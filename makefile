@@ -1,12 +1,17 @@
-all: source# document
+PROJECT=manual
+TEX=pdflatex
+BIBTEX=bibtex
+BUILDTEX=$(TEX) $(PROJECT).tex
+
+all: source builddoc
 
 source:	main.cpp link.cpp link.h stack.cpp stack.h
 	g++ main.cpp link.cpp stack.cpp -o calc
-    
-#document:
-#	echo "Utilize command below this (in makefile) for Latex-compiled documentation?"
 
-#latex:
-#	latex lexer.tex    
+builddoc:
+	$(BUILDTEX)
+	$(BIBTEX) $(PROJECT)
+	$(BUILDTEX)
+	$(BUILDTEX)
 
-#emptyrule:
+emptyrule:

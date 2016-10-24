@@ -1,7 +1,4 @@
-PROJECT=manual
-TEX=pdflatex
-BIBTEX=bibtex
-BUILDTEX=$(TEX) $(PROJECT).tex
+FILENAME=manual
 
 all: source builddoc
 
@@ -9,9 +6,9 @@ source:	main.cpp link.cpp link.h stack.cpp stack.h
 	g++ main.cpp link.cpp stack.cpp -o calc
 
 builddoc:
-	$(BUILDTEX)
-	$(BIBTEX) $(PROJECT)
-	$(BUILDTEX)
-	$(BUILDTEX)
+	pdflatex $(FILENAME).tex
+#	latex --verbose $(FILENAME).tex
+#	dvips $(FILENAME).dvi
+#	ps2pdf $(FILENAME).ps	
 
 emptyrule:

@@ -1,0 +1,27 @@
+b4b0765 was Andrew Rose, 16 hours ago, message: manual.tex
+ec798ec was gg2, 2 days ago, message: Problems in manual.tex
+54b7d9a was gg2, 2 days ago, message: Changing the Latex command in the Makefile
+ed89ba5 was gg2, 2 days ago, message: Attempt at Latex in Makefile
+1753ea1 was tanimoti, 2 days ago, message: Merge pull request #1 from ThereIsNoEscape/makefile-commenting
+320a80a was tanimoti, 2 days ago, message: Commented out broken code
+b43ff75 was gg2, 2 days ago, message: Inserted Latex command?
+f1db645 was gg2, 3 days ago, message: Lowercasing makefile filename.
+4f02acf was gg2, 3 days ago, message: Correcting? Issues on Makefile
+426a1cc was Jonathan Buch, 5 days ago, message: create Makefile
+3e5f93c was Jonathan Buch, 5 days ago, message: Create stack.cpp
+d20a70b was Jonathan Buch, 5 days ago, message: Create stack.h
+e3f6867 was Jonathan Buch, 5 days ago, message: Create link.h
+258b265 was Jonathan Buch, 5 days ago, message: Create link.cpp
+5ed3f95 was Jonathan Buch, 5 days ago, message: Delete stack.h
+8eabd86 was Jonathan Buch, 5 days ago, message: Delete stack.cpp
+5304ca6 was Jonathan Buch, 5 days ago, message: Delete LinkedList.cpp
+b9732e7 was Jonathan Buch, 5 days ago, message: Delete LinkedList.h
+4b49886 was kirk8182, 5 days ago, message: Add files via upload
+982ed7c was Hunter Barnett, 5 days ago, message: HW1 Adder Main Added
+f097fd1 was Jonathan Buch, 5 days ago, message: create LinkedList.cpp
+cba9178 was Jonathan Buch, 5 days ago, message: create LinkedList.h
+3fff65b was Jonathan Buch, 5 days ago, message: create stack.h
+72bc7cc was Jonathan Buch, 5 days ago, message: create stack.cpp
+faef11d was Hunter Barnett, 12 days ago, message: Added Specification
+b75d169 was kirk8182, 2 weeks ago, message: Create TEST
+147de71 was Jonathan Buch, 2 weeks ago, message: Initial commit

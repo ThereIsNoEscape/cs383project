@@ -1,1 +1,18 @@
 This is the log for the repository
+This logfile was created on November 2nd, 2016, 10:54 AM PST
+
+8e85e64 was kirk8182, 8 minutes ago, message: Add files via upload
+d7ed696 was gg2, 12 hours ago, message: Updated UI Sketch
+b87f3dc was JamesMYoung, 17 hours ago, message: Add files via upload
+6198e7f was Jonathan Buch, 18 hours ago, message: Added a master for the use case descriptions
+7f1d4fe was Jonathan Buch, 18 hours ago, message: Updated CS383TowerLightsUseCases.pdf
+0c1e8c5 was Jonathan Buch, 18 hours ago, message: Updated LED Cells Use Cases
+54586f6 was Jonathan Buch, 19 hours ago, message: Update Requirements.tex
+6ae4393 was Jonathan Buch, 19 hours ago, message: Add files via upload
+662724c was Andrew Rose, 22 hours ago, message: Add files via upload
+f6348cc was kirk8182, 23 hours ago, message: Add files via upload
+e3d3f50 was gg2, 2 days ago, message: Adding Project UI Images
+8780a96 was kirk8182, 2 days ago, message: Delete readme.txt
+cbcbd4b was kirk8182, 2 days ago, message: Add files via upload
+1a209ad was kirk8182, 8 days ago, message: added the log
+35c4200 was kirk8182, 8 days ago, message: my first commit

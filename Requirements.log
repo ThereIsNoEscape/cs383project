@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.8.30)  30 OCT 2016 23:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.10.4)  2 NOV 2016 10:41
 entering extended mode
 **./Requirements.tex
 (Requirements.tex
@@ -136,22 +136,57 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 14.
  [1
 
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2] (Requirements.aux) ) 
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
+<CS336-Project01-UI-Week1_Target.png, id=8, 1699.34875pt x 849.1725pt>
+File: CS336-Project01-UI-Week1_Target.png Graphic file (type png)
+
+<use CS336-Project01-UI-Week1_Target.png>
+Package pdftex.def Info: CS336-Project01-UI-Week1_Target.png used on input line
+ 63.
+(pdftex.def)             Requested size: 424.83615pt x 212.2926pt.
+
+Overfull \hbox (34.83615pt too wide) in paragraph at lines 63--64
+[] 
+ []
+
+[2] <CS336-Project01-UI.png, id=13, 2245.38875pt x 1430.34375pt>
+File: CS336-Project01-UI.png Graphic file (type png)
+
+<use CS336-Project01-UI.png>
+Package pdftex.def Info: CS336-Project01-UI.png used on input line 65.
+(pdftex.def)             Requested size: 426.6283pt x 271.76814pt.
+
+Overfull \hbox (36.6283pt too wide) in paragraph at lines 65--66
+[] 
+ []
+
+[3 <./CS336-Project01-UI-Week1_Target.png> <./CS336-Project01-UI.png>]
+<UseCases.JPG, id=19, 478.78876pt x 281.55188pt>
+File: UseCases.JPG Graphic file (type jpg)
+ <use UseCases.JPG>
+Package pdftex.def Info: UseCases.JPG used on input line 73.
+(pdftex.def)             Requested size: 392.60931pt x 230.87402pt.
+
+Overfull \hbox (2.60931pt too wide) in paragraph at lines 72--74
+[] 
+ []
+
+[4 <./UseCases.JPG>] (Requirements.aux) ) 
 Here is how much of TeX's memory you used:
- 1483 strings out of 493334
- 21333 string characters out of 3136639
+ 1500 strings out of 493334
+ 21743 string characters out of 3136646
  79337 words of memory out of 3000000
- 5031 multiletter control sequences out of 15000+200000
+ 5043 multiletter control sequences out of 15000+200000
  5713 words of font info for 21 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,4n,25p,242b,145s stack positions out of 5000i,500n,10000p,200000b,50000s
-<
-C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Requirements.pdf (2 pages, 39785 bytes).
+ 40i,5n,25p,446b,145s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x86)/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Requirements.pdf (4 pages, 339862 bytes).
 PDF statistics:
- 21 PDF objects out of 1000 (max. 8388607)
+ 33 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

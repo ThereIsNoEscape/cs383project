@@ -1,13 +1,10 @@
-// H Barnett / Group 2
-// CS383 QT Tower Lights Project
-
 #ifndef TAN_FILE_H_
 #define TAN_FILE_H_
 
 #include <QString>
 #include <QLinkedList>
 
-// Window / Pixel
+// Pixel
 union RGB {
 	struct {
 		unsigned char b, g, r;
@@ -25,9 +22,9 @@ struct TanFrame {
 class TanFile {
 private:
 	// Variables
-	QString m_filename_tan;
-	QString m_filename_wav;
-	QLinkedList<struct TanFrame *> m_frames;
+	QString m_filename_tan; // TAN file name
+	QString m_filename_wav; // WAV file name
+	QLinkedList<struct TanFrame *> m_frames; // Frame list
 	// Constant for all TAN files
 	// version = 0.4
 	// width = 4

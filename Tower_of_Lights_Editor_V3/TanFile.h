@@ -1,10 +1,12 @@
 #ifndef TAN_FILE_H_
 #define TAN_FILE_H_
 
+#include <QColor>      // Pixel Colors
+#include <QFile>       // File IO
+#include <QTextStream> // File IO
 #include <QString>
-#include <QColor>       //added for pixel
-#include <QLinkedList>
-#include <QTime>        //for time
+#include <QLinkedList> // Frame List
+#include <QTime>
 
 // Tower Frame
 struct TanFrame {
@@ -33,6 +35,10 @@ class TanFile {
     QString getAudioName();
     QColor getCurrRGB();
     QColor * getPresetRGB();    //returns pointer to QColor array
+
+    void Save();
+    void SaveAs();
+    void SaveAs(const QString& p_filename);
 };
 
 #endif

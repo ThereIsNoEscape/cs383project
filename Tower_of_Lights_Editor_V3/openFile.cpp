@@ -1,8 +1,8 @@
-#include <iostream>
 #include <QString>
-#include <QTextStream>
-#include <QFile>
-#include <QMessageBox>
+#include <QTextStream>  //for iostream objects
+#include <QFile>        //for file manipulation
+#include <QMessageBox>  //for error checking
+#include "TanFile.h"    //for making a TanFile object
 
 using namespace std;
 
@@ -17,7 +17,7 @@ QStringList getFileContents(QString fileName)
         //the file is open
         QTextStream in(&fp);
         buffer = in.readAll();  //read file into Qstring buffer
-        fileContents = buffer.split('\n');  //delimiti buffer into Qstring list
+        fileContents = buffer.split(QRegExp("\n|\r"),QString::SkipEmptyParts);  //delimiti buffer into Qstring list
         fp.close();	//close the file
         return fileContents;
     }

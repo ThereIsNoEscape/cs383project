@@ -1,22 +1,78 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "openFile.cpp"
-#include <QFileDialog>  //used for selecting files
-#include <QString>
-#include <QDebug>   //for testing purposes
-#include <QColor>
-#include <QTime>    //for holding time
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
+
+	// Connecting all the cells to the same click handler
+/*
+	foreach(QObject *child, ui->frame->children())
+	{
+		QString m_name = m_getObjName(child);
+		if(m_name.startsWith("cell")) {
+			connect(child, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+		}
+	}
+/*
+	int i=0, cellCt=12;
+
+	for(i=0; i<cellCt; i++) {
+		// Generate the name for each cell
+		QString m_cellName = "cell" + (QString("%1").arg(i, 2, 10, QChar('0')));
+		// Connect up the clicked signal with the click handler
+		connect(ui->m_cellName, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	}
+*/
+	// Sorry, I can't make the shorter versions above work
+	connect(ui->cell000, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell001, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell002, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell003, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell004, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell005, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell006, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell007, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell008, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell009, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell010, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell011, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell012, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell013, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell014, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell015, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell016, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell017, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell018, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell019, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell020, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell021, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell022, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell023, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell024, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell025, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell026, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell027, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell028, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell029, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell030, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell031, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell032, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell033, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell034, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell035, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell036, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell037, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell038, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+	connect(ui->cell039, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+	delete ui;
 }
 
 void MainWindow::on_pushButton_clicked()    //when open is clicked
@@ -136,4 +192,63 @@ void MainWindow::on_pushButton_clicked()    //when open is clicked
     for (int i=0;i<20;i++)
         for (int j=0;j<12;j++)
             frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
+}
+
+// Get the name of the referenced object.
+QString MainWindow::m_getObjName(QObject *m_obj) {
+	QString m_name = m_obj->property("objectName").toString();
+	return m_name;
+}
+
+// Find a cell by its name,
+// toggle its color,
+// and toggle its state to determine appropriate color on next click.
+// This function as-is is only meant for testing purposes;
+// To be connected up with actual frame data eventually.
+void MainWindow::m_changeCellColor(QString m_cellName)
+{
+	QPushButton *m_cell = MainWindow::findChild<QPushButton*>(m_cellName);
+	const char *m_cellPropertyName = "activated";
+	QString m_activated = m_cell->property(m_cellPropertyName).toString();
+	QColor m_color = Qt::green;
+	QString qss = QString("color: white;\nbackground-color: ");
+
+	if(m_color.isValid()) {
+		// Determine which state we're in and switch the state, and the color, if appropriate
+		if(m_activated == "false") {
+			m_activated = "true";
+		}
+		else {
+			m_color = Qt::black;
+			m_activated = "false";
+		}
+		// Set the color on the stylesheet after concatenating the resulting color to the style string
+		qss += m_color.name();
+		m_cell->setStyleSheet(qss);
+		// Switch state
+		m_cell->setProperty(m_cellPropertyName, m_activated);
+	}
+}
+
+// Generate a message box announcing the value of the custom coordinate property for a cell
+void MainWindow::m_alertCoords(QString m_cellName)
+{
+	QPushButton *m_cell = MainWindow::findChild<QPushButton*>(m_cellName);
+	const char *m_cellPropertyName = "coord";
+	QString m_coord = m_cell->property(m_cellPropertyName).toString();
+	QMessageBox m_msg;
+
+	m_msg.setWindowTitle("Hi from Cell " + m_coord + "!");
+	m_msg.setText("This is Cell " + m_coord + ".");
+	m_msg.setInformativeText("This is a stand-in for tracking which cell was clicked and signaling its coordinates: " + m_coord + ".");
+
+	m_msg.exec();
+}
+
+// The primary handler for cell clicks
+void MainWindow::on_cell_clicked()
+{
+	QString m_cellName = m_getObjName(QObject::sender());
+	m_changeCellColor(m_cellName);
+	//m_alertCoords(m_cellName);
 }

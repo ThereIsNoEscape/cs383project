@@ -13,8 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    openFile.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    TanFile.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    New Text Document.txt

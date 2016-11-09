@@ -1,78 +1,83 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "openFile.cpp"
+#include <QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
+    connectCellButtons();
+}
 
-	// Connecting all the cells to the same click handler
+void MainWindow::connectCellButtons()
+{
+    // Connecting all the cells to the same click handler
 /*
-	foreach(QObject *child, ui->frame->children())
-	{
-		QString m_name = m_getObjName(child);
-		if(m_name.startsWith("cell")) {
-			connect(child, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-		}
-	}
+    foreach(QObject *child, ui->frame->children())
+    {
+        QString m_name = m_getObjName(child);
+        if(m_name.startsWith("cell")) {
+            connect(child, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+        }
+    }
 /*
-	int i=0, cellCt=12;
+    int i=0, cellCt=12;
 
-	for(i=0; i<cellCt; i++) {
-		// Generate the name for each cell
-		QString m_cellName = "cell" + (QString("%1").arg(i, 2, 10, QChar('0')));
-		// Connect up the clicked signal with the click handler
-		connect(ui->m_cellName, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	}
+    for(i=0; i<cellCt; i++) {
+        // Generate the name for each cell
+        QString m_cellName = "cell" + (QString("%1").arg(i, 2, 10, QChar('0')));
+        // Connect up the clicked signal with the click handler
+        connect(ui->m_cellName, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    }
 */
-	// Sorry, I can't make the shorter versions above work
-	connect(ui->cell000, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell001, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell002, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell003, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell004, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell005, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell006, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell007, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell008, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell009, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell010, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell011, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell012, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell013, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell014, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell015, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell016, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell017, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell018, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell019, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell020, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell021, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell022, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell023, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell024, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell025, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell026, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell027, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell028, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell029, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell030, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell031, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell032, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell033, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell034, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell035, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell036, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell037, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell038, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-	connect(ui->cell039, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    // Sorry, I can't make the shorter versions above work
+    connect(ui->cell000, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell001, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell002, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell003, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell004, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell005, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell006, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell007, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell008, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell009, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell010, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell011, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell012, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell013, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell014, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell015, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell016, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell017, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell018, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell019, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell020, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell021, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell022, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell023, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell024, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell025, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell026, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell027, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell028, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell029, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell030, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell031, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell032, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell033, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell034, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell035, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell036, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell037, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell038, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
+    connect(ui->cell039, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
 }
 
 MainWindow::~MainWindow()
 {
-	delete ui;
+    delete ui;
 }
 
 void MainWindow::on_pushButton_clicked()    //when open is clicked

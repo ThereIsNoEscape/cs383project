@@ -27,5 +27,4 @@
 *.exe
 *.out
 *.app
-*.user
-Tower_of_Lights_Editor_V3/Tower_of_Lights_Editor_V3.pro.user.740bec5
+*.pro.user.*

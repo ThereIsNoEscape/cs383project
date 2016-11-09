@@ -27,8 +27,11 @@ private slots:
 
 	void on_pushButton_clicked();
 
-	void on_cell_clicked();
+    void connectCellButtons();
 
+    void on_cell_clicked();
+
+    void exit();
 private:
 	Ui::MainWindow *ui;
 
@@ -36,7 +39,7 @@ private:
 
 	void m_changeCellColor(QString m_cellName);
 
-	void m_alertCoords(QString m_cellName);
+    void m_alertCoords(QString m_cellName);
 };
 
 #endif // MAINWINDOW_H

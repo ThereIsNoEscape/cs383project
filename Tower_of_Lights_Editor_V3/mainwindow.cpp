@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "openFile.cpp"
+#include <Qdebug>
+#include <QString>
+#include <QMessageBox>
 #include <QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -80,7 +83,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()    //when open is clicked
+void MainWindow::on_pushButton_open_clicked()    //when open is clicked
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
                        "Tan File (*.tan*);;All files (*.*)");
@@ -199,6 +202,37 @@ void MainWindow::on_pushButton_clicked()    //when open is clicked
     for (int i=0;i<20;i++)
         for (int j=0;j<12;j++)
             frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
+}
+
+void MainWindow::on_pushButton_new_clicked()
+{
+    QMessageBox::StandardButton reply;
+
+    /* Create Message Box
+     * Title of message box : "Tower Lights"
+     * Prompt message : "Would you like to save?"
+     * 3 button choices : "Save", "No", "Cancel"
+    */
+
+    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                  QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+
+
+    if(reply == QMessageBox::Save){
+        TanFile newFile;
+        if(QString(newFile.getFileName()).isEmpty()){ // check if there is a file name
+            //SaveAs();
+            qDebug() << "SaveAs\n";
+        }else{
+            //Save();
+            qDebug() << "Save\n";
+        }
+    }else if(reply == QMessageBox::No){
+        TanFile newFile; //creates new blank .tan file
+        //do we delete a .tan file if it was never saved in the first place?
+    }else if(reply == QMessageBox::Cancel){
+        //do nothing
+    }
 }
 
 // Get the name of the referenced object.

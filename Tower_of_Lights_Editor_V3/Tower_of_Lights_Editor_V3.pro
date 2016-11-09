@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-10-26T14:14:09
+# Project created by QtCreator 2016-11-09T07:26:05
 #
 #-------------------------------------------------
 
@@ -14,12 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    openFile.cpp
+    openFile.cpp \
+    TanFile_Save.cpp \
+    tanfile_new.cpp
 
 HEADERS  += mainwindow.h \
     TanFile.h
 
 FORMS    += mainwindow.ui
-
-DISTFILES += \
-    New Text Document.txt

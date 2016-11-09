@@ -25,13 +25,16 @@ public:
 
 private slots:
 
-	void on_pushButton_clicked();
+    void on_pushButton_open_clicked();
+
+    void on_pushButton_new_clicked();
 
     void connectCellButtons();
 
     void on_cell_clicked();
 
     void exit();
+
 private:
 	Ui::MainWindow *ui;
 

@@ -17,7 +17,7 @@ struct TanFrame {
 
 // TAN File
 class TanFile {
-//private:
+public:
     // Variables
     QString m_filename_tan;                  //TAN file name
     QString m_filename_wav;                  //WAV file name
@@ -29,7 +29,7 @@ class TanFile {
     // version = 0.4
     // width = 4
     // height = 10
-//public:
+public:
     TanFile(); // New
     QString getFileName();
     QString getAudioName();

@@ -257,3 +257,8 @@ void MainWindow::on_cell_clicked()
 	m_changeCellColor(m_cellName);
 	//m_alertCoords(m_cellName);
 }
+
+void MainWindow::quit()
+{
+    QApplication::quit();
+}

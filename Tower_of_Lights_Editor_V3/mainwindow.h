@@ -30,6 +30,8 @@ private slots:
     void connectCellButtons();
 
     void on_cell_clicked();
+
+    void exit();
 private:
 	Ui::MainWindow *ui;
 

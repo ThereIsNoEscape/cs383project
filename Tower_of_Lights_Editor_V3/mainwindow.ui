@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
+    <width>480</width>
     <height>564</height>
    </rect>
   </property>
@@ -39,31 +39,6 @@
      <property name="rightMargin">
       <number>9</number>
      </property>
-     <item row="0" column="0" alignment="Qt::AlignTop">
-      <widget class="QPushButton" name="pushButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>72</width>
-         <height>18</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>128</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>open</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QFrame" name="frame">
        <property name="sizePolicy">
@@ -1101,7 +1076,45 @@
        </widget>
       </widget>
      </item>
+     <item row="0" column="0" alignment="Qt::AlignTop">
+      <widget class="QPushButton" name="pushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>72</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>128</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>open</string>
+       </property>
+      </widget>
+     </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save As</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -1109,8 +1122,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>449</width>
-     <height>17</height>
+     <width>480</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

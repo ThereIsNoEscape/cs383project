@@ -31,7 +31,6 @@ public:
     QWidget *centralWidget;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
-    QPushButton *pushButton;
     QFrame *frame;
     QWidget *gridLayoutWidget_2;
     QGridLayout *gridLayout_2;
@@ -75,6 +74,8 @@ public:
     QPushButton *cell037;
     QPushButton *cell038;
     QPushButton *cell039;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -83,7 +84,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(449, 564);
+        MainWindow->resize(480, 564);
         MainWindow->setTabShape(QTabWidget::Rounded);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
@@ -100,25 +101,13 @@ public:
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setContentsMargins(9, 0, 9, 0);
-        pushButton = new QPushButton(gridLayoutWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy1);
-        pushButton->setMinimumSize(QSize(72, 18));
-        pushButton->setMaximumSize(QSize(128, 24));
-
-        gridLayout->addWidget(pushButton, 0, 0, 1, 1, Qt::AlignTop);
-
         frame = new QFrame(gridLayoutWidget);
         frame->setObjectName(QStringLiteral("frame"));
-        QSizePolicy sizePolicy2(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        sizePolicy2.setHorizontalStretch(1);
-        sizePolicy2.setVerticalStretch(1);
-        sizePolicy2.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
-        frame->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        sizePolicy1.setHorizontalStretch(1);
+        sizePolicy1.setVerticalStretch(1);
+        sizePolicy1.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
+        frame->setSizePolicy(sizePolicy1);
         frame->setMinimumSize(QSize(168, 280));
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
@@ -133,8 +122,8 @@ public:
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
         cell001 = new QPushButton(gridLayoutWidget_2);
         cell001->setObjectName(QStringLiteral("cell001"));
-        sizePolicy2.setHeightForWidth(cell001->sizePolicy().hasHeightForWidth());
-        cell001->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell001->sizePolicy().hasHeightForWidth());
+        cell001->setSizePolicy(sizePolicy1);
         cell001->setMinimumSize(QSize(10, 10));
         cell001->setProperty("coord", QVariant(0u));
 
@@ -142,8 +131,8 @@ public:
 
         cell002 = new QPushButton(gridLayoutWidget_2);
         cell002->setObjectName(QStringLiteral("cell002"));
-        sizePolicy2.setHeightForWidth(cell002->sizePolicy().hasHeightForWidth());
-        cell002->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell002->sizePolicy().hasHeightForWidth());
+        cell002->setSizePolicy(sizePolicy1);
         cell002->setMinimumSize(QSize(10, 10));
         cell002->setProperty("coord", QVariant(0u));
 
@@ -151,8 +140,8 @@ public:
 
         cell003 = new QPushButton(gridLayoutWidget_2);
         cell003->setObjectName(QStringLiteral("cell003"));
-        sizePolicy2.setHeightForWidth(cell003->sizePolicy().hasHeightForWidth());
-        cell003->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell003->sizePolicy().hasHeightForWidth());
+        cell003->setSizePolicy(sizePolicy1);
         cell003->setMinimumSize(QSize(10, 10));
         cell003->setProperty("coord", QVariant(0u));
 
@@ -160,8 +149,8 @@ public:
 
         cell004 = new QPushButton(gridLayoutWidget_2);
         cell004->setObjectName(QStringLiteral("cell004"));
-        sizePolicy2.setHeightForWidth(cell004->sizePolicy().hasHeightForWidth());
-        cell004->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell004->sizePolicy().hasHeightForWidth());
+        cell004->setSizePolicy(sizePolicy1);
         cell004->setMinimumSize(QSize(10, 10));
         cell004->setProperty("coord", QVariant(0u));
 
@@ -169,8 +158,8 @@ public:
 
         cell006 = new QPushButton(gridLayoutWidget_2);
         cell006->setObjectName(QStringLiteral("cell006"));
-        sizePolicy2.setHeightForWidth(cell006->sizePolicy().hasHeightForWidth());
-        cell006->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell006->sizePolicy().hasHeightForWidth());
+        cell006->setSizePolicy(sizePolicy1);
         cell006->setMinimumSize(QSize(10, 10));
         cell006->setProperty("coord", QVariant(0u));
 
@@ -178,8 +167,8 @@ public:
 
         cell012 = new QPushButton(gridLayoutWidget_2);
         cell012->setObjectName(QStringLiteral("cell012"));
-        sizePolicy2.setHeightForWidth(cell012->sizePolicy().hasHeightForWidth());
-        cell012->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell012->sizePolicy().hasHeightForWidth());
+        cell012->setSizePolicy(sizePolicy1);
         cell012->setMinimumSize(QSize(10, 10));
         cell012->setProperty("coord", QVariant(0u));
 
@@ -187,8 +176,8 @@ public:
 
         cell030 = new QPushButton(gridLayoutWidget_2);
         cell030->setObjectName(QStringLiteral("cell030"));
-        sizePolicy2.setHeightForWidth(cell030->sizePolicy().hasHeightForWidth());
-        cell030->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell030->sizePolicy().hasHeightForWidth());
+        cell030->setSizePolicy(sizePolicy1);
         cell030->setMinimumSize(QSize(10, 10));
         cell030->setProperty("coord", QVariant(0u));
 
@@ -196,8 +185,8 @@ public:
 
         cell031 = new QPushButton(gridLayoutWidget_2);
         cell031->setObjectName(QStringLiteral("cell031"));
-        sizePolicy2.setHeightForWidth(cell031->sizePolicy().hasHeightForWidth());
-        cell031->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell031->sizePolicy().hasHeightForWidth());
+        cell031->setSizePolicy(sizePolicy1);
         cell031->setMinimumSize(QSize(10, 10));
         cell031->setProperty("coord", QVariant(0u));
 
@@ -205,8 +194,8 @@ public:
 
         cell033 = new QPushButton(gridLayoutWidget_2);
         cell033->setObjectName(QStringLiteral("cell033"));
-        sizePolicy2.setHeightForWidth(cell033->sizePolicy().hasHeightForWidth());
-        cell033->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell033->sizePolicy().hasHeightForWidth());
+        cell033->setSizePolicy(sizePolicy1);
         cell033->setMinimumSize(QSize(10, 10));
         cell033->setProperty("coord", QVariant(0u));
 
@@ -214,8 +203,8 @@ public:
 
         cell034 = new QPushButton(gridLayoutWidget_2);
         cell034->setObjectName(QStringLiteral("cell034"));
-        sizePolicy2.setHeightForWidth(cell034->sizePolicy().hasHeightForWidth());
-        cell034->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell034->sizePolicy().hasHeightForWidth());
+        cell034->setSizePolicy(sizePolicy1);
         cell034->setMinimumSize(QSize(10, 10));
         cell034->setProperty("coord", QVariant(0u));
 
@@ -223,8 +212,8 @@ public:
 
         cell000 = new QPushButton(gridLayoutWidget_2);
         cell000->setObjectName(QStringLiteral("cell000"));
-        sizePolicy2.setHeightForWidth(cell000->sizePolicy().hasHeightForWidth());
-        cell000->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell000->sizePolicy().hasHeightForWidth());
+        cell000->setSizePolicy(sizePolicy1);
         cell000->setMinimumSize(QSize(10, 10));
         cell000->setProperty("coord", QVariant(0u));
 
@@ -232,8 +221,8 @@ public:
 
         cell011 = new QPushButton(gridLayoutWidget_2);
         cell011->setObjectName(QStringLiteral("cell011"));
-        sizePolicy2.setHeightForWidth(cell011->sizePolicy().hasHeightForWidth());
-        cell011->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell011->sizePolicy().hasHeightForWidth());
+        cell011->setSizePolicy(sizePolicy1);
         cell011->setMinimumSize(QSize(10, 10));
         cell011->setProperty("coord", QVariant(0u));
 
@@ -241,8 +230,8 @@ public:
 
         cell010 = new QPushButton(gridLayoutWidget_2);
         cell010->setObjectName(QStringLiteral("cell010"));
-        sizePolicy2.setHeightForWidth(cell010->sizePolicy().hasHeightForWidth());
-        cell010->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell010->sizePolicy().hasHeightForWidth());
+        cell010->setSizePolicy(sizePolicy1);
         cell010->setMinimumSize(QSize(10, 10));
         cell010->setProperty("coord", QVariant(0u));
 
@@ -250,8 +239,8 @@ public:
 
         cell008 = new QPushButton(gridLayoutWidget_2);
         cell008->setObjectName(QStringLiteral("cell008"));
-        sizePolicy2.setHeightForWidth(cell008->sizePolicy().hasHeightForWidth());
-        cell008->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell008->sizePolicy().hasHeightForWidth());
+        cell008->setSizePolicy(sizePolicy1);
         cell008->setMinimumSize(QSize(10, 10));
         cell008->setProperty("coord", QVariant(0u));
 
@@ -259,8 +248,8 @@ public:
 
         cell016 = new QPushButton(gridLayoutWidget_2);
         cell016->setObjectName(QStringLiteral("cell016"));
-        sizePolicy2.setHeightForWidth(cell016->sizePolicy().hasHeightForWidth());
-        cell016->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell016->sizePolicy().hasHeightForWidth());
+        cell016->setSizePolicy(sizePolicy1);
         cell016->setMinimumSize(QSize(10, 10));
         cell016->setProperty("coord", QVariant(0u));
 
@@ -268,8 +257,8 @@ public:
 
         cell024 = new QPushButton(gridLayoutWidget_2);
         cell024->setObjectName(QStringLiteral("cell024"));
-        sizePolicy2.setHeightForWidth(cell024->sizePolicy().hasHeightForWidth());
-        cell024->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell024->sizePolicy().hasHeightForWidth());
+        cell024->setSizePolicy(sizePolicy1);
         cell024->setMinimumSize(QSize(10, 10));
         cell024->setProperty("coord", QVariant(0u));
 
@@ -277,8 +266,8 @@ public:
 
         cell018 = new QPushButton(gridLayoutWidget_2);
         cell018->setObjectName(QStringLiteral("cell018"));
-        sizePolicy2.setHeightForWidth(cell018->sizePolicy().hasHeightForWidth());
-        cell018->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell018->sizePolicy().hasHeightForWidth());
+        cell018->setSizePolicy(sizePolicy1);
         cell018->setMinimumSize(QSize(10, 10));
         cell018->setProperty("coord", QVariant(0u));
 
@@ -286,8 +275,8 @@ public:
 
         cell027 = new QPushButton(gridLayoutWidget_2);
         cell027->setObjectName(QStringLiteral("cell027"));
-        sizePolicy2.setHeightForWidth(cell027->sizePolicy().hasHeightForWidth());
-        cell027->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell027->sizePolicy().hasHeightForWidth());
+        cell027->setSizePolicy(sizePolicy1);
         cell027->setMinimumSize(QSize(10, 10));
         cell027->setProperty("coord", QVariant(0u));
 
@@ -295,8 +284,8 @@ public:
 
         cell023 = new QPushButton(gridLayoutWidget_2);
         cell023->setObjectName(QStringLiteral("cell023"));
-        sizePolicy2.setHeightForWidth(cell023->sizePolicy().hasHeightForWidth());
-        cell023->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell023->sizePolicy().hasHeightForWidth());
+        cell023->setSizePolicy(sizePolicy1);
         cell023->setMinimumSize(QSize(10, 10));
         cell023->setProperty("coord", QVariant(0u));
 
@@ -304,8 +293,8 @@ public:
 
         cell029 = new QPushButton(gridLayoutWidget_2);
         cell029->setObjectName(QStringLiteral("cell029"));
-        sizePolicy2.setHeightForWidth(cell029->sizePolicy().hasHeightForWidth());
-        cell029->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell029->sizePolicy().hasHeightForWidth());
+        cell029->setSizePolicy(sizePolicy1);
         cell029->setMinimumSize(QSize(10, 10));
         cell029->setProperty("coord", QVariant(0u));
 
@@ -313,8 +302,8 @@ public:
 
         cell028 = new QPushButton(gridLayoutWidget_2);
         cell028->setObjectName(QStringLiteral("cell028"));
-        sizePolicy2.setHeightForWidth(cell028->sizePolicy().hasHeightForWidth());
-        cell028->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell028->sizePolicy().hasHeightForWidth());
+        cell028->setSizePolicy(sizePolicy1);
         cell028->setMinimumSize(QSize(10, 10));
         cell028->setProperty("coord", QVariant(0u));
 
@@ -322,8 +311,8 @@ public:
 
         cell009 = new QPushButton(gridLayoutWidget_2);
         cell009->setObjectName(QStringLiteral("cell009"));
-        sizePolicy2.setHeightForWidth(cell009->sizePolicy().hasHeightForWidth());
-        cell009->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell009->sizePolicy().hasHeightForWidth());
+        cell009->setSizePolicy(sizePolicy1);
         cell009->setMinimumSize(QSize(10, 10));
         cell009->setProperty("coord", QVariant(0u));
 
@@ -331,8 +320,8 @@ public:
 
         cell007 = new QPushButton(gridLayoutWidget_2);
         cell007->setObjectName(QStringLiteral("cell007"));
-        sizePolicy2.setHeightForWidth(cell007->sizePolicy().hasHeightForWidth());
-        cell007->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell007->sizePolicy().hasHeightForWidth());
+        cell007->setSizePolicy(sizePolicy1);
         cell007->setMinimumSize(QSize(10, 10));
         cell007->setProperty("coord", QVariant(0u));
 
@@ -340,8 +329,8 @@ public:
 
         cell020 = new QPushButton(gridLayoutWidget_2);
         cell020->setObjectName(QStringLiteral("cell020"));
-        sizePolicy2.setHeightForWidth(cell020->sizePolicy().hasHeightForWidth());
-        cell020->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell020->sizePolicy().hasHeightForWidth());
+        cell020->setSizePolicy(sizePolicy1);
         cell020->setMinimumSize(QSize(10, 10));
         cell020->setProperty("coord", QVariant(0u));
 
@@ -349,8 +338,8 @@ public:
 
         cell022 = new QPushButton(gridLayoutWidget_2);
         cell022->setObjectName(QStringLiteral("cell022"));
-        sizePolicy2.setHeightForWidth(cell022->sizePolicy().hasHeightForWidth());
-        cell022->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell022->sizePolicy().hasHeightForWidth());
+        cell022->setSizePolicy(sizePolicy1);
         cell022->setMinimumSize(QSize(10, 10));
         cell022->setProperty("coord", QVariant(0u));
 
@@ -358,8 +347,8 @@ public:
 
         cell021 = new QPushButton(gridLayoutWidget_2);
         cell021->setObjectName(QStringLiteral("cell021"));
-        sizePolicy2.setHeightForWidth(cell021->sizePolicy().hasHeightForWidth());
-        cell021->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell021->sizePolicy().hasHeightForWidth());
+        cell021->setSizePolicy(sizePolicy1);
         cell021->setMinimumSize(QSize(10, 10));
         cell021->setProperty("coord", QVariant(0u));
 
@@ -367,8 +356,8 @@ public:
 
         cell017 = new QPushButton(gridLayoutWidget_2);
         cell017->setObjectName(QStringLiteral("cell017"));
-        sizePolicy2.setHeightForWidth(cell017->sizePolicy().hasHeightForWidth());
-        cell017->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell017->sizePolicy().hasHeightForWidth());
+        cell017->setSizePolicy(sizePolicy1);
         cell017->setMinimumSize(QSize(10, 10));
         cell017->setProperty("coord", QVariant(0u));
 
@@ -376,8 +365,8 @@ public:
 
         cell026 = new QPushButton(gridLayoutWidget_2);
         cell026->setObjectName(QStringLiteral("cell026"));
-        sizePolicy2.setHeightForWidth(cell026->sizePolicy().hasHeightForWidth());
-        cell026->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell026->sizePolicy().hasHeightForWidth());
+        cell026->setSizePolicy(sizePolicy1);
         cell026->setMinimumSize(QSize(10, 10));
         cell026->setProperty("coord", QVariant(0u));
 
@@ -385,8 +374,8 @@ public:
 
         cell035 = new QPushButton(gridLayoutWidget_2);
         cell035->setObjectName(QStringLiteral("cell035"));
-        sizePolicy2.setHeightForWidth(cell035->sizePolicy().hasHeightForWidth());
-        cell035->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell035->sizePolicy().hasHeightForWidth());
+        cell035->setSizePolicy(sizePolicy1);
         cell035->setMinimumSize(QSize(10, 10));
         cell035->setProperty("coord", QVariant(0u));
 
@@ -394,8 +383,8 @@ public:
 
         cell036 = new QPushButton(gridLayoutWidget_2);
         cell036->setObjectName(QStringLiteral("cell036"));
-        sizePolicy2.setHeightForWidth(cell036->sizePolicy().hasHeightForWidth());
-        cell036->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell036->sizePolicy().hasHeightForWidth());
+        cell036->setSizePolicy(sizePolicy1);
         cell036->setMinimumSize(QSize(10, 10));
         cell036->setProperty("coord", QVariant(0u));
 
@@ -403,8 +392,8 @@ public:
 
         cell005 = new QPushButton(gridLayoutWidget_2);
         cell005->setObjectName(QStringLiteral("cell005"));
-        sizePolicy2.setHeightForWidth(cell005->sizePolicy().hasHeightForWidth());
-        cell005->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell005->sizePolicy().hasHeightForWidth());
+        cell005->setSizePolicy(sizePolicy1);
         cell005->setMinimumSize(QSize(10, 10));
         cell005->setProperty("coord", QVariant(0u));
 
@@ -412,8 +401,8 @@ public:
 
         cell013 = new QPushButton(gridLayoutWidget_2);
         cell013->setObjectName(QStringLiteral("cell013"));
-        sizePolicy2.setHeightForWidth(cell013->sizePolicy().hasHeightForWidth());
-        cell013->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell013->sizePolicy().hasHeightForWidth());
+        cell013->setSizePolicy(sizePolicy1);
         cell013->setMinimumSize(QSize(10, 10));
         cell013->setProperty("coord", QVariant(0u));
 
@@ -421,8 +410,8 @@ public:
 
         cell019 = new QPushButton(gridLayoutWidget_2);
         cell019->setObjectName(QStringLiteral("cell019"));
-        sizePolicy2.setHeightForWidth(cell019->sizePolicy().hasHeightForWidth());
-        cell019->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell019->sizePolicy().hasHeightForWidth());
+        cell019->setSizePolicy(sizePolicy1);
         cell019->setMinimumSize(QSize(10, 10));
         cell019->setProperty("coord", QVariant(0u));
 
@@ -430,8 +419,8 @@ public:
 
         cell015 = new QPushButton(gridLayoutWidget_2);
         cell015->setObjectName(QStringLiteral("cell015"));
-        sizePolicy2.setHeightForWidth(cell015->sizePolicy().hasHeightForWidth());
-        cell015->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell015->sizePolicy().hasHeightForWidth());
+        cell015->setSizePolicy(sizePolicy1);
         cell015->setMinimumSize(QSize(10, 10));
         cell015->setProperty("coord", QVariant(0u));
 
@@ -439,8 +428,8 @@ public:
 
         cell014 = new QPushButton(gridLayoutWidget_2);
         cell014->setObjectName(QStringLiteral("cell014"));
-        sizePolicy2.setHeightForWidth(cell014->sizePolicy().hasHeightForWidth());
-        cell014->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell014->sizePolicy().hasHeightForWidth());
+        cell014->setSizePolicy(sizePolicy1);
         cell014->setMinimumSize(QSize(10, 10));
         cell014->setProperty("coord", QVariant(0u));
 
@@ -448,8 +437,8 @@ public:
 
         cell025 = new QPushButton(gridLayoutWidget_2);
         cell025->setObjectName(QStringLiteral("cell025"));
-        sizePolicy2.setHeightForWidth(cell025->sizePolicy().hasHeightForWidth());
-        cell025->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell025->sizePolicy().hasHeightForWidth());
+        cell025->setSizePolicy(sizePolicy1);
         cell025->setMinimumSize(QSize(10, 10));
         cell025->setProperty("coord", QVariant(0u));
 
@@ -457,8 +446,8 @@ public:
 
         cell032 = new QPushButton(gridLayoutWidget_2);
         cell032->setObjectName(QStringLiteral("cell032"));
-        sizePolicy2.setHeightForWidth(cell032->sizePolicy().hasHeightForWidth());
-        cell032->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell032->sizePolicy().hasHeightForWidth());
+        cell032->setSizePolicy(sizePolicy1);
         cell032->setMinimumSize(QSize(10, 10));
         cell032->setProperty("coord", QVariant(0u));
 
@@ -466,8 +455,8 @@ public:
 
         cell037 = new QPushButton(gridLayoutWidget_2);
         cell037->setObjectName(QStringLiteral("cell037"));
-        sizePolicy2.setHeightForWidth(cell037->sizePolicy().hasHeightForWidth());
-        cell037->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell037->sizePolicy().hasHeightForWidth());
+        cell037->setSizePolicy(sizePolicy1);
         cell037->setMinimumSize(QSize(10, 10));
         cell037->setProperty("coord", QVariant(0u));
 
@@ -475,8 +464,8 @@ public:
 
         cell038 = new QPushButton(gridLayoutWidget_2);
         cell038->setObjectName(QStringLiteral("cell038"));
-        sizePolicy2.setHeightForWidth(cell038->sizePolicy().hasHeightForWidth());
-        cell038->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell038->sizePolicy().hasHeightForWidth());
+        cell038->setSizePolicy(sizePolicy1);
         cell038->setMinimumSize(QSize(10, 10));
         cell038->setProperty("coord", QVariant(0u));
 
@@ -484,8 +473,8 @@ public:
 
         cell039 = new QPushButton(gridLayoutWidget_2);
         cell039->setObjectName(QStringLiteral("cell039"));
-        sizePolicy2.setHeightForWidth(cell039->sizePolicy().hasHeightForWidth());
-        cell039->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cell039->sizePolicy().hasHeightForWidth());
+        cell039->setSizePolicy(sizePolicy1);
         cell039->setMinimumSize(QSize(10, 10));
         cell039->setProperty("coord", QVariant(0u));
 
@@ -494,10 +483,25 @@ public:
 
         gridLayout->addWidget(frame, 0, 1, 1, 1);
 
+        pushButton = new QPushButton(gridLayoutWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy2);
+        pushButton->setMinimumSize(QSize(72, 18));
+        pushButton->setMaximumSize(QSize(128, 24));
+
+        gridLayout->addWidget(pushButton, 0, 0, 1, 1, Qt::AlignTop);
+
+        pushButton_2 = new QPushButton(centralWidget);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(10, 470, 75, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 449, 17));
+        menuBar->setGeometry(QRect(0, 0, 480, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -514,7 +518,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Tower of Lights v3.0", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "open", 0));
         cell001->setText(QApplication::translate("MainWindow", "1", 0));
         cell001->setProperty("activated", QVariant(QApplication::translate("MainWindow", "false", 0)));
         cell002->setText(QApplication::translate("MainWindow", "2", 0));
@@ -595,6 +598,8 @@ public:
         cell038->setProperty("activated", QVariant(QApplication::translate("MainWindow", "false", 0)));
         cell039->setText(QApplication::translate("MainWindow", "39", 0));
         cell039->setProperty("activated", QVariant(QApplication::translate("MainWindow", "false", 0)));
+        pushButton->setText(QApplication::translate("MainWindow", "open", 0));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Save As", 0));
     } // retranslateUi
 
 };

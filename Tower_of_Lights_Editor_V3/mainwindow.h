@@ -32,6 +32,8 @@ private slots:
     void on_cell_clicked();
 
     void exit();
+    void on_pushButton_2_clicked();
+
 private:
 	Ui::MainWindow *ui;
 

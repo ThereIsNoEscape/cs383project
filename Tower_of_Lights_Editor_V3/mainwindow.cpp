@@ -260,7 +260,27 @@ void MainWindow::on_cell_clicked()
 	//m_alertCoords(m_cellName);
 }
 
+
 void MainWindow::quit()
 {
     QApplication::quit();
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString savefileName;
+    QStringList fileNames;
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("*.tan*;;All Files (*)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    if(dialog.exec()){
+        fileNames = dialog.selectedFiles();
+    }
+
+    //Once globals are set, filename will be passed to
+    //SaveFile in TanFile_Save.cpp in order to save
+
+
+}
+

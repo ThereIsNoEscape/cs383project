@@ -84,6 +84,8 @@ void MainWindow::on_pushButton_clicked()    //when open is clicked
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
                        "Tan File (*.tan*);;All files (*.*)");
+    if (fileName=="")
+	    return;
 
     QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
                                                         //QStringList contents

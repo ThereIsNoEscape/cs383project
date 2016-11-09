@@ -28,4 +28,7 @@
 *.out
 *.app
 *.user
+
+# QT
+build-*/
 *.pro.user.*

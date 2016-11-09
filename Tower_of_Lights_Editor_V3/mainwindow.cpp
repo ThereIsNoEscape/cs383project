@@ -22,7 +22,7 @@ void MainWindow::connectCellButtons()
             connect(child, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
         }
     }
-/*
+
     int i=0, cellCt=12;
 
     for(i=0; i<cellCt; i++) {
@@ -260,7 +260,7 @@ void MainWindow::on_cell_clicked()
 	//m_alertCoords(m_cellName);
 }
 
-void MainWindow::quit()
+void MainWindow::exit()
 {
     QApplication::quit();
 }

@@ -10,6 +10,7 @@
 #include <QDebug>        // for testing purposes
 #include <QColor>
 #include <QTime>         // for holding time
+#include "TanFile.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,19 +22,20 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    TanFile *project;   //the object that MainWindow will use for data storage
     ~MainWindow();
 
 private slots:
 
-    void on_pushButton_open_clicked();
+    void openFile();
 
-    void on_pushButton_new_clicked();
+    void newFile();
 
     void connectCellButtons();
 
     void on_cell_clicked();
 
-    void exit();
+    void on_comboBox_activated(const QString &arg1);
 
 private:
 	Ui::MainWindow *ui;

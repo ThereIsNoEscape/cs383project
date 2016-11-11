@@ -2,7 +2,8 @@
  *  TanFile_New.cpp
  *
 */
-
+#include <QFile>
+#include <QTextStream>
 #include "TanFile.h"
 
 TanFile::TanFile()

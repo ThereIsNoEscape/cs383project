@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->comboBox->addItem("new");       //instantiates the items in the comboBox
+    ui->comboBox->addItem("open");      //
+    ui->comboBox->addItem("save as");   //
+    ui->comboBox->addItem("exit");      //
+
     connectCellButtons();
 }
 
@@ -83,12 +88,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_open_clicked()    //when open is clicked
+void MainWindow::openFile()    //when open is clicked
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
                        "Tan File (*.tan*);;All files (*.*)");
     if (fileName=="")
-	    return;
+        return;
 
     QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
                                                         //QStringList contents
@@ -204,7 +209,7 @@ void MainWindow::on_pushButton_open_clicked()    //when open is clicked
             frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
 }
 
-void MainWindow::on_pushButton_new_clicked()
+void MainWindow::newFile()
 {
     QMessageBox::StandardButton reply;
 
@@ -294,7 +299,14 @@ void MainWindow::on_cell_clicked()
 	//m_alertCoords(m_cellName);
 }
 
-void MainWindow::exit()
+void MainWindow::on_comboBox_activated(const QString &arg1)
 {
-    QApplication::quit();
+    if (arg1=="open")       //open a file
+        openFile();
+    if (arg1=="save as")    //save the file
+        project->SaveAs();
+    if (arg1=="new")        //make a new file
+        newFile();
+    if (arg1=="exit")       //quit the application
+        QApplication::quit();
 }

@@ -1,6 +1,6 @@
 #include "TanFile.h"
 #include <QFile>
-//#include <QTextStream>
+#include <QTextStream>
 
 void TanFile::Save() {
     SaveAs(m_filename_tan);

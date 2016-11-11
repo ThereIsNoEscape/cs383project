@@ -1,8 +1,5 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include <QString>
-
-QString blah = "Hello";
 
 int main(int argc, char *argv[])
 {

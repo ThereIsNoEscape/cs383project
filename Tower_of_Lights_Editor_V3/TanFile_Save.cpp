@@ -1,15 +1,22 @@
 #include "TanFile.h"
 #include <QFile>
 #include <QTextStream>
+#include <QFileDialog>
 
 void TanFile::Save() {
     SaveAs(m_filename_tan);
 }
 
 void TanFile::SaveAs() {
-	QString filename;
-    //TODO save file dialog
-	SaveAs(filename);
+    QStringList fileNames;
+    QFileDialog dialog();
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("*.tan*;;All Files (*)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    if(dialog.exec()){
+        fileNames = dialog.selectedFiles();
+    }
+	SaveAs(fileNames[0]);
 }
 
 void TanFile::SaveAs(const QString& p_filename) {

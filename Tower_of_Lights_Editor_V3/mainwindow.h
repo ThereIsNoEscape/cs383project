@@ -27,7 +27,7 @@ private slots:
 
 	void on_pushButton_clicked();
 
-    void connectCellButtons();
+		void connectCellButtons(int cellCt);
 
     void on_cell_clicked();
 

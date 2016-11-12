@@ -31,8 +31,6 @@ private slots:
 
     void newFile();
 
-    void connectCellButtons();
-
     void on_cell_clicked();
 
     void on_comboBox_activated(const QString &arg1);
@@ -42,9 +40,11 @@ private:
 
 	QString m_getObjName(QObject *m_cell);
 
+	void m_connectCellButtons(int cellCt);
+
 	void m_changeCellColor(QString m_cellName);
 
-    void m_alertCoords(QString m_cellName);
+	void m_alertCoords(QString m_cellName);
 };
 
 #endif // MAINWINDOW_H

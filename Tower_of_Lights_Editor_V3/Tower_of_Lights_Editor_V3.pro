@@ -16,9 +16,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     openFile.cpp \
     TanFile_Save.cpp \
-    tanfile_new.cpp
+    tanfile_new.cpp \
+    cell.cpp
 
 HEADERS  += mainwindow.h \
-    TanFile.h
+    TanFile.h \
+    cell.h
 
 FORMS    += mainwindow.ui

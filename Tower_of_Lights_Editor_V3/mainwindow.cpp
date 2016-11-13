@@ -1,28 +1,28 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "openFile.cpp"
-#include <Qdebug>
-#include <QString>
-#include <QMessageBox>
-#include <QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+		m_generateFrame(12, 20);
+
     ui->comboBox->addItem("new");       //instantiates the items in the comboBox
     ui->comboBox->addItem("open");      //
     ui->comboBox->addItem("save as");   //
     ui->comboBox->addItem("exit");      //
-
-		m_connectCellButtons(40);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+	m_destroyFrame(12, 20);
+
+	delete ui;
 }
+
+
 
 void MainWindow::openFile()    //when open is clicked
 {
@@ -145,6 +145,7 @@ void MainWindow::openFile()    //when open is clicked
             frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
 }
 
+
 void MainWindow::newFile()
 {
     QMessageBox::StandardButton reply;
@@ -177,61 +178,101 @@ void MainWindow::newFile()
 }
 
 
-// Get the name of the referenced object.
-QString MainWindow::m_getObjName(QObject *m_obj) {
-	QString m_name = m_obj->property("objectName").toString();
-	return m_name;
+// Create the grid of cell widgets
+void MainWindow::m_generateFrame(int rows, int cols)
+{
+	int i = 0, j = 0;
+	QGridLayout *m_FrameLayout = ui->gridLayout_2;
+	QString m_cellName;
+	QSizePolicy m_cellSizePolicy;
+	QSize m_cellSize(36,36);
+
+	// Configure the size policy that every cell widget will use
+	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
+	m_cellSizePolicy.setHorizontalStretch(1);
+	m_cellSizePolicy.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+	m_cellSizePolicy.setVerticalStretch(1);
+	m_cellSizePolicy.setHeightForWidth(true);
+
+	for (i=0; i<rows; i++)
+	{
+		for (j=0; j<cols; j++)
+		{
+			// Generate the name for each cell, based on rows and cols
+			// Relocate this job to TanFrame *project at some point
+			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+			m_cellWidget->setMinimumSize(m_cellSize);
+			m_cellWidget->setSizePolicy(m_cellSizePolicy);
+
+			// Adding cell widget to the frame's gridLayout
+			m_FrameLayout->addWidget(m_cellWidget, i, j);
+			// Connecting each cell's signals to appropriate generic slots
+			m_connectCellSignals(m_cellWidget);
+		}
+	}
+}
+
+// Destroy the grid of cell widgets
+void MainWindow::m_destroyFrame(int rows, int cols)
+{
+	QString m_cellName;
+	int i = 0, j = 0;
+
+	for (i=0; i<rows; i++)
+	{
+		for (j=0; j<cols; j++)
+		{
+			// Generate the name for each cell, based on rows and cols
+			// Relocate this job to TanFrame *project at some point
+			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+			CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+			delete m_cellWidget;
+			m_cellWidget = 0;
+		}
+	}
+
 }
 
 
 // Connecting all the cells to the same click handler
-void MainWindow::m_connectCellButtons(int cellCt)
+void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-	QString m_cellName;
-	int i=0;
-	// Cycling through all cells
-	for(i=0; i<cellCt; i++)
-	{
-		// Generate the name for each cell
-		m_cellName = "cell" + (QString("%1").arg(i, 3, 10, QChar('0')));
-		// Acquire a reference to the object
-		QPushButton *m_cell = ui->frame->findChild<QPushButton *>(m_cellName, Qt::FindChildrenRecursively);
-		// If valid, connect up the clicked() signal to on_cell_clicked()
-		if(m_cell->objectName() == m_cellName) {
-			connect(m_cell, SIGNAL(clicked()), this, SLOT(on_cell_clicked()));
-		}
-	}
+	connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
 }
 
 
-// Find a cell by its name,
-// toggle its color,
-// and toggle its state to determine appropriate color on next click.
-// This function as-is is only meant for testing purposes;
-// To be connected up with actual frame data eventually.
-void MainWindow::m_changeCellColor(QString m_cellName)
+// The primary handler for cell clicks
+void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
 {
-	QPushButton *m_cell = MainWindow::findChild<QPushButton*>(m_cellName);
-	const char *m_cellPropertyName = "activated";
-	QString m_activated = m_cell->property(m_cellPropertyName).toString();
-	QColor m_color = Qt::green;
-	QString qss = QString("color: white;\nbackground-color: ");
+	//QString m_cellName = m_getObjName(QObject::sender());
+	//CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+	m_updateTanFileColor(row, col, m_color);
+}
 
-	if(m_color.isValid()) {
-		// Determine which state we're in and switch the state, and the color, if appropriate
-		if(m_activated == "false") {
-			m_activated = "true";
-		}
-		else {
-			m_color = Qt::black;
-			m_activated = "false";
-		}
-		// Set the color on the stylesheet after concatenating the resulting color to the style string
-		qss += m_color.name();
-		m_cell->setStyleSheet(qss);
-		// Switch state
-		m_cell->setProperty(m_cellPropertyName, m_activated);
-	}
+
+// Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
+void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
+{
+	// Can't currently access -- is a private member
+	//project->m_frames->pixel[row][col] = m_color;
+}
+
+
+// Obtain a reference to a cell widget by name, and set its color.
+// This is the function to call when opening or creating a new Tan file.
+void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
+{
+	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+
+	m_cell->setColor(m_color);
+}
+
+
+// Get the name of the referenced object.
+QString MainWindow::m_getObjName(QObject *m_obj) {
+	QString m_name = m_obj->property("objectName").toString();
+	return m_name;
 }
 
 
@@ -248,15 +289,6 @@ void MainWindow::m_alertCoords(QString m_cellName)
 	m_msg.setInformativeText("This is a stand-in for tracking which cell was clicked and signaling its coordinates: " + m_coord + ".");
 
 	m_msg.exec();
-}
-
-
-// The primary handler for cell clicks
-void MainWindow::on_cell_clicked()
-{
-	QString m_cellName = m_getObjName(QObject::sender());
-	m_changeCellColor(m_cellName);
-	//m_alertCoords(m_cellName);
 }
 
 

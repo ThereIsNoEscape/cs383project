@@ -1,4 +1,4 @@
-#include "openFile.h"
+#include "openfile.h"
 
 QStringList getFileContents(QString fileName)
 {

@@ -26,6 +26,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()    //when open is clicked
 {
+    QMessageBox::StandardButton reply;
+
+    /* Create Message Box
+     * Title of message box : "Tower Lights"
+     * Prompt message : "Would you like to save?"
+     * 3 button choices : "Save", "No", "Cancel"
+    */
+
+    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                  QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+
+    if (reply==0x00400000)  //if cancel selected
+        return;
+    if (reply==0x00000800)  //if save selected
+    {
+        project.Save();
+    }
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
                        "Tan File (*.tan*);;All files (*.*)");
     if (fileName=="")
@@ -33,8 +51,9 @@ void MainWindow::openFile()    //when open is clicked
 
     QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
                                                         //QStringList contents
+
     //get fileName
-    project->setfilename(fileName);
+    project.setfilename(fileName);
 
     //check version
     if (contents[0]!="0.4")    //error checking
@@ -43,7 +62,7 @@ void MainWindow::openFile()    //when open is clicked
         return;
     }
     //set audio filename
-    project->setaudiofile(contents[1]);   //set audio filename
+    project.setaudiofile(contents[1]);   //set audio filename
 
     //view section later for audio file error checking
     /*QString last3 = ;  //get last 3 characters
@@ -73,7 +92,7 @@ void MainWindow::openFile()    //when open is clicked
         QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
         return;
     }
-    project->setleftclr(r,g,b);     //set the rgb value
+    project.setleftclr(r,g,b);     //set the rgb value
 
     //get the preset RGB values
     QStringList buffer; //holds parsed input string
@@ -84,7 +103,7 @@ void MainWindow::openFile()    //when open is clicked
     for (int i=0;i<48;i++)
         presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
 
-    project->setpresetclr(presetRGB);
+    project.setpresetclr(presetRGB);
 
     //get the number of frames
     QStringList hype = contents[4].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
@@ -101,13 +120,69 @@ void MainWindow::openFile()    //when open is clicked
         return;
     }
 
-
-
-
     /*************************************************************************************/
 
+    //error checking the tanfile frames
+    if (((contents.size()-5) % 21)!=0)
+    {
+        QMessageBox::information(0,"error","frames corrupt");
+        return;
+    }
+    else if (num_frames!=((contents.size() - 5) / 21))
+    {
+        QMessageBox::information(0,"error","specified number of frames does not equal actual number of frames");
+        num_frames = (contents.size() - 5) / 21;
+    }
 
+    int frameRGB[36][20];   //holds the frame rgbs
+    project.m_frames.clear(); //clear the linked list
 
+    for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
+    {
+        TanFrame frame;
+        frame.frame_start = contents[5+k].toInt();  //set num_frames
+        //calculate frame duration
+
+        hype.clear();   //clear QStringList
+        for (int i=0;i<20;i++) //the increment for rows
+        {
+            hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
+            if (hype.size()!=36)
+            {
+                    QMessageBox::information(0,"error","frame contains invalid number of rgb values");
+                    return;
+            }
+            int rgb[3]; //holds an rgb value
+            for (int j=0,g=0;j<36;j++,g++) //the increment for columns
+            {
+                frameRGB[j][i]=hype[j].toInt();  //convert to int and place into frameRGB
+                if (g<3)
+                {
+                    rgb[g]=frameRGB[j][i];  //place the frameRGB into rgb
+                    if ((rgb[g]<0)||(rgb[g]>255)) //error checking on rgb value
+                    {
+                        QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
+                        return;
+                    }
+                }
+                else    //every 3 integers
+                {
+                    frame.pixels[j/3-1][i].color.fromRgb(rgb[0],rgb[1],rgb[2],255); //add color to a pixel
+                    g=0;    //reset incrementor
+                    rgb[g]=frameRGB[j][i];  //place the frameRGB into rgb[0]
+                    if ((rgb[g]<0)||(rgb[g]>255)) //error checking on rgb value
+                    {
+                        QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
+                        return;
+                    }
+                }
+            }
+            frame.pixels[11][i].color.fromRgb(rgb[0],rgb[1],rgb[2],255); //add color to last pixel in row
+        }
+        //got a frame!
+        project.m_frames.append(frame); //add the frame to the linked list
+    }
+//  qDebug() << project.m_frames.begin()->pixels[0][0].color;
     /*************************************************************************************/
     /*
     //get the frames

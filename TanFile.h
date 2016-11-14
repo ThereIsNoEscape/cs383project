@@ -31,7 +31,7 @@ private:
     // m_frame_count = m_frames.size();      //CONSTANT! DO NOT NEED TO STORE
 
 public:
-    QLinkedList<struct TanFrame *> m_frames; //Frame linked list
+    QLinkedList<TanFrame> m_frames; //Frame linked list
 
     //set functions
     TanFile(); // New

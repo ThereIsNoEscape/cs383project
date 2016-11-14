@@ -1,6 +1,11 @@
 #include "TanFile.h"
 #include <QMessageBox>
 
+QString TanFile::getFileName()
+{
+    return m_filename_tan;
+}
+
 void TanFile::setfilename(QString input)    //set filename
 {
     m_filename_tan = input;

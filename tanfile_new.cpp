@@ -29,8 +29,3 @@ TanFile::TanFile()
     }
     new_tan_file.close();
 }
-
-
-QString TanFile::getFileName(){
-    return m_filename_tan;
-}

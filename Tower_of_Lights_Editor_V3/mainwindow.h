@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    TanFile *project;   //the object that MainWindow will use for data storage
+		TanFile project;   //the object that MainWindow will use for data storage
     ~MainWindow();
 
 private slots:

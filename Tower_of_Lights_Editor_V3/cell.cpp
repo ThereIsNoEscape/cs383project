@@ -10,6 +10,9 @@ CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent
 		_state(false)
 {
 	setObjectName(name);
+	// Set initial styles
+	QString qss = QString("margin: 0px; border: 2px solid rgb(192,192,192); border-radius: 4px;");
+	setStyleSheet(qss);
 	setColor(color);
 
 	if (_row < 0 || _col < 0)
@@ -78,30 +81,57 @@ bool CellWidget::getState()
 	return _state;
 }
 
-// Event handlers
-// QMouseEvent handlers
-void CellWidget::mousePressEvent(QMouseEvent *event)
+// Custom event handler
+bool CellWidget::event(QEvent *event)
 {
-	QColor testColor1 = Qt::yellow;
-	QColor testColor2 = Qt::black;
-	// Handle left-click here
-	if (event->button() == Qt::LeftButton)
+	// Can be deleted once actually connected to TanCells
+	QColor testColor1 = Qt::red;
+	QColor testColor2 = Qt::blue;
+	QColor baseColor = Qt::black;
+
+	if (event->type() == QEvent::MouseButtonPress)
 	{
-		// Get color from left-click colorbox and pass to changeColor()
-		// Get reference to left-click colorbox
-		// Pass value to changeColor()
-		setColor(testColor1);
+		QMouseEvent *qme = static_cast<QMouseEvent*>(event);
+		// Handle left-click here
+		if (qme->button() == Qt::LeftButton)
+		{
+			// Get color from left-click colorbox and pass to changeColor()
+			// Get reference to left-click colorbox
+			// Pass value to changeColor()
+			QColor thisColor;
+			if (_state) {
+				thisColor = testColor1;
+				_state = false;
+			}
+			else {
+				thisColor = testColor2;
+				_state = true;
+			}
+			changeColor(thisColor);
+			return true;
+		}
+		// Handle right-click here
+		else if (qme->button() == Qt::RightButton)
+		{
+			// Get color from right-click colorbox and pass to changeColor()
+			// Get reference to right-click colorbox
+			// Pass value to changeColor()
+			changeColor(baseColor);
+			_state = false;
+			return true;
+		}
 	}
-	// Handle right-click here
-	else if (event->button() == Qt::RightButton)
-	{
-		// Get color from right-click colorbox and pass to changeColor()
-		// Get reference to right-click colorbox
-		// Pass value to changeColor()
-		setColor(testColor2);
-	}
-	else {
-			// pass on other buttons to base class
-			QWidget::mousePressEvent(event);
-	}
+
+	// Pass all other events down to the base class
+	return QWidget::event(event);
+}
+
+
+// Reimplementing base widget paintEvent in order for the stylesheet to work
+void CellWidget::paintEvent(QPaintEvent *event)
+{
+		QStyleOption opt;
+		opt.initFrom(this);
+		QPainter p(this);
+		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

@@ -255,6 +255,7 @@ void MainWindow::newFile()
 void MainWindow::m_generateFrame(int rows, int cols)
 {
 	int i = 0, j = 0;
+	//QFrame *m_Frame = ui->frame;
 	QGridLayout *m_FrameLayout = ui->gridLayout_2;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
@@ -272,7 +273,7 @@ void MainWindow::m_generateFrame(int rows, int cols)
 		for (j=0; j<cols; j++)
 		{
 			// Generate the name for each cell, based on rows and cols
-			// Relocate this job to TanFrame *project at some point
+			// Relocate this job to TanFrame project at some point?
 			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
 			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
 			m_cellWidget->setMinimumSize(m_cellSize);
@@ -280,8 +281,10 @@ void MainWindow::m_generateFrame(int rows, int cols)
 
 			// Adding cell widget to the frame's gridLayout
 			m_FrameLayout->addWidget(m_cellWidget, i, j);
+			m_cellWidget->show();
 			// Connecting each cell's signals to appropriate generic slots
 			m_connectCellSignals(m_cellWidget);
+			m_FrameLayout->update();
 		}
 	}
 }
@@ -351,22 +354,6 @@ void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
 QString MainWindow::m_getObjName(QObject *m_obj) {
 	QString m_name = m_obj->property("objectName").toString();
 	return m_name;
-}
-
-
-// Generate a message box announcing the value of the custom coordinate property for a cell
-void MainWindow::m_alertCoords(QString m_cellName)
-{
-	QPushButton *m_cell = MainWindow::findChild<QPushButton*>(m_cellName);
-	const char *m_cellPropertyName = "coord";
-	QString m_coord = m_cell->property(m_cellPropertyName).toString();
-	QMessageBox m_msg;
-
-	m_msg.setWindowTitle("Hi from Cell " + m_coord + "!");
-	m_msg.setText("This is Cell " + m_coord + ".");
-	m_msg.setInformativeText("This is a stand-in for tracking which cell was clicked and signaling its coordinates: " + m_coord + ".");
-
-	m_msg.exec();
 }
 
 

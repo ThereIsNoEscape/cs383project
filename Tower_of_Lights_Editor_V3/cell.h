@@ -4,7 +4,8 @@
 #define CELL_H
 
 #include <QWidget>
-#include <QDebug>
+#include <QStyleOption>
+#include <QPainter>
 #include <QString>
 #include <QColor>
 #include <QMouseEvent>
@@ -33,6 +34,7 @@ public:
 	bool getState();
 
 signals:
+
 	void colorChanged(const int row, const int col, QColor color);
 
 	void clicked(const int row, const int col);
@@ -42,7 +44,10 @@ signals:
 private slots:
 
 protected:
-	void mousePressEvent(QMouseEvent *event);
+
+	bool event(QEvent *event);
+
+	void paintEvent(QPaintEvent *event);
 
 private:
 

@@ -10,8 +10,8 @@
 #include <QString>
 #include <QColor>
 #include <QTime>         // for holding time
-#include "TanFile.h"
-#include "openFile.h"
+#include "tanfile.h"
+#include "openfile.h"
 #include "cell.h"
 
 namespace Ui {

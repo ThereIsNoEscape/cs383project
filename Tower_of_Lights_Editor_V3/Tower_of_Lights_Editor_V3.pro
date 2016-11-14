@@ -14,15 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    openFile.cpp \
-    TanFile_Save.cpp \
     tanfile_new.cpp \
-    cell.cpp
+    cell.cpp \
+    tanfile.cpp \
+    openfile.cpp \
+    tanfile_save.cpp
 
 HEADERS  += mainwindow.h \
-    TanFile.h \
     cell.h \
     config.h \
-    openFile.h
+    tanfile.h \
+    openfile.h
 
 FORMS    += mainwindow.ui

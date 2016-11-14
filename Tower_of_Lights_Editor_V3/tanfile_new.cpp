@@ -1,10 +1,11 @@
 /*
- *  TanFile_New.cpp
+ *  tanfile_new.cpp
  *
 */
+
 #include <QFile>
 #include <QTextStream>
-#include "TanFile.h"
+#include "tanfile.h"
 
 TanFile::TanFile()
 {
@@ -28,9 +29,4 @@ TanFile::TanFile()
         }
     }
     new_tan_file.close();
-}
-
-
-QString TanFile::getFileName(){
-    return m_filename_tan;
 }

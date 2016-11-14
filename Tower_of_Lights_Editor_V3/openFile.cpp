@@ -1,10 +1,4 @@
-#include <QString>
-#include <QTextStream>  //for iostream objects
-#include <QFile>        //for file manipulation
-#include <QMessageBox>  //for error checking
-#include "TanFile.h"    //for making a TanFile object
-
-using namespace std;
+#include "openFile.h"
 
 QStringList getFileContents(QString fileName)
 {

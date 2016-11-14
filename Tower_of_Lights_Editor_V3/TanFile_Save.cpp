@@ -8,20 +8,22 @@ void TanFile::Save() {
 }
 
 void TanFile::SaveAs() {
-    QStringList fileNames;
+/*
+		QStringList fileNames;
     QFileDialog dialog();
-    dialog.setFileMode(QFileDialog::AnyFile);
+		dialog.setFileMode(QFileDialog::AnyFile);
     dialog.setNameFilter(tr("*.tan*;;All Files (*)"));
     dialog.setViewMode(QFileDialog::Detail);
     if(dialog.exec()){
         fileNames = dialog.selectedFiles();
     }
 	SaveAs(fileNames[0]);
+*/
 }
 
 void TanFile::SaveAs(const QString& p_filename) {
+/*
 	QFile real_file(p_filename);
-
     if (real_file.open(QIODevice::WriteOnly)) {
 		QTextStream file(&real_file);
 
@@ -41,14 +43,12 @@ void TanFile::SaveAs(const QString& p_filename) {
         file << m_filename_curr.blue() << "\r\n";
 
 		// Palette
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < TAN_DEFAULT_COLORPRESETS; i++) {
             file << m_filename_preset[i].red() << " ";
             file << m_filename_preset[i].green() << " ";
             file << m_filename_preset[i].blue() << " ";
 		}
-        file << m_filename_preset[15].red() << " ";
-        file << m_filename_preset[15].green() << " ";
-        file << m_filename_preset[15].blue() << "\r\n";
+		file << m_filename_preset[TAN_DEFAULT_COLORPRESETS-1].blue() << "\r\n";
 
 		// Stuff
 		file << m_frames.size() << " 10 4\r\n";
@@ -64,4 +64,5 @@ void TanFile::SaveAs(const QString& p_filename) {
 	} else {
 		// TODO error
 	}
+*/
 }

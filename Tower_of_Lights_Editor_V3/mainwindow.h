@@ -11,7 +11,7 @@
 #include <QColor>
 #include <QTime>         // for holding time
 #include "TanFile.h"
-#include "openFile.cpp"
+#include "openFile.h"
 #include "cell.h"
 
 namespace Ui {

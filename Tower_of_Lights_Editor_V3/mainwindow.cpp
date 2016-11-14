@@ -7,17 +7,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-		m_generateFrame(12, 20);
+		m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
 
     ui->comboBox->addItem("new");       //instantiates the items in the comboBox
     ui->comboBox->addItem("open");      //
-    ui->comboBox->addItem("save as");   //
-    ui->comboBox->addItem("exit");      //
+		ui->comboBox->addItem("save as");   //
+		ui->comboBox->addItem("save");   //
+		ui->comboBox->addItem("exit");      //
 }
 
 MainWindow::~MainWindow()
 {
-	m_destroyFrame(12, 20);
+	m_destroyFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
 
 	delete ui;
 }
@@ -35,7 +36,7 @@ void MainWindow::openFile()    //when open is clicked
                                                         //QStringList contents
 
     QString m_filename_tan, m_filename_wav;         //holds filename and audio filename
-    QColor m_filename_curr, m_filename_preset[15];  //holds current color and the 16 preset colors
+		QColor m_filename_curr, m_filename_preset[TAN_DEFAULT_COLORPRESETS];  //holds current color and the 16 preset colors
     int num_frames = 1; //holds the number of frames in the project
 
     //get fileName
@@ -81,13 +82,13 @@ void MainWindow::openFile()    //when open is clicked
 
     //get the preset RGB values
     QStringList buffer; //holds parsed input string
-    int presetRGB[48];  //holds each individual rgb value
+		int presetRGB[TAN_DEFAULT_COLORPRESETS*3];  //holds each individual rgb value
 
     buffer = contents[3].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
 
-    for (int i=0;i<48;i++)
+		for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
         presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
-    for (int i=0;i<16;i++)
+		for (int i=0;i<TAN_DEFAULT_COLORPRESETS;i++)
     {
         if ((presetRGB[i*3]<0)||(presetRGB[i*3]>255)||(presetRGB[(i*3)+1]<0)||
                 (presetRGB[(i*3)+1]>255)||(presetRGB[(i*3)+2]<0)||
@@ -116,8 +117,8 @@ void MainWindow::openFile()    //when open is clicked
 
     //get the frames
     QTime start;   //the starting time for frame
-    int frameRGB[20][36];   //2d array of ints (20 rows, 36 integers)
-    QColor frame_grid[20][12];  //holds rgb values for a frame
+		int frameRGB[TAN_DEFAULT_ROWS][TAN_DEFAULT_COLS*3];   //2d array of ints (20 rows, 36 integers)
+		QColor frame_grid[TAN_DEFAULT_ROWS][TAN_DEFAULT_COLS];  //holds rgb values for a frame
 
     if (contents[5].toInt()!=0) //error checking the first frame start time
     {
@@ -128,10 +129,10 @@ void MainWindow::openFile()    //when open is clicked
     QStringList bof;    //will holds delimited strings
     int i=0;
     int j=0;    //incrementors i=row and j is the number of integers in each
-    while (i<20)
+		while (i<TAN_DEFAULT_ROWS)
     {
         bof = contents[i+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
-        while (j<36)
+				while (j<TAN_DEFAULT_COLS*3)
         {
             frameRGB[i][j]=bof[j].toInt();  //convert to int and place into frameRGB
             j++;
@@ -140,8 +141,8 @@ void MainWindow::openFile()    //when open is clicked
         i++;
     }
 
-    for (int i=0;i<20;i++)
-        for (int j=0;j<12;j++)
+		for (int i=0;i<TAN_DEFAULT_ROWS;i++)
+				for (int j=0;j<TAN_DEFAULT_COLS;j++)
             frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
 }
 
@@ -185,7 +186,7 @@ void MainWindow::m_generateFrame(int rows, int cols)
 	QGridLayout *m_FrameLayout = ui->gridLayout_2;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
-	QSize m_cellSize(36,36);
+	QSize m_cellSize(36,36);	// Arbitrarily selected as a decent minimum ("half-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
 
 	// Configure the size policy that every cell widget will use
 	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
@@ -254,13 +255,18 @@ void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_col
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
-	// Can't currently access -- is a private member
-	//project->m_frames->pixel[row][col] = m_color;
+	// Need to determine how to identify each frame
+	/*
+	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
+	struct TanCell *cell = frame->cells[row][col];
+	cell->color = m_color;
+	*/
 }
 
 
 // Obtain a reference to a cell widget by name, and set its color.
 // This is the function to call when opening or creating a new Tan file.
+// Does not trigger the signal that will then cause an update to the corresponding TanFile cell
 void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
 {
 	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
@@ -296,8 +302,10 @@ void MainWindow::on_comboBox_activated(const QString &arg1)
 {
     if (arg1=="open")       //open a file
         openFile();
-    if (arg1=="save as")    //save the file
-        project->SaveAs();
+		if (arg1=="save as")    //save the file as...
+				project->SaveAs();
+		if (arg1=="save")    //save the file
+				project->Save();
     if (arg1=="new")        //make a new file
         newFile();
     if (arg1=="exit")       //quit the application

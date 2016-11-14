@@ -21,6 +21,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     TanFile.h \
-    cell.h
+    cell.h \
+    config.h \
+    openFile.h
 
 FORMS    += mainwindow.ui

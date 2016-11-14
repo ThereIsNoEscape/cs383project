@@ -29,15 +29,21 @@
       <x>0</x>
       <y>0</y>
       <width>421</width>
-      <height>461</height>
+      <height>501</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
      <property name="leftMargin">
       <number>9</number>
      </property>
+     <property name="topMargin">
+      <number>18</number>
+     </property>
      <property name="rightMargin">
       <number>9</number>
+     </property>
+     <property name="bottomMargin">
+      <number>18</number>
      </property>
      <item row="1" column="2">
       <widget class="QFrame" name="frame">
@@ -67,15 +73,15 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>261</width>
-          <height>431</height>
+          <width>321</width>
+          <height>441</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2"/>
        </widget>
       </widget>
      </item>
-     <item row="0" column="0">
+     <item row="1" column="0" alignment="Qt::AlignTop">
       <widget class="QComboBox" name="comboBox"/>
      </item>
     </layout>

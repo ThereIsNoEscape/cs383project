@@ -236,10 +236,10 @@ void MainWindow::newFile()
     if(reply == QMessageBox::Save){
         TanFile newFile;
         if(QString(newFile.getFileName()).isEmpty()){ // check if there is a file name
-            SaveAs();
+            newFile.SaveAs();
             //qDebug() << "SaveAs\n";
         }else{
-            Save();
+            newFile.Save();
             //qDebug() << "Save\n";
         }
     }else if(reply == QMessageBox::No){

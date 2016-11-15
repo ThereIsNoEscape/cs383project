@@ -236,15 +236,14 @@ void MainWindow::newFile()
     if(reply == QMessageBox::Save){
         TanFile newFile;
         if(QString(newFile.getFileName()).isEmpty()){ // check if there is a file name
-            //SaveAs();
-            qDebug() << "SaveAs\n";
+            SaveAs();
+            //qDebug() << "SaveAs\n";
         }else{
-            //Save();
-            qDebug() << "Save\n";
+            Save();
+            //qDebug() << "Save\n";
         }
     }else if(reply == QMessageBox::No){
         TanFile newFile; //creates new blank .tan file
-        //do we delete a .tan file if it was never saved in the first place?
     }else if(reply == QMessageBox::Cancel){
         //do nothing
     }

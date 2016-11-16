@@ -1,32 +1,25 @@
-/*
- *  tanfile_new.cpp
- *
-*/
-
-#include <QFile>
-#include <QTextStream>
 #include "tanfile.h"
 
-TanFile::TanFile()
-{
-    QFile new_tan_file("unedited.tan");
-    if(!new_tan_file.open(QIODevice::ReadWrite))
-        return;
-
-    QTextStream out(&new_tan_file);
-    out << "0.4\n";
-    out << "NoAudioFile\n";
-    out << "255 0 0\n";
-    out << "169 169 169 128 128 0 139 0 139 0 139 139 0 0 139 0 100 0 139 0 0 0 0 0 128 128 128 255 255 0 255 0 255 0 255 255 0 0 255 0 128 0 255 0 0 255 255 255\n";
-    out << "1 10 4\n";
-    out << "0\n";
-    for(int i = 0; i < 20; i++){
-        for(int j = 0; j < 36; j++){
-            if(j == 35)
-                out << "0\n";
-            else
-                out << "0 ";
-        }
-    }
-    new_tan_file.close();
+TanFile::TanFile() {
+	m_fiename_tan = "";
+	m_filename_wav = "NoAudioFile";
+	m_color_left = QColor(255,0,0);
+	m_color_right = QColor(169,169,169);
+	m_color_preset[0] = QColor(169,169,169);
+	m_color_preset[1] = QColor(128,128,0);
+	m_color_preset[2] = QColor(139,0,139);
+	m_color_preset[3] = QColor(0,139,139);
+	m_color_preset[4] = QColor(0,0,139);
+	m_color_preset[5] = QColor(0,100,0);
+	m_color_preset[6] = QColor(139,0,0);
+	m_color_preset[7] = QColor(0,0,0);
+	m_color_preset[8] = QColor(128,128,128);
+	m_color_preset[9] = QColor(255,255,0);
+	m_color_preset[10] = QColor(255,0,255);
+	m_color_preset[11] = QColor(0,255,255);
+	m_color_preset[12] = QColor(0,0,255);
+	m_color_preset[13] = QColor(0,128,0);
+	m_color_preset[14] = QColor(255,0,0);
+	m_color_preset[15] = QColor(255,255,255);
+	m_frames = QLinkedList<TanFrame>();
 }

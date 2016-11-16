@@ -8,17 +8,18 @@ void TanFile::Save() {
 }
 
 void TanFile::SaveAs() {
-/*
-    QStringList fileNames;
-    QFileDialog dialog();
-    dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilter(tr("*.tan*;;All Files (*)"));
-    dialog.setViewMode(QFileDialog::Detail);
-    if(dialog.exec()){
-        fileNames = dialog.selectedFiles();
-        SaveAs(fileNames[0]);
-    }
-*/
+
+    QFileDialog dialog;
+
+    //QWidget sets location of popup box (I think)
+    //Then getSaveFileName, as expected, gets the name of the file to save to
+    QWidget * parent = 0;
+    QString fileName = QFileDialog::getSaveFileName(parent,
+        QObject::tr("Save Tower Animation File"), "",
+        QObject::tr("Tower Animation (*.tan);;All Files (*)"));
+
+    SaveAs(fileName);
+
 }
 
 void TanFile::SaveAs(const QString& p_filename) {

@@ -344,6 +344,8 @@ void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_col
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
+	TanFrame frame;
+	frame.pixels[col][row].color = m_color;
 	// Need to determine how to identify each frame
 	/*
 	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;

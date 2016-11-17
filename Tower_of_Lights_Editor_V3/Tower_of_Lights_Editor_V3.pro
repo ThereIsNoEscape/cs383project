@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-10-26T14:14:09
+# Project created by QtCreator 2016-11-09T07:26:05
 #
 #-------------------------------------------------
 
@@ -13,8 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    tanfile_new.cpp \
+    cell.cpp \
+    tanfile.cpp \
+    openfile.cpp \
+    tanfile_save.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    cell.h \
+    config.h \
+    tanfile.h \
+    openfile.h
 
 FORMS    += mainwindow.ui

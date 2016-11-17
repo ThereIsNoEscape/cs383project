@@ -1,7 +1,7 @@
 #include "tanfile.h"
 
 TanFile::TanFile() {
-	m_fiename_tan = "";
+    m_filename_tan = "";
 	m_filename_wav = "NoAudioFile";
 	m_color_left = QColor(255,0,0);
 	m_color_right = QColor(169,169,169);

@@ -242,8 +242,23 @@ void MainWindow::newFile()
             project.Save();
             //qDebug() << "Save\n";
         }
+	TanFile newProject; //creates new .tan file
+        TanFrame frame;
+        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
+            for(int j=0; j<TAN_DEFAULT_COLS; j++){
+                frame.pixels[i][j].color.fromRgb(0,0,0,255); //set all pixels in grid to black
+            }
+        }
+        m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame
     }else if(reply == QMessageBox::No){
-        TanFile newFile; //creates new blank .tan file
+        TanFile newProject; //creates new .tan file
+	TanFrame frame;
+        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
+            for(int j=0; j<TAN_DEFAULT_COLS; j++){
+                frame.pixels[i][j].color.fromRgb(0,0,0,255); //set all pixels in grid to black
+            }
+        }
+        m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame
     }else if(reply == QMessageBox::Cancel){
         //do nothing
     }

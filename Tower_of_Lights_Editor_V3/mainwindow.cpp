@@ -10,14 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    //QWidget *widget = new QWidget;
-    //setCentralWidget(widget);
-
     ui->setupUi(this);
-
-    //QVBoxLayout *layout = new QVBoxLayout;
-    //layout->setMargin(5);
-    //widget->setLayout(layout);
 
     createActions();
     createMenus();
@@ -498,4 +491,10 @@ void MainWindow::on_pushButton_3_clicked()
     }
     QString qss = ("background-color: " + color.name());
     ui->pushButton_3->setStyleSheet(qss);
+
+    int r,g,b;
+    r = (int)strtol(color.name().mid(1,2).toLatin1().data(),NULL,16);
+    g = (int)strtol(color.name().mid(3,2).toLatin1().data(),NULL,16);
+    b = (int)strtol(color.name().mid(5,2).toLatin1().data(),NULL,16);
+    project.setRightColor(r,g,b);
 }

@@ -101,21 +101,8 @@ void MainWindow::openFile()    //when open is clicked
 				QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
 				return;
 		}
-		project.setLeftColor(r,g,b);     //set the rgb value
-        char str[3];
-        QString tempString = "#";
-        if (r < 16) tempString.append("0");
-        sprintf(str,"%x",r);
-        tempString.append(str);
-        if (g < 16) tempString.append("0");
-        sprintf(str,"%x",g);
-        tempString.append(str);
-        if (b < 16) tempString.append("0");
-        sprintf(str,"%x",b);
-        tempString.append(str);
-        ui->label_2->setText(tempString);
-        QString qss = ("background-color: " + tempString);
-        ui->pushButton_2->setStyleSheet(qss);
+        project.setLeftColor(r,g,b);     //set the rgb value
+        updateGUIColorButtons();
 
 		//get the preset RGB values
 		QStringList buffer; //holds parsed input string
@@ -465,21 +452,26 @@ void MainWindow::createMenus()
     fileMenu->addAction(quitAct);
 }
 
+void MainWindow::updateGUIColorButtons()
+{
+    ui->label_2->setText(getLeftColor().name());
+    QString qss = ("background-color: " + getLeftColor().name());
+    ui->pushButton_2->setStyleSheet(qss);
+
+    ui->label_3->setText(getRightColor().name());
+    QString qss = ("background-color: " + getRightColor().name());
+    ui->pushButton_3->setStyleSheet(qss);
+}
+
 void MainWindow::on_pushButton_2_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
     if( color.isValid() )
     {
-        ui->label_2->setText(color.name());
+        project.setLeftColor(color);
     }
-    QString qss = ("background-color: " + color.name());
-    ui->pushButton_2->setStyleSheet(qss);
-
-    int r,g,b;
-    r = (int)strtol(color.name().mid(1,2).toLatin1().data(),NULL,16);
-    g = (int)strtol(color.name().mid(3,2).toLatin1().data(),NULL,16);
-    b = (int)strtol(color.name().mid(5,2).toLatin1().data(),NULL,16);
-    project.setLeftColor(r,g,b);
+    else QMessageBox::information(0,"error","Invalid color selection");
+    updateGUIColorButtons();
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -487,14 +479,8 @@ void MainWindow::on_pushButton_3_clicked()
     QColor color = QColorDialog::getColor(Qt::yellow, this );
     if( color.isValid() )
     {
-        ui->label_3->setText(color.name());
+        project.setRightColor(color);
     }
-    QString qss = ("background-color: " + color.name());
-    ui->pushButton_3->setStyleSheet(qss);
-
-    int r,g,b;
-    r = (int)strtol(color.name().mid(1,2).toLatin1().data(),NULL,16);
-    g = (int)strtol(color.name().mid(3,2).toLatin1().data(),NULL,16);
-    b = (int)strtol(color.name().mid(5,2).toLatin1().data(),NULL,16);
-    project.setRightColor(r,g,b);
+    else QMessageBox::information(0,"error","Invalid color selection");
+    updateGUIColorButtons();
 }

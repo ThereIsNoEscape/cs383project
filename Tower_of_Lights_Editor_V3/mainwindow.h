@@ -62,6 +62,8 @@ private:
 
 	void m_setCellColor(QString m_cellName, QColor m_color);
 
+    void updateGUIColorButtons();
+
     void createActions();
     void createMenus();
 

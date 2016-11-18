@@ -41,9 +41,11 @@ public:
     QString getAudioFile();
 
     void setLeftColor(int,int,int);
+    void setLeftColor(QColor);
     QColor getLeftColor();
 
     void setRightColor(int,int,int);
+    void setRightColor(QColor);
     QColor getRightColor();
 
     void setPresetColor(int []);

@@ -1,6 +1,7 @@
 #include "tanfile.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 #include <QFileDialog>
 
 void TanFile::Save() {
@@ -16,7 +17,7 @@ void TanFile::SaveAs() {
     QWidget * parent = 0;
     QString fileName = QFileDialog::getSaveFileName(parent,
         QObject::tr("Save Tower Animation File"), "",
-        QObject::tr("Tower Animation (*.tan);;All Files (*)"));
+        QObject::tr("Tower Animation (*.tan*);;All Files (*)"));
 
     SaveAs(fileName);
 
@@ -55,12 +56,13 @@ void TanFile::SaveAs(const QString& p_filename) {
 
         // Stuff
         file << m_frames.size() << " 10 4\r\n";
+        qDebug() << m_frames.begin()->pixels[0][0].color.red();
 
         // Frames
         for (int i = 0; i < m_frames.size(); i++) {
             file << (m_frames.begin()+i)->frame_start << "\r\n";
-            for (int y = 0; y < TAN_DEFAULT_ROWS-1; y++) {
-                for (int x = 0; x < TAN_DEFAULT_COLS; x++) {
+            for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
+                for (int x = 0; x < TAN_DEFAULT_COLS-1; x++) {
                     file << (m_frames.begin()+i)->pixels[x][y].color.red() << " ";
                     file << (m_frames.begin()+i)->pixels[x][y].color.green() << " ";
                     file << (m_frames.begin()+i)->pixels[x][y].color.blue() << " ";

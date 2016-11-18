@@ -28,6 +28,7 @@ private:
     QColor m_color_left;                             // the current color selected
     QColor m_color_right;                            // not saved in file; pulled from the 1st preset color
     QColor m_color_preset[TAN_DEFAULT_COLORPRESETS]; // preset colors
+
     // m_frame_count = m_frames.size();              // CONSTANT! DO NOT NEED TO STORE
 
 public:

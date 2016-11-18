@@ -21,5 +21,18 @@ TanFile::TanFile() {
 	m_color_preset[13] = QColor(0,128,0);
 	m_color_preset[14] = QColor(255,0,0);
 	m_color_preset[15] = QColor(255,255,255);
-	m_frames = QLinkedList<TanFrame>();
+    m_frames = QLinkedList<TanFrame>();
+    //make blank frame
+    //append the frame to the linked list
+    TanFrame newf;
+    newf.frame_length = 0;
+    newf.frame_start = 0;
+    for(int i = 0; i < 20; i++)
+    {
+        for(int j = 0; j < 12; j++)
+        {
+            newf.pixels[j][i].color.setRgb(0,0,0,255);
+        }
+    }
+    m_frames.append(newf);
 }

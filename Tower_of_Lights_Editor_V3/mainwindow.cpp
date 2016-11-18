@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -135,87 +136,42 @@ void MainWindow::openFile()    //when open is clicked
 				num_frames = (contents.size() - 5) / 21;
 		}
 
-		int frameRGB[TAN_DEFAULT_COLS*3][TAN_DEFAULT_ROWS];   //holds the frame rgbs
 		project.m_frames.clear(); //clear the linked list
+        project.m_frames.begin();   //start the linked list at the beginning
 
 		for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
 		{
 				TanFrame frame;
 				frame.frame_start = contents[5+k].toInt();  //set num_frames
+                int rgb[3]; //holds an rgb value
 				//calculate frame duration
 
 				hype.clear();   //clear QStringList
 				for (int i=0;i<TAN_DEFAULT_ROWS;i++) //the increment for rows
 				{
 						hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
-						if (hype.size()!=TAN_DEFAULT_COLS*3)
+
+                        if (hype.size()!=TAN_DEFAULT_COLS*3)
 						{
 										QMessageBox::information(0,"error","frame contains invalid number of rgb values");
 										return;
 						}
-						int rgb[3]; //holds an rgb value
-						for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j++,g++) //the increment for columns
+                        for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
 						{
-								frameRGB[j][i]=hype[j].toInt();  //convert to int and place into frameRGB
-								if (g<3)
-								{
-										rgb[g]=frameRGB[j][i];  //place the frameRGB into rgb
-										if ((rgb[g]<0)||(rgb[g]>255)) //error checking on rgb value
-										{
-												QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
-												return;
-										}
-								}
-								else    //every 3 integers
-								{
-										frame.pixels[j/3-1][i].color.fromRgb(rgb[0],rgb[1],rgb[2],255); //add color to a pixel
-										g=0;    //reset incrementor
-										rgb[g]=frameRGB[j][i];  //place the frameRGB into rgb[0]
-										if ((rgb[g]<0)||(rgb[g]>255)) //error checking on rgb value
-										{
-												QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
-												return;
-										}
-								}
-						}
-						frame.pixels[11][i].color.fromRgb(rgb[0],rgb[1],rgb[2],255); //add color to last pixel in row
-				}
+                            rgb[0] = hype[j].toInt();
+                            rgb[1] = hype[j+1].toInt();
+                            rgb[2] = hype[j+2].toInt();
+                            if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
+                            {
+                                    QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
+                                    return;
+                            }
+                            frame.pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
+                        }
+                }
 				//got a frame!
-				project.m_frames.append(frame); //add the frame to the linked list
-		}
-		//  qDebug() << project.m_frames.begin()->pixels[0][0].color;
-		/*************************************************************************************/
-		/*
-		//get the frames
-		QTime start;   //the starting time for frame
-		int frameRGB[20][36];   //2d array of ints (20 rows, 36 integers)
-		QColor frame_grid[20][12];  //holds rgb values for a frame
-
-		if (contents[5].toInt()!=0) //error checking the first frame start time
-		{
-				QMessageBox::information(0,"error","the first frame must start at 0ms");
-				return;
-		}
-
-		QStringList bof;    //will holds delimited strings
-		int i=0;
-		int j=0;    //incrementors i=row and j is the number of integers in each
-		while (i<20)
-		{
-				bof = contents[i+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
-				while (j<36)
-				{
-						frameRGB[i][j]=bof[j].toInt();  //convert to int and place into frameRGB
-						j++;
-				}
-				j=0;
-				i++;
-		}
-
-		for (int i=0;i<20;i++)
-				for (int j=0;j<12;j++)
-						frame_grid[i][j].fromRgb(frameRGB[i][(j*3)], frameRGB[i][(j*3)+1], frameRGB[i][(j*3)+2], 255);
-						*/
+                project.m_frames.append(frame); //add the frame to the linked list
+        }
 }
 
 
@@ -246,7 +202,7 @@ void MainWindow::newFile()
         TanFrame frame;
         for(int i=0; i<TAN_DEFAULT_ROWS; i++){
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                frame.pixels[i][j].color.fromRgb(0,0,0,255); //set all pixels in grid to black
+                frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
             }
         }
         m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame
@@ -255,7 +211,7 @@ void MainWindow::newFile()
 	TanFrame frame;
         for(int i=0; i<TAN_DEFAULT_ROWS; i++){
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                frame.pixels[i][j].color.fromRgb(0,0,0,255); //set all pixels in grid to black
+                frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
             }
         }
         m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame

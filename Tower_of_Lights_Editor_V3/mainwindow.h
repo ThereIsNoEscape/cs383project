@@ -11,6 +11,7 @@
 #include <QColor>
 #include <QTime>         // for holding time
 #include "tanfile.h"
+#include "config.h"
 #include "openfile.h"
 #include "cell.h"
 

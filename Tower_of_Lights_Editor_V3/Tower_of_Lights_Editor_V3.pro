@@ -27,3 +27,7 @@ HEADERS  += mainwindow.h \
     openfile.h
 
 FORMS    += mainwindow.ui
+
+# install
+target.path = $$[QT_INSTALL_EXAMPLES]/widgets/mainwindows/menus
+INSTALLS += target

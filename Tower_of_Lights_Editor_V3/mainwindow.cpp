@@ -181,7 +181,6 @@ void MainWindow::openFile()    //when open is clicked
 
 void MainWindow::newFile()
 {
-    qDebug("beginning of new");
     QMessageBox::StandardButton reply;
 
     /* Create Message Box
@@ -204,11 +203,8 @@ void MainWindow::newFile()
             project.Save();
             //qDebug() << "Save\n";
         }
-        qDebug("1");
         project = TanFile();
-        qDebug("2");
         TanFrame frame;
-        qDebug("3");
         for(int i=0; i<TAN_DEFAULT_ROWS; i++){
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
                 //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
@@ -216,13 +212,9 @@ void MainWindow::newFile()
                 ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
             }
         }
-        qDebug("4");
         project.setLeftColor(255,255,255);
-        qDebug("5");
         project.setRightColor(255,255,255);
-        qDebug("6");
         updateGUIColorButtons();
-        qDebug("7");
     }else if(reply == QMessageBox::No){
         project = TanFile();
         TanFrame frame;
@@ -239,7 +231,6 @@ void MainWindow::newFile()
     }else if(reply == QMessageBox::Cancel){
         //do nothing
     }
-    qDebug("end of new");
 }
 
 void MainWindow::save()
@@ -249,6 +240,7 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
+    qDebug("saving as");
     project.SaveAs();
 }
 
@@ -380,9 +372,9 @@ void MainWindow::createActions()
     connect(saveAct, &QAction::triggered, this, &MainWindow::save);
 
     saveAsAct = new QAction(tr("&Save As"), this);
-    saveAsAct->setShortcuts(QKeySequence::Save);
+    saveAsAct->setShortcuts(QKeySequence::SaveAs);
     saveAsAct->setStatusTip(tr("Save the document to disk as a new file"));
-    connect(saveAct, &QAction::triggered, this, &MainWindow::saveAs);
+    connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
 
     quitAct = new QAction(tr("&Quit"), this);
     quitAct->setShortcuts(QKeySequence::Quit);

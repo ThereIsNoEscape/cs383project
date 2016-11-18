@@ -204,35 +204,42 @@ void MainWindow::newFile()
             project.Save();
             //qDebug() << "Save\n";
         }
-        project = TanFile(); //creates new .tan file
+        qDebug("1");
+        project = TanFile();
+        qDebug("2");
         TanFrame frame;
+        qDebug("3");
         for(int i=0; i<TAN_DEFAULT_ROWS; i++){
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
+                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
+                qss = ("background-color: #000000");
+                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
             }
         }
-        m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame
+        qDebug("4");
+        project.setLeftColor(255,255,255);
+        qDebug("5");
+        project.setRightColor(255,255,255);
+        qDebug("6");
+        updateGUIColorButtons();
+        qDebug("7");
     }else if(reply == QMessageBox::No){
         project = TanFile();
         TanFrame frame;
         for(int i=0; i<TAN_DEFAULT_ROWS; i++){
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
+                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
                 qss = ("background-color: #000000");
                 ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
             }
         }
-        /*ui->setupUi(this);
-        m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);*/
         project.setLeftColor(255,255,255);
         project.setRightColor(255,255,255);
         updateGUIColorButtons();
-        //m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS); //refresh frame
     }else if(reply == QMessageBox::Cancel){
         //do nothing
     }
     qDebug("end of new");
-    qDebug("");
 }
 
 void MainWindow::save()

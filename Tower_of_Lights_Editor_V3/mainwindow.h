@@ -15,6 +15,11 @@
 #include "openfile.h"
 #include "cell.h"
 
+class QAction;
+class QActionGroup;
+class QLabel;
+class QMenu;
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,7 +30,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-		TanFile project;   //the object that MainWindow will use for data storage
+    TanFile project;   //the object that MainWindow will use for data storage
     ~MainWindow();
 
 private slots:
@@ -33,10 +38,13 @@ private slots:
     void openFile();
 
     void newFile();
+    void save();
+    void saveAs();
 
-		void on_cell_colorChanged(const int row, const int col, QColor m_color);
+    void on_cell_colorChanged(const int row, const int col, QColor m_color);
 
-		void on_comboBox_activated(const QString &arg1);
+    void on_pushButton_2_clicked();
+    void on_pushButton_3_clicked();
 
 private:
 	Ui::MainWindow *ui;
@@ -53,6 +61,17 @@ private:
 
 	void m_setCellColor(QString m_cellName, QColor m_color);
 
+    void updateGUIColorButtons();
+
+    void createActions();
+    void createMenus();
+
+    QMenu *fileMenu;
+    QAction *newAct;
+    QAction *openAct;
+    QAction *saveAct;
+    QAction *saveAsAct;
+    QAction *quitAct;
 };
 
 #endif // MAINWINDOW_H

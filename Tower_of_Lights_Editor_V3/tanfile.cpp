@@ -30,12 +30,17 @@ void TanFile::setLeftColor(int r, int g, int b)   //set left-click color
 				(g>=0) && (g<=255) &&
 				(b>=0) && (b<=255))				//error checking on rgb values
 		{
-				m_color_left.fromRgb(r,g,b,alpha);
+                m_color_left = QColor(r,g,b,alpha);
 		}
 		else
 		{
 				QMessageBox::information(0,"error","preset rgb colors are not within range (0-255)");
 		}
+}
+
+void TanFile::setLeftColor(QColor in)   //set left-click color
+{
+    m_color_left = in;
 }
 
 QColor TanFile::getLeftColor()		//get left-click color
@@ -52,12 +57,17 @@ void TanFile::setRightColor(int r, int g, int b)   //set right-click color
 				(g>=0) && (g<=255) &&
 				(b>=0) && (b<=255))				//error checking on rgb values
 		{
-				m_color_right.fromRgb(r,g,b,alpha);
+                m_color_right = QColor(r,g,b,alpha);
 		}
 		else
 		{
 				QMessageBox::information(0,"error","preset rgb colors are not within range (0-255)");
 		}
+}
+
+void TanFile::setRightColor(QColor in)   //set left-click color
+{
+    m_color_right = in;
 }
 
 QColor TanFile::getRightColor()		//get right-click color

@@ -5,7 +5,9 @@
 #include <QFileDialog>
 
 void TanFile::Save() {
-    SaveAs(m_filename_tan);
+    if (m_filename_tan.isEmpty())
+        SaveAs();
+    else SaveAs(m_filename_tan);
 }
 
 void TanFile::SaveAs() {

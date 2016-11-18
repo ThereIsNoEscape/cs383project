@@ -1,5 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QtWidgets>
+#include <QColorDialog>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstdio>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -7,13 +12,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-		m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+    createActions();
+    createMenus();
 
-    ui->comboBox->addItem("new");       //instantiates the items in the comboBox
-    ui->comboBox->addItem("open");      //
-		ui->comboBox->addItem("save as");   //
-		ui->comboBox->addItem("save");   //
-		ui->comboBox->addItem("exit");      //
+        m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+
+//    ui->comboBox->addItem("new");       //instantiates the items in the comboBox
+//    ui->comboBox->addItem("open");      //
+//		ui->comboBox->addItem("save as");   //
+//		ui->comboBox->addItem("save");   //
+//		ui->comboBox->addItem("exit");      //
 }
 
 MainWindow::~MainWindow()
@@ -93,7 +101,8 @@ void MainWindow::openFile()    //when open is clicked
 				QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
 				return;
 		}
-		project.setLeftColor(r,g,b);     //set the rgb value
+        project.setLeftColor(r,g,b);     //set the rgb value
+        updateGUIColorButtons();
 
 		//get the preset RGB values
 		QStringList buffer; //holds parsed input string
@@ -264,10 +273,27 @@ void MainWindow::newFile()
     }
 }
 
+void MainWindow::save()
+{
+    project.Save();
+}
+
+void MainWindow::saveAs()
+{
+    project.SaveAs();
+}
+
+void MainWindow::quit()
+{
+    QApplication::quit();
+}
 
 // Create the grid of cell widgets
 void MainWindow::m_generateFrame(int rows, int cols)
 {
+    QString qss = ("background-color: #ffffff");
+    ui->pushButton_2->setStyleSheet(qss);
+    ui->pushButton_3->setStyleSheet(qss);
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
 	QGridLayout *m_FrameLayout = ui->gridLayout_2;
@@ -373,7 +399,7 @@ QString MainWindow::m_getObjName(QObject *m_obj) {
 }
 
 
-void MainWindow::on_comboBox_activated(const QString &arg1)
+/*void MainWindow::on_comboBox_activated(const QString &arg1)
 {
     if (arg1=="open")       //open a file
         openFile();
@@ -385,4 +411,76 @@ void MainWindow::on_comboBox_activated(const QString &arg1)
         newFile();
     if (arg1=="exit")       //quit the application
         QApplication::quit();
+}*/
+
+void MainWindow::createActions()
+{
+    newAct = new QAction(tr("&New"), this);
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(tr("Create a new file"));
+    connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
+
+    openAct = new QAction(tr("&Open..."), this);
+    openAct->setShortcuts(QKeySequence::Open);
+    openAct->setStatusTip(tr("Open an existing file"));
+    connect(openAct, &QAction::triggered, this, &MainWindow::openFile);
+
+    saveAct = new QAction(tr("&Save"), this);
+    saveAct->setShortcuts(QKeySequence::Save);
+    saveAct->setStatusTip(tr("Save the document to disk"));
+    connect(saveAct, &QAction::triggered, this, &MainWindow::save);
+
+    saveAsAct = new QAction(tr("&Save As"), this);
+    saveAsAct->setShortcuts(QKeySequence::Save);
+    saveAsAct->setStatusTip(tr("Save the document to disk as a new file"));
+    connect(saveAct, &QAction::triggered, this, &MainWindow::saveAs);
+
+    quitAct = new QAction(tr("&Quit"), this);
+    quitAct->setShortcuts(QKeySequence::Quit);
+    quitAct->setStatusTip(tr("Quit the application"));
+    connect(quitAct, &QAction::triggered, this, &QWidget::close);
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(newAct);
+    fileMenu->addAction(openAct);
+    fileMenu->addAction(saveAct);
+    fileMenu->addAction(saveAsAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(quitAct);
+}
+
+void MainWindow::updateGUIColorButtons()
+{
+    ui->label_2->setText(getLeftColor().name());
+    QString qss = ("background-color: " + getLeftColor().name());
+    ui->pushButton_2->setStyleSheet(qss);
+
+    ui->label_3->setText(getRightColor().name());
+    QString qss = ("background-color: " + getRightColor().name());
+    ui->pushButton_3->setStyleSheet(qss);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this );
+    if( color.isValid() )
+    {
+        project.setLeftColor(color);
+    }
+    else QMessageBox::information(0,"error","Invalid color selection");
+    updateGUIColorButtons();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this );
+    if( color.isValid() )
+    {
+        project.setRightColor(color);
+    }
+    else QMessageBox::information(0,"error","Invalid color selection");
+    updateGUIColorButtons();
 }

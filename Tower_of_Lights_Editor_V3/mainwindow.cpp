@@ -407,22 +407,20 @@ void MainWindow::updateGUIColorButtons()
 void MainWindow::on_pushButton_2_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
-    if( color.isValid() )
+    if(color.isValid())
     {
         project.setLeftColor(color);
+        updateGUIColorButtons();
     }
-    else QMessageBox::information(0,"error","Invalid color selection");
-    updateGUIColorButtons();
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
-    if( color.isValid() )
+    if(color.isValid())
     {
         project.setRightColor(color);
+        updateGUIColorButtons();
     }
-    else QMessageBox::information(0,"error","Invalid color selection");
-    updateGUIColorButtons();
 }
 

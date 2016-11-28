@@ -16,7 +16,7 @@ struct TanCell {
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
     struct TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
-    int frame_length; // >= 25ms
+    double frame_length; // >= 25ms
     int frame_start; // in ms
 };
 

@@ -326,8 +326,8 @@ void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_col
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
-	TanFrame frame;
-	frame.pixels[col][row].color = m_color;
+    TanFrame frame;
+    frame.pixels[col][row].color = m_color;
 	// Need to determine how to identify each frame
 	/*
 	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
@@ -424,3 +424,12 @@ void MainWindow::on_pushButton_3_clicked()
     }
 }
 
+
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+{
+    //time interval
+    //need to find what frame you're currently on through QLinkedList
+    //this would only work for the one frame we have
+    TanFrame frame;
+    frame.frame_length = arg1;
+}

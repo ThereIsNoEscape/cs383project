@@ -22,8 +22,8 @@ void TanFile::SaveAs() {
         QObject::tr("Tower Animation (*.tan*);;All Files (*)"));
     if (fileName.mid((fileName.length()-5),5).compare(QString(".tan2")))
     {
-        if (fileName.mid((fileName.length()-4),4).compare(QString(".tan"))) fileName.append("2");
-        else fileName.append(".tan2");
+        if (fileName.mid((fileName.length()-4),4).compare(QString(".tan"))) fileName.append(".tan2");
+        else fileName.append("2");
     }
     SaveAs(fileName);
 

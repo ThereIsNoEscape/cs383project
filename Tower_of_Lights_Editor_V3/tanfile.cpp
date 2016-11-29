@@ -1,5 +1,15 @@
 #include "tanfile.h"
 
+int TanFile::getCurrFrame()
+{
+    return currFrame;
+}
+
+void TanFile::setCurrFrame(int input)
+{
+    currFrame = input;
+}
+
 void TanFile::setFileName(QString input)    //set TAN filename
 {
 		m_filename_tan = input;

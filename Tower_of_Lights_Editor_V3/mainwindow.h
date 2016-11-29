@@ -41,12 +41,15 @@ private slots:
     void save();
     void saveAs();
 
-    void on_cell_colorChanged(const int row, const int col, QColor m_color);
+    //void on_cell_colorChanged(const int row, const int col, QColor m_color);
+    void on_cell_leftChanged(const int row, const int col, QColor m_color);
+    void on_cell_rightChanged(const int row, const int col, QColor m_color);
 
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
 
-    void on_doubleSpinBox_valueChanged(double arg1);
+
+    void on_spinBox_valueChanged(int arg1);
 
 private:
 	Ui::MainWindow *ui;
@@ -59,9 +62,9 @@ private:
 
 	void m_connectCellSignals(CellWidget *m_cell);
 
-	void m_updateTanFileColor(const int row, const int col, QColor m_color);
+    void m_updateTanFileColor(const int row, const int col, QColor m_color);
 
-	void m_setCellColor(QString m_cellName, QColor m_color);
+    void m_setCellColor(CellWidget *, QColor color);
 
     void updateGUIColorButtons();
 

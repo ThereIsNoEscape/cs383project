@@ -26,8 +26,6 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-
-
 void MainWindow::openFile()    //when open is clicked
 {
 		QMessageBox::StandardButton reply;
@@ -67,19 +65,6 @@ void MainWindow::openFile()    //when open is clicked
 		}
 		//set audio filename
 		project.setAudioFile(contents[1]);   //set audio filename
-
-		//view section later for audio file error checking
-		/*QString last3 = ;  //get last 3 characters
-		if (contents[1]=="NoAudioFile")
-				m_filename_wav = "NoAudioFile"; //valid
-		else
-		{
-				//check last 3 characters
-				if (last3 == "mp3"||"mp4"||"wav")
-						m_filename_wav = contents[1];   //valid audio type
-				else
-						QMessageBox::information(0,"error","audio format not supported");   //invalid audio type
-		}*/
 
 		//get the current color value
 		QStringList temp;   //holds parsed values
@@ -270,8 +255,8 @@ void MainWindow::m_generateFrame(int rows, int cols)
 		{
 			// Generate the name for each cell, based on rows and cols
 			// Relocate this job to TanFrame project at some point?
-			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
 			m_cellWidget->setMinimumSize(m_cellSize);
 			m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
@@ -303,25 +288,46 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 			m_cellWidget = 0;
 		}
 	}
-
 }
 
 
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-	connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
+    //connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(rightClick(const int, const int, QColor)), this, SLOT(on_cell_rightChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(leftClick(const int, const int, QColor)), this, SLOT(on_cell_leftChanged(const int, const int, QColor)));
 }
 
 
 // The primary handler for cell clicks
-void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+/*void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
 {
-	//QString m_cellName = m_getObjName(QObject::sender());
-	//CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-	m_updateTanFileColor(row, col, m_color);
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+
+    m_setCellColor(m_cell);
+    m_updateTanFileColor(row, col, m_color);   //updates project's appropriate frame with color information
+
+}*/
+void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_color)
+{
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    m_setCellColor(m_cell,project.getLeftColor());
+    m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
+void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_color)
+{
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    m_setCellColor(m_cell,project.getRightColor());
+    m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
+}
 
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
@@ -340,11 +346,9 @@ void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_col
 // Obtain a reference to a cell widget by name, and set its color.
 // This is the function to call when opening or creating a new Tan file.
 // Does not trigger the signal that will then cause an update to the corresponding TanFile cell
-void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
+void MainWindow::m_setCellColor(CellWidget *m_cell, QColor color)
 {
-	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-
-	m_cell->setColor(m_color);
+    m_cell->setColor(color);
 }
 
 
@@ -425,11 +429,22 @@ void MainWindow::on_pushButton_3_clicked()
 }
 
 
-void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+void MainWindow::on_spinBox_valueChanged(int arg1)
 {
-    //time interval
-    //need to find what frame you're currently on through QLinkedList
-    //this would only work for the one frame we have
-    TanFrame frame;
-    frame.frame_length = arg1;
+    int currFrame = project.getCurrFrame(); //gets the frame you're on
+
+
+    int totalTime = 0;                      //frame_legnth's < currFrame added together
+    int counter = 0;
+    QLinkedList<TanFrame>::iterator i; //iterator for linked list
+    for(i = project.m_frames.begin(); i != project.m_frames.end(); i++){ //from begining of linked list to end of linked list
+        if(counter == currFrame){                               //if iterator is on your current frame
+            i->frame_length = arg1;                             //set frame length to the value in the spin box
+            i->frame_start = totalTime;                         //set your current frame start time to all previous frame lengths added together
+            qDebug() << i->frame_length << i->frame_start;
+        }else if(counter < currFrame){                          //if iterator is on a frame < your current frame
+            totalTime = totalTime + i->frame_length;            //add frame legnth to total time
+        }
+        counter++;
+    }
 }

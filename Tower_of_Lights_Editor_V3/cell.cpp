@@ -1,6 +1,7 @@
 // Class for a custom cell display widget
 #include "cell.h"
-
+#include "TanFile.h"
+#include "mainwindow.h"   //access to project data
 
 // Constructor
 CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent)
@@ -29,13 +30,13 @@ CellWidget::~CellWidget()
 
 
 // Return this widget's row, corresponding with an index in TanFrame
-const int CellWidget::getRow()
+int CellWidget::getRow()
 {
 	return _row;
 }
 
 // Return this widget's column, corresponding with an index in TanFrame
-const int CellWidget::getColumn()
+int CellWidget::getColumn()
 {
 	return _col;
 }
@@ -60,14 +61,13 @@ QColor CellWidget::setColor(QColor rgb)
 
 // Calls setColor(), and then triggers the colorChanged() signal
 // Returns the color that was set, for verification purposes
-QColor CellWidget::changeColor(QColor rgb)
+/*QColor CellWidget::changeColor(QColor rgb)
 {
 	setColor(rgb);
 
 	emit colorChanged(getRow(), getColumn(), getColor());
-
 	return getColor();
-}
+}*/
 
 // Return the current color
 QColor CellWidget::getColor()
@@ -84,42 +84,22 @@ bool CellWidget::getState()
 // Custom event handler
 bool CellWidget::event(QEvent *event)
 {
-	// Can be deleted once actually connected to TanCells
-	QColor testColor1 = Qt::red;
-	QColor testColor2 = Qt::blue;
-	QColor baseColor = Qt::black;
 
 	if (event->type() == QEvent::MouseButtonPress)
 	{
 		QMouseEvent *qme = static_cast<QMouseEvent*>(event);
 		// Handle left-click here
 		if (qme->button() == Qt::LeftButton)
-		{
-			// Get color from left-click colorbox and pass to changeColor()
-			// Get reference to left-click colorbox
-			// Pass value to changeColor()
-			QColor thisColor;
-			if (_state) {
-				thisColor = testColor1;
-				_state = false;
-			}
-			else {
-				thisColor = testColor2;
-				_state = true;
-			}
-			changeColor(thisColor);
-			return true;
-		}
-		// Handle right-click here
+            emit leftClick(getRow(),getColumn(),getColor()); //left click signal
+
 		else if (qme->button() == Qt::RightButton)
 		{
-			// Get color from right-click colorbox and pass to changeColor()
-			// Get reference to right-click colorbox
-			// Pass value to changeColor()
-			changeColor(baseColor);
+            emit rightClick(getRow(),getColumn(),getColor()); //right click signal
+            //changeColor(baseColor);
+
 			_state = false;
 			return true;
-		}
+        }
 	}
 
 	// Pass all other events down to the base class

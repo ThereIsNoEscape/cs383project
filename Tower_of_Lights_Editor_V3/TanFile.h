@@ -16,7 +16,7 @@ struct TanCell {
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
     struct TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
-    double frame_length; // >= 25ms
+    int frame_length; // >= 25ms
     int frame_start; // in ms
 };
 
@@ -28,11 +28,15 @@ private:
     QColor m_color_left;                             // the current color selected
     QColor m_color_right;                            // not saved in file; pulled from the 1st preset color
     QColor m_color_preset[TAN_DEFAULT_COLORPRESETS]; // preset colors
+    int currFrame;                                   // holds current position in list of frames
 
     // m_frame_count = m_frames.size();              // CONSTANT! DO NOT NEED TO STORE
 
 public:
     TanFile(); // New
+
+    int getCurrFrame();
+    void setCurrFrame(int);
 
     QLinkedList<TanFrame> m_frames; //Frame linked list
     void setFileName(QString);

@@ -53,6 +53,7 @@ private slots:
 
 private:
 	Ui::MainWindow *ui;
+    bool nothingToSave;
 
 	QString m_getObjName(QObject *m_obj);
 
@@ -67,6 +68,8 @@ private:
     void m_setCellColor(CellWidget *, QColor color);
 
     void updateGUIColorButtons();
+
+    bool saveSequence();//returns false if the user cancels the entire process
 
     void createActions();
     void createMenus();

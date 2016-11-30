@@ -353,20 +353,10 @@ border-radius: 4px;</string>
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
-           <widget class="QPlainTextEdit" name="plainTextEdit">
-            <property name="geometry">
-             <rect>
-              <x>55</x>
-              <y>380</y>
-              <width>90</width>
-              <height>21</height>
-             </rect>
-            </property>
-           </widget>
            <widget class="QLabel" name="label_9">
             <property name="geometry">
              <rect>
-              <x>143</x>
+              <x>141</x>
               <y>380</y>
               <width>31</width>
               <height>21</height>
@@ -390,6 +380,28 @@ border-radius: 4px;</string>
             </property>
             <property name="text">
              <string>Preview Animation</string>
+            </property>
+           </widget>
+           <widget class="QSpinBox" name="spinBox">
+            <property name="geometry">
+             <rect>
+              <x>72</x>
+              <y>380</y>
+              <width>71</width>
+              <height>24</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>71</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="minimum">
+             <number>25</number>
+            </property>
+            <property name="maximum">
+             <number>1000000</number>
             </property>
            </widget>
           </widget>

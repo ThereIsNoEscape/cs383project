@@ -21,6 +21,7 @@ TanFile::TanFile() {
 	m_color_preset[13] = QColor(0,128,0);
 	m_color_preset[14] = QColor(255,0,0);
 	m_color_preset[15] = QColor(255,255,255);
+    currFrame = 0;      //sets the iterator to the first frame
     m_frames = QLinkedList<TanFrame>();
     //make blank frame
     //append the frame to the linked list

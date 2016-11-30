@@ -27,164 +27,148 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-
-bool MainWindow::saveSequence()//returns false if the user cancels the entire process
+bool MainWindow::saveSequence()
 {
     if (nothingToSave) return true;
-    QMessageBox::StandardButton reply;
+        QMessageBox::StandardButton reply;
 
-    /* Create Message Box
-     * Title of message box : "Tower Lights"
-     * Prompt message : "Would you like to save?"
-     * 3 button choices : "Save", "No", "Cancel"
-    */
+        /* Create Message Box
+         * Title of message box : "Tower Lights"
+         * Prompt message : "Would you like to save?"
+         * 3 button choices : "Save", "No", "Cancel"
+        */
 
-    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-                                                                QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+        reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                                                    QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
 
-    if (reply==0x00400000)  //if cancel selected
-            return false;
-    if (reply==0x00000800)  //if save selected
-    {
-            if (project.Save()) nothingToSave = true;;
-    }
-    return true;
+        if (reply==0x00400000)  //if cancel selected
+                return false;
+        if (reply==0x00000800)  //if save selected
+        {
+                if (project.Save()) nothingToSave = true;;
+        }
+        return true;
 }
-
-
 
 void MainWindow::openFile()    //when open is clicked
 {
-        if (!saveSequence()) return;
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
+    if (!saveSequence()) return;
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
 											 "Tan File (*.tan*);;All files (*.*)");
-		if (fileName=="")
-				return;
+    if (fileName=="")
+        return;
 
-		QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
-																												//QStringList contents
+    QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
+                                                                                                            //QStringList contents
 
-        //set fileName
-		project.setFileName(fileName);
+    //set fileName
+    project.setFileName(fileName);
 
-		//check version
-		if (contents[0]!="0.4")    //error checking
-		{
-                QMessageBox::information(0,"error","File is an unsupported version");
-				return;
-		}
-		//set audio filename
-		project.setAudioFile(contents[1]);   //set audio filename
+    //check version
+    if (contents[0]!="0.4")    //error checking
+    {
+        QMessageBox::information(0,"error","File is an unsupported version");
+        return;
+    }
+    //set audio filename
+    project.setAudioFile(contents[1]);   //set audio filename
 
-		//view section later for audio file error checking
-		/*QString last3 = ;  //get last 3 characters
-		if (contents[1]=="NoAudioFile")
-				m_filename_wav = "NoAudioFile"; //valid
-		else
-		{
-				//check last 3 characters
-				if (last3 == "mp3"||"mp4"||"wav")
-						m_filename_wav = contents[1];   //valid audio type
-				else
-                        QMessageBox::information(0,"error","Audio format not supported");   //invalid audio type
-		}*/
+    //get the current color value
+    QStringList temp;   //holds parsed values
+    int r,g,b;  //holds int values for rgb
 
-		//get the current color value
-		QStringList temp;   //holds parsed values
-		int r,g,b;  //holds int values for rgb
+    temp = contents[2].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    r = temp[0].toInt();    // convert to integers
+    g = temp[1].toInt();    //
+    b = temp[2].toInt();    //
+    //WARNING: This code will accept characters with ascii values within the range
+    //         This should not really be a big deal however
+    if ((r<0)||(r>255)||(g<0)||(g>255)||(b<0)||(b>255)) //error checking on rgb values
+    {
+        QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
+        return;
+    }
+    project.setLeftColor(r,g,b);     //set the rgb value
+    updateGUIColorButtons();
 
-		temp = contents[2].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
-		r = temp[0].toInt();    // convert to integers
-		g = temp[1].toInt();    //
-		b = temp[2].toInt();    //
-		//WARNING: This code will accept characters with ascii values within the range
-		//         This should not really be a big deal however
-		if ((r<0)||(r>255)||(g<0)||(g>255)||(b<0)||(b>255)) //error checking on rgb values
-		{
-				QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
-				return;
-		}
-		project.setLeftColor(r,g,b);     //set the rgb value
-        updateGUIColorButtons();
+    //get the preset RGB values
+    QStringList buffer; //holds parsed input string
+    int presetRGB[TAN_DEFAULT_COLORPRESETS*3];  //holds each individual rgb value
 
-		//get the preset RGB values
-		QStringList buffer; //holds parsed input string
-		int presetRGB[TAN_DEFAULT_COLORPRESETS*3];  //holds each individual rgb value
+    buffer = contents[3].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
 
-		buffer = contents[3].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
+        presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
 
-		for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
-				presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
+    project.setPresetColor(presetRGB);
+    updateGUIColorButtons();
 
-		project.setPresetColor(presetRGB);
-        updateGUIColorButtons();
+    //get the number of frames
+    QStringList hype = contents[4].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    int num_frames = hype[0].toInt();  //set num_frames
+    if (num_frames<1)   //error checking the number of frames
+    {
+        QMessageBox::information(0,"error","number of frames must be at least 1");
+        return;
+    }
+    //error check dimensions
+    if (hype[1]!="10" || hype[2]!="4")
+    {
+        QMessageBox::information(0,"error","invalid dimensions");
+        return;
+    }
 
-		//get the number of frames
-		QStringList hype = contents[4].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
-		int num_frames = hype[0].toInt();  //set num_frames
-		if (num_frames<1)   //error checking the number of frames
-		{
-				QMessageBox::information(0,"error","number of frames must be at least 1");
-				return;
-		}
-		//error check dimensions
-		if (hype[1]!="10" || hype[2]!="4")
-		{
-				QMessageBox::information(0,"error","invalid dimensions");
-				return;
-		}
+    /*************************************************************************************/
 
-		/*************************************************************************************/
+    //error checking the tanfile frames
+    if (((contents.size()-5) % 21)!=0)
+    {
+        QMessageBox::information(0,"error","frames corrupt");
+        return;
+    }
+    else if (num_frames!=((contents.size() - 5) / 21))
+    {
+        QMessageBox::information(0,"error","specified number of frames does not equal actual number of frames");
+        num_frames = (contents.size() - 5) / 21;
+    }
 
-		//error checking the tanfile frames
-		if (((contents.size()-5) % 21)!=0)
-		{
-				QMessageBox::information(0,"error","frames corrupt");
-				return;
-		}
-		else if (num_frames!=((contents.size() - 5) / 21))
-		{
-				QMessageBox::information(0,"error","specified number of frames does not equal actual number of frames");
-				num_frames = (contents.size() - 5) / 21;
-		}
+    project.m_frames.clear(); //clear the linked list
+    project.m_frames.begin();   //start the linked list at the beginning
 
-		project.m_frames.clear(); //clear the linked list
-        project.m_frames.begin();   //start the linked list at the beginning
+    for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
+    {
+        TanFrame frame;
+        frame.frame_start = contents[5+k].toInt();  //set num_frames
+        int rgb[3]; //holds an rgb value
+        //calculate frame duration
 
-		for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
-		{
-				TanFrame frame;
-				frame.frame_start = contents[5+k].toInt();  //set num_frames
-                int rgb[3]; //holds an rgb value
-				//calculate frame duration
+        hype.clear();   //clear QStringList
+        for (int i=0;i<TAN_DEFAULT_ROWS;i++) //the increment for rows
+        {
+            hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
 
-				hype.clear();   //clear QStringList
-				for (int i=0;i<TAN_DEFAULT_ROWS;i++) //the increment for rows
-				{
-						hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
-
-                        if (hype.size()!=TAN_DEFAULT_COLS*3)
-						{
-										QMessageBox::information(0,"error","frame contains invalid number of rgb values");
-										return;
-						}
-                        for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
-						{
-                            rgb[0] = hype[j].toInt();
-                            rgb[1] = hype[j+1].toInt();
-                            rgb[2] = hype[j+2].toInt();
-                            if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
-                            {
-                                    QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
-                                    return;
-                            }
-                            frame.pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
-                        }
+            if (hype.size()!=TAN_DEFAULT_COLS*3)
+            {
+                QMessageBox::information(0,"error","frame contains invalid number of rgb values");
+                return;
+            }
+            for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
+            {
+                rgb[0] = hype[j].toInt();
+                rgb[1] = hype[j+1].toInt();
+                rgb[2] = hype[j+2].toInt();
+                if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
+                {
+                    QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
+                    return;
                 }
-				//got a frame!
-                project.m_frames.append(frame); //add the frame to the linked list
+                frame.pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
+            }
         }
-        nothingToSave = true;
+        //got a frame!
+        project.m_frames.append(frame); //add the frame to the linked list
+    }
+    nothingToSave = true;
 }
 
 
@@ -193,7 +177,9 @@ void MainWindow::newFile()
     if (!saveSequence()) return;
     project = TanFile();
     TanFrame frame;
+
     QString qss;
+
     for(int i=0; i<TAN_DEFAULT_ROWS; i++){
         for(int j=0; j<TAN_DEFAULT_COLS; j++){
             //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
@@ -215,7 +201,7 @@ void MainWindow::save()
 void MainWindow::saveAs()
 {
     qDebug("saving as");
-    if (project.SaveAs()) nothingToSave = true;;
+    if (project.SaveAs()) nothingToSave = true;
 }
 
 // Create the grid of cell widgets
@@ -244,8 +230,8 @@ void MainWindow::m_generateFrame(int rows, int cols)
 		{
 			// Generate the name for each cell, based on rows and cols
 			// Relocate this job to TanFrame project at some point?
-			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
 			m_cellWidget->setMinimumSize(m_cellSize);
 			m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
@@ -277,32 +263,54 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 			m_cellWidget = 0;
 		}
 	}
-
 }
 
 
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-	connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
+    //connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(rightClick(const int, const int, QColor)), this, SLOT(on_cell_rightChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(leftClick(const int, const int, QColor)), this, SLOT(on_cell_leftChanged(const int, const int, QColor)));
 }
 
 
 // The primary handler for cell clicks
-void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+/*void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+{
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+
+    m_setCellColor(m_cell);
+    m_updateTanFileColor(row, col, m_color);   //updates project's appropriate frame with color information
+
+}*/
+void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_color)
 {
     nothingToSave = false;
-	//QString m_cellName = m_getObjName(QObject::sender());
-	//CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-	m_updateTanFileColor(row, col, m_color);
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    m_setCellColor(m_cell,project.getLeftColor());
+    m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
+void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_color)
+{
+    nothingToSave = false;
+    //take provided color and assign it to the
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    m_setCellColor(m_cell,project.getRightColor());
+    m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
+}
 
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
-	TanFrame frame;
-	frame.pixels[col][row].color = m_color;
+    TanFrame frame;
+    frame.pixels[col][row].color = m_color;
 	// Need to determine how to identify each frame
 	/*
 	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
@@ -315,11 +323,9 @@ void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_col
 // Obtain a reference to a cell widget by name, and set its color.
 // This is the function to call when opening or creating a new Tan file.
 // Does not trigger the signal that will then cause an update to the corresponding TanFile cell
-void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
+void MainWindow::m_setCellColor(CellWidget *m_cell, QColor color)
 {
-	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-
-	m_cell->setColor(m_color);
+    m_cell->setColor(color);
 }
 
 
@@ -386,8 +392,8 @@ void MainWindow::on_pushButton_2_clicked()
     {
         project.setLeftColor(color);
         updateGUIColorButtons();
-        nothingToSave = false;
     }
+    nothingToSave = false;
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -397,7 +403,28 @@ void MainWindow::on_pushButton_3_clicked()
     {
         project.setRightColor(color);
         updateGUIColorButtons();
-        nothingToSave = false;
     }
+    nothingToSave = false;
 }
 
+
+void MainWindow::on_spinBox_valueChanged(int arg1)
+{
+    int currFrame = project.getCurrFrame(); //gets the frame you're on
+
+
+    int totalTime = 0;                      //frame_legnth's < currFrame added together
+    int counter = 0;
+    QLinkedList<TanFrame>::iterator i; //iterator for linked list
+    for(i = project.m_frames.begin(); i != project.m_frames.end(); i++){ //from begining of linked list to end of linked list
+        if(counter == currFrame){                               //if iterator is on your current frame
+            i->frame_length = arg1;                             //set frame length to the value in the spin box
+            i->frame_start = totalTime;                         //set your current frame start time to all previous frame lengths added together
+            qDebug() << i->frame_length << i->frame_start;
+        }else if(counter < currFrame){                          //if iterator is on a frame < your current frame
+            totalTime = totalTime + i->frame_length;            //add frame legnth to total time
+        }
+        counter++;
+    }
+    nothingToSave = false;
+}

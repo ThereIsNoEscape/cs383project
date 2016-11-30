@@ -20,7 +20,18 @@ void TanFile::SaveAs() {
     QString fileName = QFileDialog::getSaveFileName(parent,
         QObject::tr("Save Tower Animation File"), "",
         QObject::tr("Tower Animation (*.tan*);;All Files (*)"));
-
+    qDebug() << fileName;
+    if (fileName.mid((fileName.length()-5),5).compare(QString(".tan2")))
+    {
+        qDebug()<<"was true";
+        if (fileName.mid((fileName.length()-4),4).compare(QString(".tan")))
+        {
+            qDebug() << "was true again with " << fileName.mid((fileName.length()-4),4);
+            fileName.append(".tan2");
+        }
+        else fileName.append("2");
+    }
+    qDebug() << fileName;
     SaveAs(fileName);
 
 }

@@ -194,7 +194,7 @@ void MainWindow::newFile()
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
                 //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
                 qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
+                ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
             }
         }
         project.setLeftColor(255,255,255);
@@ -207,7 +207,7 @@ void MainWindow::newFile()
             for(int j=0; j<TAN_DEFAULT_COLS; j++){
                 //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
                 qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
+                ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
             }
         }
         project.setLeftColor(255,255,255);
@@ -237,7 +237,7 @@ void MainWindow::m_generateFrame(int rows, int cols)
     updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
-	QGridLayout *m_FrameLayout = ui->gridLayout_2;
+    QGridLayout *m_FrameLayout = ui->gridLayout;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
 	QSize m_cellSize(36,36);	// Arbitrarily selected as a decent minimum ("half-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)

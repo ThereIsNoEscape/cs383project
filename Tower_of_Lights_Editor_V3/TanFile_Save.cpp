@@ -4,13 +4,13 @@
 #include <QDebug>
 #include <QFileDialog>
 
-void TanFile::Save() {
+bool TanFile::Save() {
     if (m_filename_tan.isEmpty())
-        SaveAs();
-    else SaveAs(m_filename_tan);
+        return SaveAs();
+    else return SaveAs(m_filename_tan);
 }
 
-void TanFile::SaveAs() {
+bool TanFile::SaveAs() {
 
     QFileDialog dialog;
 
@@ -25,11 +25,11 @@ void TanFile::SaveAs() {
         if (fileName.mid((fileName.length()-4),4).compare(QString(".tan"))) fileName.append(".tan2");
         else fileName.append("2");
     }
-    SaveAs(fileName);
+    return SaveAs(fileName);
 
 }
 
-void TanFile::SaveAs(const QString& p_filename) {
+bool TanFile::SaveAs(const QString& p_filename) {
     QFile real_file(p_filename);
 
     if (real_file.open(QIODevice::WriteOnly)) {
@@ -80,7 +80,10 @@ void TanFile::SaveAs(const QString& p_filename) {
         }
 
         real_file.close();
+        m_filename_tan = p_filename;//in case user saved as new filename, update current filename
+        return true;
     } else {
+        return false;
         // TODO error
     }
 }

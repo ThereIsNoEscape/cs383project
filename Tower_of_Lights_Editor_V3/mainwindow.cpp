@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+    nothingToSave = true;
 }
 
 MainWindow::~MainWindow()
@@ -27,27 +28,34 @@ MainWindow::~MainWindow()
 }
 
 
+bool MainWindow::saveSequence()//returns false if the user cancels the entire process
+{
+    if (nothingToSave) return true;
+    QMessageBox::StandardButton reply;
+
+    /* Create Message Box
+     * Title of message box : "Tower Lights"
+     * Prompt message : "Would you like to save?"
+     * 3 button choices : "Save", "No", "Cancel"
+    */
+
+    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                                                QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+
+    if (reply==0x00400000)  //if cancel selected
+            return false;
+    if (reply==0x00000800)  //if save selected
+    {
+            if (project.Save()) nothingToSave = true;;
+    }
+    return true;
+}
+
+
 
 void MainWindow::openFile()    //when open is clicked
 {
-		QMessageBox::StandardButton reply;
-
-		/* Create Message Box
-		 * Title of message box : "Tower Lights"
-		 * Prompt message : "Would you like to save?"
-		 * 3 button choices : "Save", "No", "Cancel"
-		*/
-
-		reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-																	QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
-
-		if (reply==0x00400000)  //if cancel selected
-				return;
-		if (reply==0x00000800)  //if save selected
-		{
-				project.Save();
-		}
-
+        if (!saveSequence()) return;
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
 											 "Tan File (*.tan*);;All files (*.*)");
 		if (fileName=="")
@@ -56,13 +64,13 @@ void MainWindow::openFile()    //when open is clicked
 		QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
 																												//QStringList contents
 
-		//get fileName
+        //set fileName
 		project.setFileName(fileName);
 
 		//check version
 		if (contents[0]!="0.4")    //error checking
 		{
-				QMessageBox::information(0,"error","not supported version");
+                QMessageBox::information(0,"error","File is an unsupported version");
 				return;
 		}
 		//set audio filename
@@ -78,7 +86,7 @@ void MainWindow::openFile()    //when open is clicked
 				if (last3 == "mp3"||"mp4"||"wav")
 						m_filename_wav = contents[1];   //valid audio type
 				else
-						QMessageBox::information(0,"error","audio format not supported");   //invalid audio type
+                        QMessageBox::information(0,"error","Audio format not supported");   //invalid audio type
 		}*/
 
 		//get the current color value
@@ -176,72 +184,38 @@ void MainWindow::openFile()    //when open is clicked
 				//got a frame!
                 project.m_frames.append(frame); //add the frame to the linked list
         }
+        nothingToSave = true;
 }
 
 
 void MainWindow::newFile()
 {
-    QMessageBox::StandardButton reply;
-
-    /* Create Message Box
-     * Title of message box : "Tower Lights"
-     * Prompt message : "Would you like to save?"
-     * 3 button choices : "Save", "No", "Cancel"
-    */
+    if (!saveSequence()) return;
+    project = TanFile();
+    TanFrame frame;
     QString qss;
-
-    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-                                  QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
-
-
-    if(reply == QMessageBox::Save){
-        //TanFile newFile;
-        if(QString(project.getFileName()).isEmpty()){ // check if there is a file name
-            project.SaveAs();
-            //qDebug() << "SaveAs\n";
-        }else{
-            project.Save();
-            //qDebug() << "Save\n";
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++){
+        for(int j=0; j<TAN_DEFAULT_COLS; j++){
+            //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
+            qss = ("background-color: #000000");
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
         }
-        project = TanFile();
-        TanFrame frame;
-        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
-            for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
-                qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-            }
-        }
-        project.setLeftColor(255,255,255);
-        project.setRightColor(255,255,255);
-        updateGUIColorButtons();
-    }else if(reply == QMessageBox::No){
-        project = TanFile();
-        TanFrame frame;
-        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
-            for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
-                qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-            }
-        }
-        project.setLeftColor(255,255,255);
-        project.setRightColor(255,255,255);
-        updateGUIColorButtons();
-    }else if(reply == QMessageBox::Cancel){
-        //do nothing
     }
+    project.setLeftColor(255,255,255);
+    project.setRightColor(255,255,255);
+    updateGUIColorButtons();
+    nothingToSave = true;
 }
 
 void MainWindow::save()
 {
-    project.Save();
+    if (project.Save()) nothingToSave = true;
 }
 
 void MainWindow::saveAs()
 {
     qDebug("saving as");
-    project.SaveAs();
+    if (project.SaveAs()) nothingToSave = true;;
 }
 
 // Create the grid of cell widgets
@@ -252,15 +226,15 @@ void MainWindow::m_generateFrame(int rows, int cols)
     updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
-	QGridLayout *m_FrameLayout = ui->gridLayout_2;
+    QGridLayout *m_FrameLayout = ui->gridLayout;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
-	QSize m_cellSize(36,36);	// Arbitrarily selected as a decent minimum ("half-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
+    QSize m_cellSize(18,18);	// Arbitrarily selected as a decent minimum ("quarter-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
 
 	// Configure the size policy that every cell widget will use
-	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
+    m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setHorizontalStretch(1);
-	m_cellSizePolicy.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+    m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setVerticalStretch(1);
 	m_cellSizePolicy.setHeightForWidth(true);
 
@@ -317,6 +291,7 @@ void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 // The primary handler for cell clicks
 void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
 {
+    nothingToSave = false;
 	//QString m_cellName = m_getObjName(QObject::sender());
 	//CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
 	m_updateTanFileColor(row, col, m_color);
@@ -411,6 +386,7 @@ void MainWindow::on_pushButton_2_clicked()
     {
         project.setLeftColor(color);
         updateGUIColorButtons();
+        nothingToSave = false;
     }
 }
 
@@ -421,6 +397,7 @@ void MainWindow::on_pushButton_3_clicked()
     {
         project.setRightColor(color);
         updateGUIColorButtons();
+        nothingToSave = false;
     }
 }
 

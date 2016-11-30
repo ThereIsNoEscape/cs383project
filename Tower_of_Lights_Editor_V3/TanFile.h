@@ -52,9 +52,9 @@ public:
     void setPresetColor(int []);
     QColor getPresetColor(int index);
 
-    void Save();
-    void SaveAs();
-    void SaveAs(const QString &p_filename);
+    bool Save();
+    bool SaveAs();
+    bool SaveAs(const QString &p_filename);
 };
 
 #endif // TANFILE_H

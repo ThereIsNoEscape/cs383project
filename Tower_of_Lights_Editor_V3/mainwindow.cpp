@@ -317,6 +317,7 @@ void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_colo
     QString m_cellName = m_getObjName(QObject::sender());
     CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
     m_setCellColor(m_cell,project.getLeftColor());
+    project.storeFrameColor(row,col,project.getLeftColor());
     m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
@@ -326,6 +327,7 @@ void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_col
     QString m_cellName = m_getObjName(QObject::sender());
     CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
     m_setCellColor(m_cell,project.getRightColor());
+    project.storeFrameColor(row,col,project.getRightColor());
     m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
 }
 

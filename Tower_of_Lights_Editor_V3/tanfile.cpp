@@ -120,3 +120,16 @@ QColor TanFile::getPresetColor(int index)
 				return QColor(Qt::black);
 		}
 }
+
+void TanFile::storeFrameColor(int row, int col, QColor m_color){
+    //Takes updated color and stores in project
+    (m_frames.begin()+currFrame)->pixels[col][row].color = m_color;
+
+
+    //Test to ensure correct color
+    //qInfo("Print to console rgb values");
+    //qInfo("%d",m_color.red());
+    //qInfo("%d",m_color.green());
+    //qInfo("%d",m_color.blue());
+
+}

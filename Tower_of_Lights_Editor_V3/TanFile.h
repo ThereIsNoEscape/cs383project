@@ -56,6 +56,8 @@ public:
     void setPresetColor(int []);
     QColor getPresetColor(int index);
 
+    void storeFrameColor(int row, int col, QColor m_Color);
+
     void Save();
     void SaveAs();
     void SaveAs(const QString &p_filename);

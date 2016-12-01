@@ -1,6 +1,6 @@
 // Class for a custom cell display widget
 #include "cell.h"
-#include "TanFile.h"
+#include "tanfile.h"
 #include "mainwindow.h"   //access to project data
 
 // Constructor

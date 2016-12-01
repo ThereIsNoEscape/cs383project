@@ -181,8 +181,9 @@ void MainWindow::openFile()    //when open is clicked
         iter->frame_length = (iter + 1)->frame_start - iter->frame_start;
         counter++;
     }
-	
-	
+
+
+    on_change_frame();
     nothingToSave = true;
 }
 
@@ -205,6 +206,7 @@ void MainWindow::newFile()
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
     updateGUIColorButtons();
+    on_change_frame();
     nothingToSave = true;
 }
 
@@ -222,8 +224,8 @@ void MainWindow::saveAs()
 // Create the grid of cell widgets
 void MainWindow::m_generateFrame(int rows, int cols)
 {
-    project.setLeftColor(255,255,255);
-    project.setRightColor(255,255,255);
+    //project.setLeftColor(255,255,255);
+    //project.setRightColor(255,255,255);
     updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
@@ -306,8 +308,7 @@ void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_colo
     nothingToSave = false;
     //take provided color and assign it to the
     QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getLeftColor());
+    on_change_color(m_cellName, project.getLeftColor());
     m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
@@ -316,8 +317,7 @@ void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_col
     nothingToSave = false;
     //take provided color and assign it to the
     QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getRightColor());
+    on_change_color(m_cellName, project.getRightColor());
     m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
 }
 
@@ -376,6 +376,14 @@ void MainWindow::createActions()
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit the application"));
     connect(quitAct, &QAction::triggered, this, &QWidget::close);
+
+    undoAct = new QAction(tr("&Undo"), this);
+    undoAct->setShortcuts(QKeySequence::Undo);
+    connect(undoAct, &QAction::triggered, this, &MainWindow::on_undo);
+
+    redoAct = new QAction(tr("&Redo"), this);
+    redoAct->setShortcuts(QKeySequence::Redo);
+    connect(redoAct, &QAction::triggered, this, &MainWindow::on_redo);
 }
 
 void MainWindow::createMenus()
@@ -387,6 +395,10 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAct);
+    editMenu->addAction(redoAct);
 }
 
 void MainWindow::updateGUIColorButtons()
@@ -442,4 +454,43 @@ void MainWindow::on_spinBox_valueChanged(int arg1)
         counter++;
     }
     nothingToSave = false;
+}
+
+
+void MainWindow::on_undo() {
+    if (m_undo_index > 0) {
+        m_undo_index--;
+        struct Change *change = *(m_changes.begin() + m_undo_index);
+        CellWidget *cell = MainWindow::findChild<CellWidget*>(change->cell_name);
+        cell->setColor(change->old_color);
+    }
+}
+
+void MainWindow::on_redo() {
+    if (m_undo_index < m_changes.size()) {
+        struct Change *change = *(m_changes.begin() + m_undo_index);
+        CellWidget *cell = MainWindow::findChild<CellWidget*>(change->cell_name);
+        cell->setColor(change->new_color);
+        m_undo_index++;
+    }
+}
+
+void MainWindow::on_change_color(const QString& p_cell_name, const QColor& p_color) {
+    while (m_undo_index < m_changes.size()) {
+        m_changes.removeLast();
+    }
+
+    struct Change *change = new struct Change;
+    CellWidget *cell = MainWindow::findChild<CellWidget*>(p_cell_name);
+    change->cell_name = p_cell_name;
+    change->old_color = cell->getColor();
+    change->new_color = p_color;
+    m_changes.append(change);
+    m_undo_index++;
+    cell->setColor(p_color);
+}
+
+void MainWindow::on_change_frame() {
+    m_undo_index = 0;
+    m_changes.clear();
 }

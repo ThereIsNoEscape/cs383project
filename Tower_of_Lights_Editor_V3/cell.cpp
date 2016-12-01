@@ -1,7 +1,5 @@
 // Class for a custom cell display widget
 #include "cell.h"
-#include "TanFile.h"
-#include "mainwindow.h"   //access to project data
 
 // Constructor
 CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent)
@@ -22,6 +20,7 @@ CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent
 	}
 }
 
+
 // Destructor
 CellWidget::~CellWidget()
 {
@@ -35,11 +34,13 @@ int CellWidget::getRow()
 	return _row;
 }
 
+
 // Return this widget's column, corresponding with an index in TanFrame
 int CellWidget::getColumn()
 {
 	return _col;
 }
+
 
 // Sets the background color of this widget
 // Returns the color that was set, for verification purposes
@@ -59,15 +60,17 @@ QColor CellWidget::setColor(QColor rgb)
 	return getColor();
 }
 
+
 // Calls setColor(), and then triggers the colorChanged() signal
 // Returns the color that was set, for verification purposes
-/*QColor CellWidget::changeColor(QColor rgb)
+QColor CellWidget::changeColor(QColor rgb)
 {
 	setColor(rgb);
 
 	emit colorChanged(getRow(), getColumn(), getColor());
 	return getColor();
-}*/
+}
+
 
 // Return the current color
 QColor CellWidget::getColor()
@@ -75,11 +78,13 @@ QColor CellWidget::getColor()
 	return _color;
 }
 
+
 // Returns the current state of the widget, indicating currently selected or not
 bool CellWidget::getState()
 {
 	return _state;
 }
+
 
 // Custom event handler
 bool CellWidget::event(QEvent *event)
@@ -88,22 +93,30 @@ bool CellWidget::event(QEvent *event)
 	if (event->type() == QEvent::MouseButtonPress)
 	{
 		QMouseEvent *qme = static_cast<QMouseEvent*>(event);
-		// Handle left-click here
-		if (qme->button() == Qt::LeftButton)
-            emit leftClick(getRow(),getColumn(),getColor()); //left click signal
+		char btn = 'X';
 
+		// Handle left-click here
+		// Left-click changes the color based on
+		// the current leftColor of the Tan file representation
+		if (qme->button() == Qt::LeftButton) {
+			btn = 'L';
+		}
+		// Handle right-click here
+		// Right-click changes the color based on
+		// the current rightColor of the Tan file representation
 		else if (qme->button() == Qt::RightButton)
 		{
-            emit rightClick(getRow(),getColumn(),getColor()); //right click signal
-            //changeColor(baseColor);
+			btn = 'R';
+		}
 
-			_state = false;
-			return true;
-        }
+		emit clicked(getRow(), getColumn(), btn);
+		return true;
 	}
-
-	// Pass all other events down to the base class
-	return QWidget::event(event);
+	else
+	{
+		// Pass all other events down to the base class
+		return QWidget::event(event);
+	}
 }
 
 

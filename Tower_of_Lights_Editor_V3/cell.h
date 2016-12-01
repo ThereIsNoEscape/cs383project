@@ -12,14 +12,14 @@
 
 class CellWidget : public QWidget {
 
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    CellWidget(QString name, int x, int y, QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
+	CellWidget(QString name, int x, int y, QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
 	~CellWidget();
 
-    int getRow();
-    int getColumn();
+	int getRow();
+	int getColumn();
 
 	QColor setColor(QColor rgb);
 	QColor changeColor(QColor rgb);
@@ -29,21 +29,19 @@ public:
 
 signals:
 
-    //void colorChanged(const int row, const int col, QColor color);
-    void rightClick(const int row,const int col,QColor color); //right click
-    void leftClick(const int row,const int col,QColor color);  //left click
+	void colorChanged(const int row,const int col,QColor color);
 
-	void clicked(const int row, const int col);
+	void clicked(const int row,const int col,const char btn);
 
-	void selected(const int row, const int col);
+	void selected(const int row,const int col);
 
 private slots:
 
 protected:
 
-    bool event(QEvent *event);
+	bool event(QEvent *event);
 
-    void paintEvent(QPaintEvent *event);
+	void paintEvent(QPaintEvent *event);
 
 private:
 

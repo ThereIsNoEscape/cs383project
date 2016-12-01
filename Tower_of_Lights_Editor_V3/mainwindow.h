@@ -41,9 +41,7 @@ private slots:
     void save();
     void saveAs();
 
-    //void on_cell_colorChanged(const int row, const int col, QColor m_color);
-    void on_cell_leftChanged(const int row, const int col, QColor m_color);
-    void on_cell_rightChanged(const int row, const int col, QColor m_color);
+		void on_cell_clicked(const int row, const int col, const char btn);
 
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();

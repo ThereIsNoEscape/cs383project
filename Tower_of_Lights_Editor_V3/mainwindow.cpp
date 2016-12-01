@@ -17,7 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
-    nothingToSave = true;
+		project.setLeftColor(255,255,255);
+		project.setRightColor(255,255,255);
+		updateGUIColorButtons();
+		nothingToSave = true;
 }
 
 MainWindow::~MainWindow()
@@ -207,20 +210,17 @@ void MainWindow::saveAs()
 // Create the grid of cell widgets
 void MainWindow::m_generateFrame(int rows, int cols)
 {
-    project.setLeftColor(255,255,255);
-    project.setRightColor(255,255,255);
-    updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
-    QGridLayout *m_FrameLayout = ui->gridLayout;
+	QGridLayout *m_FrameLayout = ui->gridLayout;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
-    QSize m_cellSize(18,18);	// Arbitrarily selected as a decent minimum ("quarter-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
+	QSize m_cellSize(18,18);	// Arbitrarily selected as a decent minimum ("quarter-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
 
 	// Configure the size policy that every cell widget will use
-    m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
+	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setHorizontalStretch(1);
-    m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
+	m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setVerticalStretch(1);
 	m_cellSizePolicy.setHeightForWidth(true);
 
@@ -230,8 +230,8 @@ void MainWindow::m_generateFrame(int rows, int cols)
 		{
 			// Generate the name for each cell, based on rows and cols
 			// Relocate this job to TanFrame project at some point?
-            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
 			m_cellWidget->setMinimumSize(m_cellSize);
 			m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
@@ -269,48 +269,43 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-    //connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
-    connect(m_cell, SIGNAL(rightClick(const int, const int, QColor)), this, SLOT(on_cell_rightChanged(const int, const int, QColor)));
-    connect(m_cell, SIGNAL(leftClick(const int, const int, QColor)), this, SLOT(on_cell_leftChanged(const int, const int, QColor)));
+	connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(on_cell_clicked(const int, const int, const char)));
 }
 
 
-// The primary handler for cell clicks
-/*void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+// Slot to respond to cell clicks
+// Determines the color to use, based on which type of click (left or right)
+// Updates the displayed color in the clicked cell and
+// updates appropriate frame of Tan file representation with color information
+void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
 {
-    //take provided color and assign it to the
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+	QString m_cellName = m_getObjName(QObject::sender());
+	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+	QColor m_color = Qt::black;
 
-    m_setCellColor(m_cell);
-    m_updateTanFileColor(row, col, m_color);   //updates project's appropriate frame with color information
-
-}*/
-void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_color)
-{
-    nothingToSave = false;
-    //take provided color and assign it to the
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getLeftColor());
-    m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
+	// Determine whether it was a left or right click
+	if (btn == 'L')
+	{
+		m_color = project.getLeftColor();
+	}
+	else if (btn == 'R')
+	{
+		m_color = project.getRightColor();
+	}
+	// Then update the cell color
+	m_setCellColor(m_cell, m_color);
+	// And update the corresponding color in the Tan file representation
+	m_updateTanFileColor(row, col, m_color);
 }
 
-void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_color)
-{
-    nothingToSave = false;
-    //take provided color and assign it to the
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getRightColor());
-    m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
-}
 
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
     TanFrame frame;
-    frame.pixels[col][row].color = m_color;
+
+		frame.pixels[col][row].color = m_color;
+		nothingToSave = false;
 	// Need to determine how to identify each frame
 	/*
 	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
@@ -334,6 +329,7 @@ QString MainWindow::m_getObjName(QObject *m_obj) {
 	QString m_name = m_obj->property("objectName").toString();
 	return m_name;
 }
+
 
 void MainWindow::createActions()
 {

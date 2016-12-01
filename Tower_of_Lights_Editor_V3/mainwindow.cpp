@@ -168,6 +168,21 @@ void MainWindow::openFile()    //when open is clicked
         //got a frame!
         project.m_frames.append(frame); //add the frame to the linked list
     }
+
+	//set time interval for each frame
+    QLinkedList<TanFrame>::iterator iter;
+    int counter = 1;
+    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++){
+        if(counter == num_frames){          //if you're on the last frame
+            iter->frame_length = 25;        //default time interval for last frame
+            //qDebug() << iter->frame_length;
+        }
+        //next frame start time - current frame start time = current frame time interval
+        iter->frame_length = (iter + 1)->frame_start - iter->frame_start;
+        counter++;
+    }
+	
+	
     nothingToSave = true;
 }
 

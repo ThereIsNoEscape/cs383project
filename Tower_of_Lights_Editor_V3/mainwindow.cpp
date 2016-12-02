@@ -65,7 +65,7 @@ bool MainWindow::saveSequence()
 void MainWindow::openFile()    //when open is clicked
 {
     if (!saveSequence()) return;
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"",    //user selects fileName
 											 "Tan File (*.tan*);;All files (*.*)");
     if (fileName=="")
         return;

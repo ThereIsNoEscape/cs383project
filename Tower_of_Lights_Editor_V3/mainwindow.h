@@ -10,6 +10,7 @@
 #include <QString>
 #include <QColor>
 #include <QTime>         // for holding time
+#include <QLinkedList>
 #include "tanfile.h"
 #include "config.h"
 #include "openfile.h"
@@ -19,6 +20,13 @@ class QAction;
 class QActionGroup;
 class QLabel;
 class QMenu;
+
+struct Change {
+    int x;
+    int y;
+    QColor  old_color;
+    QColor  new_color;
+};
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +64,8 @@ private slots:
 
 
     void on_spinBox_valueChanged(int arg1);
+    void on_undo();
+    void on_redo();
 
 private:
 	Ui::MainWindow *ui;
@@ -82,6 +92,8 @@ private:
     void addCurrentThumbnail();
     QPushButton* newThumbnail(QImage in);
     QPushButton* newThumbnail(QString in);
+    void on_change_color(int x, int y, const QColor& p_color);
+    void on_change_frame();
 
     QMenu *fileMenu;
     QAction *newAct;
@@ -89,6 +101,13 @@ private:
     QAction *saveAct;
     QAction *saveAsAct;
     QAction *quitAct;
+
+    QMenu *editMenu;
+    QAction *undoAct;
+    QAction *redoAct;
+
+    int m_undo_index = 0;
+    QLinkedList<struct Change *> m_changes;
 };
 
 #endif // MAINWINDOW_H

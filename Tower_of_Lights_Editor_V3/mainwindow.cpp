@@ -224,6 +224,7 @@ void MainWindow::openFile()    //when open is clicked
         }
     }
 
+    on_change_frame();
     nothingToSave = true;
 }
 
@@ -246,6 +247,7 @@ void MainWindow::newFile()
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
     updateGUIColorButtons();
+    on_change_frame();
     nothingToSave = true;
 }
 
@@ -348,6 +350,7 @@ void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
     }
     // Then update the cell color
     m_setCellColor(m_cell, m_color);
+    on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,project.getLeftColor());
     nothingToSave = false;
@@ -408,6 +411,14 @@ void MainWindow::createActions()
     quitAct->setShortcuts(QKeySequence::Quit);
     quitAct->setStatusTip(tr("Quit the application"));
     connect(quitAct, &QAction::triggered, this, &QWidget::close);
+
+    undoAct = new QAction(tr("&Undo"), this);
+    undoAct->setShortcuts(QKeySequence::Undo);
+    connect(undoAct, &QAction::triggered, this, &MainWindow::on_undo);
+
+    redoAct = new QAction(tr("&Redo"), this);
+    redoAct->setShortcuts(QKeySequence::Redo);
+    connect(redoAct, &QAction::triggered, this, &MainWindow::on_redo);
 }
 
 void MainWindow::createMenus()
@@ -419,6 +430,10 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAct);
+    editMenu->addAction(redoAct);
 }
 
 void MainWindow::updateGUIColorButtons()
@@ -830,4 +845,60 @@ void MainWindow::on_pushButton_delete_clicked()
 void MainWindow::on_thumbnail_clicked()
 {
     qDebug() << "omgyay";
+}
+
+
+
+void MainWindow::on_undo() {
+    if (m_undo_index > 0) {
+        m_undo_index--;
+        qDebug() << m_undo_index << "-";
+        struct Change *change = *(m_changes.begin() + m_undo_index);
+        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+        m_cellWidget->setColor(change->old_color);
+        (*project.currFrame)->pixels[change->x][change->y].color = change->old_color;
+    }
+}
+
+void MainWindow::on_redo() {
+    if (m_undo_index < m_changes.size()) {
+        qDebug() << m_undo_index << "+";
+        struct Change *change = *(m_changes.begin() + m_undo_index);
+        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+        m_cellWidget->setColor(change->new_color);
+        (*project.currFrame)->pixels[change->x][change->y].color = change->new_color;
+        m_undo_index++;
+    }
+}
+
+void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
+    while (m_undo_index < m_changes.size()) {
+        m_changes.removeLast();
+    }
+    qDebug() << m_undo_index << x << y;
+    struct Change *change = new struct Change;
+    QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    change->x = x;
+    change->y = y;
+    change->old_color = cell->getColor();
+    change->new_color = p_color;
+    m_changes.append(change);
+    m_undo_index++;
+    cell->setColor(p_color);
+}
+
+void MainWindow::on_change_frame() {
+    m_undo_index = 0;i
+    m_changes.clear();
+
+    for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 20; y++)  {
+            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
+        }
+    }
 }

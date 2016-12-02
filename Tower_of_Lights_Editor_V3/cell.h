@@ -57,14 +57,14 @@ private:
 };
 
 class Thumbnail : public QPushButton {
-
     Q_OBJECT
-
 public:
     Thumbnail(TanFrame*);
     ~Thumbnail();
 signals:
-    void clicked(TanFrame*);
+    //void clicked();
+    void clicked(const long int);
+    //void clicked(const int);
 protected:
     bool event(QEvent *event);
 private:

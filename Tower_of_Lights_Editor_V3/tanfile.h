@@ -53,6 +53,8 @@ public:
     void setRightColor(QColor);
     QColor getRightColor();
 
+    void storeFrameColor(int row, int col, QColor m_color);
+
     void setPresetColor(int []);
     QColor getPresetColor(int index);
 

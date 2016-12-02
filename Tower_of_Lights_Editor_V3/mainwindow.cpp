@@ -308,7 +308,7 @@ void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_colo
     nothingToSave = false;
     //take provided color and assign it to the
     QString m_cellName = m_getObjName(QObject::sender());
-    on_change_color(m_cellName, project.getLeftColor());
+    on_change_color(row, col, project.getLeftColor());
     m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
@@ -317,7 +317,7 @@ void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_col
     nothingToSave = false;
     //take provided color and assign it to the
     QString m_cellName = m_getObjName(QObject::sender());
-    on_change_color(m_cellName, project.getRightColor());
+    on_change_color(row, col, project.getRightColor());
     m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
 }
 
@@ -461,28 +461,34 @@ void MainWindow::on_undo() {
     if (m_undo_index > 0) {
         m_undo_index--;
         struct Change *change = *(m_changes.begin() + m_undo_index);
-        CellWidget *cell = MainWindow::findChild<CellWidget*>(change->cell_name);
-        cell->setColor(change->old_color);
+        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+        m_cellWidget->setColor(change->old_color);
+        (project.m_frames.begin() + project.getCurrFrame())->pixels[change->x][change->y].color = change->old_color;
     }
 }
 
 void MainWindow::on_redo() {
     if (m_undo_index < m_changes.size()) {
         struct Change *change = *(m_changes.begin() + m_undo_index);
-        CellWidget *cell = MainWindow::findChild<CellWidget*>(change->cell_name);
-        cell->setColor(change->new_color);
+        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+        m_cellWidget->setColor(change->new_color);
+        (project.m_frames.begin() + project.getCurrFrame())->pixels[change->x][change->y].color = change->new_color;
         m_undo_index++;
     }
 }
 
-void MainWindow::on_change_color(const QString& p_cell_name, const QColor& p_color) {
+void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     while (m_undo_index < m_changes.size()) {
         m_changes.removeLast();
     }
 
     struct Change *change = new struct Change;
-    CellWidget *cell = MainWindow::findChild<CellWidget*>(p_cell_name);
-    change->cell_name = p_cell_name;
+    QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    change->x = x;
+    change->y = y;
     change->old_color = cell->getColor();
     change->new_color = p_color;
     m_changes.append(change);
@@ -495,10 +501,10 @@ void MainWindow::on_change_frame() {
     m_changes.clear();
 
     for (int x = 0; x < 12; x++) {
-        for (int y = 0; y < 20; y++) 
-            QString m_cellName = "cell" + (QString("%1").arg((y*12 + x), 3, 10, QChar('0')));
+        for (int y = 0; y < 20; y++)  {
+            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
             CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-            m_cellWidget->setColor((project->m_frames.begin() + project->getCurrFrame()).pixel[x][y]);
+            m_cellWidget->setColor((project.m_frames.begin() + project.getCurrFrame())->pixels[x][y].color);
         }
     }
 }

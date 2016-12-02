@@ -22,7 +22,8 @@ class QLabel;
 class QMenu;
 
 struct Change {
-    QString cell_name;
+    int x;
+    int y;
     QColor  old_color;
     QColor  new_color;
 };
@@ -84,7 +85,7 @@ private:
     void createActions();
     void createMenus();
 
-    void on_change_color(const QString& p_cell_name, const QColor& p_color);
+    void on_change_color(int x, int y, const QColor& p_color);
     void on_change_frame();
 
     QMenu *fileMenu;

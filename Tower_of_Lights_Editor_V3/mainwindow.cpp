@@ -752,7 +752,7 @@ QPushButton* MainWindow::newThumbnail(QString in)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
-    qDebug() << (*project.currFrame)->frame_length;
+    //qDebug() << (*project.currFrame)->frame_length;
 //    qDebug() << "====================";
 //    QString temp = "";
 //    for (int c = 0; c < 12; c++)

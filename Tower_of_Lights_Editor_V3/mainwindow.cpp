@@ -689,7 +689,7 @@ void MainWindow::addCurrentThumbnail() // used when creating a new frame (also s
     ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(scaleDown((*project.currFrame)->thumbnail), Qt::AutoColor)));
     ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
 
-    QPushButton *button = newThumbnail(QString("../Resources/currSelect.png"));
+    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"));
     ui->horizontalLayout_2->insertWidget(((project.currFrame-project.m_frames.begin())+1), button);
     button->show();
     ui->horizontalLayout_2->update();

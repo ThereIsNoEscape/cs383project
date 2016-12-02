@@ -1,13 +1,38 @@
 #include "tanfile.h"
 
-int TanFile::getCurrFrame()
+void TanFile::newFrame()
 {
-    return currFrame;
+    TanFrame* newf = new TanFrame;
+    newf->frame_length = 0;
+    newf->frame_start = 0;
+    for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
+    {
+        for(int j = 0; j < TAN_DEFAULT_COLS; j++)
+        {
+            newf->pixels[j][i].color.setRgb(0,0,0,255);
+        }
+    }
+    newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
+    newf->thumbnail.fill(QColor(90,90,90));
+
+    //qDebug() << (currFrame-m_frames.begin());
+    int temp = (currFrame-m_frames.begin());
+    m_frames.insert((currFrame+1-m_frames.begin()), newf);
+    currFrame = (m_frames.begin()+temp+1);
+    //qDebug() << (currFrame-m_frames.begin());
 }
 
-void TanFile::setCurrFrame(int input)
+void TanFile::removeCurrentFrame()
 {
-    currFrame = input;
+    if ((currFrame-m_frames.begin()) == (m_frames.end()-1-m_frames.begin())) // deleting the last frame
+    {qDebug() << "Y";
+         m_frames.removeAt(currFrame-m_frames.begin());
+         currFrame = (m_frames.end()-1);
+    }
+    else // not deleting the last frame
+    {qDebug() << "N";
+         m_frames.removeAt(currFrame-m_frames.begin());
+    }
 }
 
 void TanFile::setFileName(QString input)    //set TAN filename
@@ -88,7 +113,7 @@ QColor TanFile::getRightColor()		//get right-click color
 
 void TanFile::setPresetColor(int presetRGB[])  //set preset colors and right-click color
 {
-		int alpha = 255;
+        //int alpha = 255;
 
 		setRightColor(presetRGB[0],presetRGB[1],presetRGB[2]);
 
@@ -119,4 +144,17 @@ QColor TanFile::getPresetColor(int index)
 		{
 				return QColor(Qt::black);
 		}
+}
+
+void TanFile::storeFrameColor(int row, int col, QColor m_color){
+    //Takes updated color and stores in project
+    (*currFrame)->pixels[col][row].color = m_color;
+
+
+    //Test to ensure correct color
+    //qInfo("Print to console rgb values");
+    //qInfo("%d",m_color.red());
+    //qInfo("%d",m_color.green());
+    //qInfo("%d",m_color.blue());
+
 }

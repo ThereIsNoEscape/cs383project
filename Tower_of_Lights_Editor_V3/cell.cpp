@@ -12,7 +12,7 @@ CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent
 {
 	setObjectName(name);
 	// Set initial styles
-	QString qss = QString("margin: 0px; border: 2px solid rgb(192,192,192); border-radius: 4px;");
+    QString qss = QString("margin: 0px; border: 2px solid rgb(192,192,192); border-radius: 4px;");
 	setStyleSheet(qss);
 	setColor(color);
 
@@ -114,4 +114,23 @@ void CellWidget::paintEvent(QPaintEvent *event)
 		opt.initFrom(this);
 		QPainter p(this);
 		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+Thumbnail::Thumbnail(TanFrame* fin)
+{
+    framePtr = fin;
+}
+
+Thumbnail::~Thumbnail()
+{
+
+}
+
+bool Thumbnail::event(QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+        emit clicked(framePtr);
+
+    // Pass all other events down to the base class
+    return QWidget::event(event);
 }

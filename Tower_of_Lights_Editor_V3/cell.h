@@ -9,6 +9,8 @@
 #include <QString>
 #include <QColor>
 #include <QMouseEvent>
+#include <QPushButton>
+#include "TanFile.h"
 
 class CellWidget : public QWidget {
 
@@ -54,6 +56,21 @@ private:
 
 	bool _state;
 
+};
+
+class Thumbnail : public QPushButton {
+
+    Q_OBJECT
+
+public:
+    Thumbnail(TanFrame*);
+    ~Thumbnail();
+signals:
+    void clicked(TanFrame*);
+protected:
+    bool event(QEvent *event);
+private:
+    TanFrame* framePtr;
 };
 
 #endif // CELL_H

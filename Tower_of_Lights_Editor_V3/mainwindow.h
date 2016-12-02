@@ -41,12 +41,19 @@ private slots:
     void save();
     void saveAs();
 
-    //void on_cell_colorChanged(const int row, const int col, QColor m_color);
     void on_cell_leftChanged(const int row, const int col, QColor m_color);
     void on_cell_rightChanged(const int row, const int col, QColor m_color);
 
-    void on_pushButton_2_clicked();
-    void on_pushButton_3_clicked();
+    void on_pushButton_prev_clicked();
+    void on_pushButton_next_clicked();
+    void on_pushButton_l_clicked();
+    void on_pushButton_r_clicked();
+    void on_pushButton_new_clicked();
+    void on_pushButton_undo_clicked();
+    void on_pushButton_redo_clicked();
+    void on_pushButton_preview_clicked();
+    void on_pushButton_delete_clicked();
+    void on_thumbnail_clicked();
 
 
     void on_spinBox_valueChanged(int arg1);
@@ -56,23 +63,26 @@ private:
     bool nothingToSave;
 
 	QString m_getObjName(QObject *m_obj);
-
 	void m_generateFrame(int rows, int cols);
-
 	void m_destroyFrame(int rows, int cols);
-
 	void m_connectCellSignals(CellWidget *m_cell);
-
     void m_updateTanFileColor(const int row, const int col, QColor m_color);
-
     void m_setCellColor(CellWidget *, QColor color);
-
     void updateGUIColorButtons();
-
+    void newFrame();
     bool saveSequence();//returns false if the user cancels the entire process
-
     void createActions();
     void createMenus();
+    void generateThumbnailCurrent();
+    void generateThumbnail(TanFrame* ptr);
+    QImage scaleDown(QImage thumbnail);
+    void clearThumbnails(); // used when opening a project or starting a new project
+    void addThumbnail(); // only used when starting a new project;
+    void addThumbnailToEnd(QImage in);
+    void switchSelectedThumbnail(int index);
+    void addCurrentThumbnail();
+    QPushButton* newThumbnail(QImage in);
+    QPushButton* newThumbnail(QString in);
 
     QMenu *fileMenu;
     QAction *newAct;

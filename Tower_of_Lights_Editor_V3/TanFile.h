@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QMessageBox>
 #include "config.h"
+#include <QDebug>        // for testing purposes
 
 // Tower Frame
 struct TanCell {
@@ -15,9 +16,10 @@ struct TanCell {
 
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
-    struct TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
+    TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     int frame_length; // >= 25ms
     int frame_start; // in ms
+    QImage thumbnail;
 };
 
 // TAN File
@@ -28,17 +30,20 @@ private:
     QColor m_color_left;                             // the current color selected
     QColor m_color_right;                            // not saved in file; pulled from the 1st preset color
     QColor m_color_preset[TAN_DEFAULT_COLORPRESETS]; // preset colors
-    int currFrame;                                   // holds current position in list of frames
 
     // m_frame_count = m_frames.size();              // CONSTANT! DO NOT NEED TO STORE
 
 public:
     TanFile(); // New
+    TanFile(QString filename); // New from file
+    TanFile(TanFile* tfile); // Copy constructor
 
-    int getCurrFrame();
-    void setCurrFrame(int);
+    QList<TanFrame*>::iterator currFrame;       // holds current position in list of frames
 
-    QLinkedList<TanFrame> m_frames; //Frame linked list
+    void newFrame(); //creates a new frame after the current one
+    void removeCurrentFrame();
+
+    QList<TanFrame*> m_frames; //Frame linked list
     void setFileName(QString);
     QString getFileName();
 
@@ -55,6 +60,8 @@ public:
 
     void setPresetColor(int []);
     QColor getPresetColor(int index);
+
+    void storeFrameColor(int row, int col, QColor m_Color);
 
     bool Save();
     bool SaveAs();

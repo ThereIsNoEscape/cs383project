@@ -493,4 +493,12 @@ void MainWindow::on_change_color(const QString& p_cell_name, const QColor& p_col
 void MainWindow::on_change_frame() {
     m_undo_index = 0;
     m_changes.clear();
+
+    for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 20; y++) 
+            QString m_cellName = "cell" + (QString("%1").arg((y*12 + x), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((project->m_frames.begin() + project->getCurrFrame()).pixel[x][y]);
+        }
+    }
 }

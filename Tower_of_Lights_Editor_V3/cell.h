@@ -10,7 +10,7 @@
 #include <QColor>
 #include <QMouseEvent>
 #include <QPushButton>
-#include "TanFile.h"
+#include "tanfile.h"
 
 class CellWidget : public QWidget {
 

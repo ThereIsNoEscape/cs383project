@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QMessageBox>
 #include "config.h"
+#include <QDebug>        // for testing purposes
 
 // Tower Frame
 struct TanCell {
@@ -15,9 +16,10 @@ struct TanCell {
 
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
-    struct TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
+    TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     int frame_length; // >= 25ms
     int frame_start; // in ms
+    QImage thumbnail;
 };
 
 // TAN File
@@ -33,8 +35,15 @@ private:
 
 public:
     TanFile(); // New
+    TanFile(QString filename); // New from file
+    TanFile(TanFile* tfile); // Copy constructor
 
-    QLinkedList<TanFrame> m_frames; //Frame linked list
+    QList<TanFrame*>::iterator currFrame;       // holds current position in list of frames
+
+    void newFrame(); //creates a new frame after the current one
+    void removeCurrentFrame();
+
+    QList<TanFrame*> m_frames; //Frame linked list
     void setFileName(QString);
     QString getFileName();
 
@@ -52,9 +61,11 @@ public:
     void setPresetColor(int []);
     QColor getPresetColor(int index);
 
-    void Save();
-    void SaveAs();
-    void SaveAs(const QString &p_filename);
+    void storeFrameColor(int row, int col, QColor m_Color);
+
+    bool Save();
+    bool SaveAs();
+    bool SaveAs(const QString &p_filename);
 };
 
 #endif // TANFILE_H

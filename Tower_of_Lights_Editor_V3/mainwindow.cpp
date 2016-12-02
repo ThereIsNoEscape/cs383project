@@ -17,6 +17,15 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+    project.setLeftColor(255,255,255);
+    project.setRightColor(255,255,255);
+    updateGUIColorButtons();
+    QString qss = ("background-color: #e0e0e0");
+    ui->pushButton_prev->setStyleSheet(qss);
+    ui->pushButton_prev->setEnabled(false);
+    ui->pushButton_next->setStyleSheet(qss);
+    ui->pushButton_next->setEnabled(false);
+    nothingToSave = true;
 }
 
 MainWindow::~MainWindow()
@@ -26,241 +35,242 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+bool MainWindow::saveSequence()
+{
+    if (nothingToSave) return true;
+        QMessageBox::StandardButton reply;
 
+        /* Create Message Box
+         * Title of message box : "Tower Lights"
+         * Prompt message : "Would you like to save?"
+         * 3 button choices : "Save", "No", "Cancel"
+        */
+
+        reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                                                    QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+
+        if (reply==0x00400000)  //if cancel selected
+                return false;
+        if (reply==0x00000800)  //if save selected
+        {
+                if (project.Save()) nothingToSave = true;;
+        }
+        return true;
+}
 
 void MainWindow::openFile()    //when open is clicked
 {
-		QMessageBox::StandardButton reply;
-
-		/* Create Message Box
-		 * Title of message box : "Tower Lights"
-		 * Prompt message : "Would you like to save?"
-		 * 3 button choices : "Save", "No", "Cancel"
-		*/
-
-		reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-																	QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
-
-		if (reply==0x00400000)  //if cancel selected
-				return;
-		if (reply==0x00000800)  //if save selected
-		{
-				project.Save();
-		}
-
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
+    if (!saveSequence()) return;
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"C:/",    //user selects fileName
 											 "Tan File (*.tan*);;All files (*.*)");
-		if (fileName=="")
-				return;
+    if (fileName=="")
+        return;
 
-		QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
-																												//QStringList contents
+    TanFile* prospective = new TanFile(fileName);//this will temporarily hold the information so that if there's something wrong with this file we haven't written in bad data to the project object
+    //this object is deleted when this function returns, so no memory is leaked
+    QStringList contents = getFileContents(fileName);   //loads the contents of the file line by line into
+                                                                                                            //QStringList contents
 
-		//get fileName
-		project.setFileName(fileName);
+    //check version
+    if (contents[0]!="0.4")    //error checking
+    {
+        QMessageBox::information(0,"error","File is an unsupported version");
+        return;
+    }
+    //set audio filename
+    prospective->setAudioFile(contents[1]);   //set audio filename
 
-		//check version
-		if (contents[0]!="0.4")    //error checking
-		{
-				QMessageBox::information(0,"error","not supported version");
-				return;
-		}
-		//set audio filename
-		project.setAudioFile(contents[1]);   //set audio filename
+    //get the current color value
+    QStringList temp;   //holds parsed values
+    int r,g,b;  //holds int values for rgb
 
-		//view section later for audio file error checking
-		/*QString last3 = ;  //get last 3 characters
-		if (contents[1]=="NoAudioFile")
-				m_filename_wav = "NoAudioFile"; //valid
-		else
-		{
-				//check last 3 characters
-				if (last3 == "mp3"||"mp4"||"wav")
-						m_filename_wav = contents[1];   //valid audio type
-				else
-						QMessageBox::information(0,"error","audio format not supported");   //invalid audio type
-		}*/
+    temp = contents[2].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    r = temp[0].toInt();    // convert to integers
+    g = temp[1].toInt();    //
+    b = temp[2].toInt();    //
+    //WARNING: This code will accept characters with ascii values within the range
+    //         This should not really be a big deal however
+    if ((r<0)||(r>255)||(g<0)||(g>255)||(b<0)||(b>255)) //error checking on rgb values
+    {
+        QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
+        return;
+    }
+    prospective->setLeftColor(r,g,b);     //set the rgb value
 
-		//get the current color value
-		QStringList temp;   //holds parsed values
-		int r,g,b;  //holds int values for rgb
+    //get the preset RGB values
+    QStringList buffer; //holds parsed input string
+    int presetRGB[TAN_DEFAULT_COLORPRESETS*3];  //holds each individual rgb value
 
-		temp = contents[2].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
-		r = temp[0].toInt();    // convert to integers
-		g = temp[1].toInt();    //
-		b = temp[2].toInt();    //
-		//WARNING: This code will accept characters with ascii values within the range
-		//         This should not really be a big deal however
-		if ((r<0)||(r>255)||(g<0)||(g>255)||(b<0)||(b>255)) //error checking on rgb values
-		{
-				QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
-				return;
-		}
-		project.setLeftColor(r,g,b);     //set the rgb value
-        updateGUIColorButtons();
+    buffer = contents[3].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
 
-		//get the preset RGB values
-		QStringList buffer; //holds parsed input string
-		int presetRGB[TAN_DEFAULT_COLORPRESETS*3];  //holds each individual rgb value
+    for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
+        presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
 
-		buffer = contents[3].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    prospective->setPresetColor(presetRGB);
 
-		for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
-				presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
+    //get the number of frames
+    QStringList hype = contents[4].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
+    int num_frames = hype[0].toInt();  //set num_frames
+    if (num_frames<1)   //error checking the number of frames
+    {
+        QMessageBox::information(0,"error","number of frames must be at least 1");
+        return;
+    }
+    //error check dimensions
+    if (hype[1]!="10" || hype[2]!="4")
+    {
+        QMessageBox::information(0,"error","invalid dimensions");
+        return;
+    }
 
-		project.setPresetColor(presetRGB);
-        updateGUIColorButtons();
+    /*************************************************************************************/
 
-		//get the number of frames
-		QStringList hype = contents[4].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces
-		int num_frames = hype[0].toInt();  //set num_frames
-		if (num_frames<1)   //error checking the number of frames
-		{
-				QMessageBox::information(0,"error","number of frames must be at least 1");
-				return;
-		}
-		//error check dimensions
-		if (hype[1]!="10" || hype[2]!="4")
-		{
-				QMessageBox::information(0,"error","invalid dimensions");
-				return;
-		}
+    //error checking the tanfile frames
+    if (((contents.size()-5) % 21)!=0)
+    {
+        QMessageBox::information(0,"error","frames corrupt");
+        return;
+    }
+    else if (num_frames!=((contents.size() - 5) / 21))
+    {
+        QMessageBox::information(0,"error","specified number of frames does not equal actual number of frames");
+        num_frames = (contents.size() - 5) / 21;
+    }
 
-		/*************************************************************************************/
+    for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
+    {
+        TanFrame* frame = new TanFrame;
+        frame->frame_start = contents[5+k].toInt();  //set num_frames
+        frame->thumbnail = QImage(120, 200, QImage::Format_RGB32);
+        frame->thumbnail.fill(QColor(90,90,90));
+        int rgb[3]; //holds an rgb value
+        //calculate frame duration
 
-		//error checking the tanfile frames
-		if (((contents.size()-5) % 21)!=0)
-		{
-				QMessageBox::information(0,"error","frames corrupt");
-				return;
-		}
-		else if (num_frames!=((contents.size() - 5) / 21))
-		{
-				QMessageBox::information(0,"error","specified number of frames does not equal actual number of frames");
-				num_frames = (contents.size() - 5) / 21;
-		}
+        hype.clear();   //clear QStringList
+        for (int i=0;i<TAN_DEFAULT_ROWS;i++) //the increment for rows
+        {
+            hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
 
-		project.m_frames.clear(); //clear the linked list
-        project.m_frames.begin();   //start the linked list at the beginning
-
-		for (int k=0;k<num_frames*21;k+=21) //where k is the fileoffset
-		{
-				TanFrame frame;
-				frame.frame_start = contents[5+k].toInt();  //set num_frames
-                int rgb[3]; //holds an rgb value
-				//calculate frame duration
-
-				hype.clear();   //clear QStringList
-				for (int i=0;i<TAN_DEFAULT_ROWS;i++) //the increment for rows
-				{
-						hype = contents[i+k+6].split(QRegExp(" "),QString::SkipEmptyParts); //delimit by spaces for row
-
-                        if (hype.size()!=TAN_DEFAULT_COLS*3)
-						{
-										QMessageBox::information(0,"error","frame contains invalid number of rgb values");
-										return;
-						}
-                        for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
-						{
-                            rgb[0] = hype[j].toInt();
-                            rgb[1] = hype[j+1].toInt();
-                            rgb[2] = hype[j+2].toInt();
-                            if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
-                            {
-                                    QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
-                                    return;
-                            }
-                            frame.pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
-                        }
+            if (hype.size()!=TAN_DEFAULT_COLS*3)
+            {
+                QMessageBox::information(0,"error","frame contains invalid number of rgb values");
+                return;
+            }
+            for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
+            {
+                rgb[0] = hype[j].toInt();
+                rgb[1] = hype[j+1].toInt();
+                rgb[2] = hype[j+2].toInt();
+                if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
+                {
+                    QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
+                    return;
                 }
-				//got a frame!
-                project.m_frames.append(frame); //add the frame to the linked list
+                frame->pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
+            }
         }
-}
+        //got a frame!
+        prospective->m_frames.append(frame); //add the frame to the linked list
+    }
 
+    //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
+
+    //set time interval for each frame
+    QList<TanFrame*>::iterator iter;
+    int counter = 1;
+    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++){
+        if(counter == num_frames){          //if you're on the last frame
+            (*iter)->frame_length = 25;        //default time interval for last frame
+            //qDebug() << iter->frame_length;
+        }
+        //next frame start time - current frame start time = current frame time interval
+        (*iter)->frame_length = ((*iter) + 1)->frame_start - (*iter)->frame_start;
+        counter++;
+    }
+
+    project = TanFile(prospective);
+
+    clearThumbnails();
+
+    ui->pushButton_next->setIcon(QIcon());
+    ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+    ui->pushButton_next->setEnabled(false);
+    ui->pushButton_prev->setIcon(QIcon());
+    ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
+    ui->pushButton_prev->setEnabled(false);
+
+    updateGUIColorButtons();
+
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+
+    if (project.m_frames.size() > 1)
+    {
+        generateThumbnail((*(project.currFrame+1)));
+        ui->pushButton_delete->setEnabled(true);
+        ui->pushButton_next->setEnabled(true);
+        ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.currFrame+1))->thumbnail, Qt::AutoColor)));
+        ui->pushButton_next->setIconSize(QSize(240,400));
+
+        for (QList<TanFrame*>::iterator i = (project.m_frames.begin()+1); i != project.m_frames.end(); i++)
+        {
+            generateThumbnail((*i));
+            addThumbnailToEnd((*i)->thumbnail);
+        }
+    }
+
+    nothingToSave = true;
+}
 
 void MainWindow::newFile()
 {
-    QMessageBox::StandardButton reply;
+    if (!saveSequence()) return;
+    clearThumbnails();
+    project = TanFile();
 
-    /* Create Message Box
-     * Title of message box : "Tower Lights"
-     * Prompt message : "Would you like to save?"
-     * 3 button choices : "Save", "No", "Cancel"
-    */
-    QString qss;
-
-    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-                                  QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
-
-
-    if(reply == QMessageBox::Save){
-        //TanFile newFile;
-        if(QString(project.getFileName()).isEmpty()){ // check if there is a file name
-            project.SaveAs();
-            //qDebug() << "SaveAs\n";
-        }else{
-            project.Save();
-            //qDebug() << "Save\n";
-        }
-        project = TanFile();
-        TanFrame frame;
-        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
-            for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
-                qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-            }
-        }
-        project.setLeftColor(255,255,255);
-        project.setRightColor(255,255,255);
-        updateGUIColorButtons();
-    }else if(reply == QMessageBox::No){
-        project = TanFile();
-        TanFrame frame;
-        for(int i=0; i<TAN_DEFAULT_ROWS; i++){
-            for(int j=0; j<TAN_DEFAULT_COLS; j++){
-                //frame.pixels[i][j].color.setRgb(0,0,0,255); //set all pixels in grid to black
-                qss = ("background-color: #000000");
-                ui->gridLayout_2->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-            }
-        }
-        project.setLeftColor(255,255,255);
-        project.setRightColor(255,255,255);
-        updateGUIColorButtons();
-    }else if(reply == QMessageBox::Cancel){
-        //do nothing
-    }
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: #000000"));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+    ui->pushButton_next->setIcon(QIcon());
+    ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+    ui->pushButton_next->setEnabled(false);
+    ui->pushButton_prev->setIcon(QIcon());
+    ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
+    ui->pushButton_prev->setEnabled(false);
+    project.setLeftColor(255,255,255);
+    project.setRightColor(255,255,255);
+    updateGUIColorButtons();
+    nothingToSave = true;
 }
 
 void MainWindow::save()
 {
-    project.Save();
+    if (project.Save()) nothingToSave = true;
 }
 
 void MainWindow::saveAs()
 {
-    qDebug("saving as");
-    project.SaveAs();
+    //qDebug("saving as");
+    if (project.SaveAs()) nothingToSave = true;
 }
 
 // Create the grid of cell widgets
 void MainWindow::m_generateFrame(int rows, int cols)
 {
-    project.setLeftColor(255,255,255);
-    project.setRightColor(255,255,255);
-    updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
-	QGridLayout *m_FrameLayout = ui->gridLayout_2;
+    QGridLayout *m_FrameLayout = ui->gridLayout;
 	QString m_cellName;
 	QSizePolicy m_cellSizePolicy;
-	QSize m_cellSize(36,36);	// Arbitrarily selected as a decent minimum ("half-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
+    QSize m_cellSize(18,18);	// Arbitrarily selected as a decent minimum ("quarter-inch" @ 72 ppi, less @ 96 ppi or higher resolutions)
 
 	// Configure the size policy that every cell widget will use
-	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
+    m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setHorizontalStretch(1);
-	m_cellSizePolicy.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+    m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
 	m_cellSizePolicy.setVerticalStretch(1);
 	m_cellSizePolicy.setHeightForWidth(true);
 
@@ -270,8 +280,8 @@ void MainWindow::m_generateFrame(int rows, int cols)
 		{
 			// Generate the name for each cell, based on rows and cols
 			// Relocate this job to TanFrame project at some point?
-			m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-			CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
 			m_cellWidget->setMinimumSize(m_cellSize);
 			m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
@@ -283,6 +293,7 @@ void MainWindow::m_generateFrame(int rows, int cols)
 			m_FrameLayout->update();
 		}
 	}
+    addThumbnail();
 }
 
 // Destroy the grid of cell widgets
@@ -303,31 +314,47 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 			m_cellWidget = 0;
 		}
 	}
-
 }
 
 
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-	connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(on_cell_clicked(const int, const int, const char)));
 }
 
 
-// The primary handler for cell clicks
-void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+// Slot to respond to cell clicks
+// Determines the color to use, based on which type of click (left or right)
+// Updates the displayed color in the clicked cell and
+// updates appropriate frame of Tan file representation with color information
+void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
 {
-	//QString m_cellName = m_getObjName(QObject::sender());
-	//CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-	m_updateTanFileColor(row, col, m_color);
-}
+    QString m_cellName = m_getObjName(QObject::sender());
+    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    QColor m_color = Qt::black;
 
+    // Determine whether it was a left or right click
+    if (btn == 'L')
+    {
+        m_color = project.getLeftColor();
+    }
+    else if (btn == 'R')
+    {
+        m_color = project.getRightColor();
+    }
+    // Then update the cell color
+    m_setCellColor(m_cell, m_color);
+    // And update the corresponding color in the Tan file representation
+    project.storeFrameColor(row,col,project.getLeftColor());
+    nothingToSave = false;
+    //m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
+}
 
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
 void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
 {
-	TanFrame frame;
-	frame.pixels[col][row].color = m_color;
+    (*project.currFrame)->pixels[col][row].color = m_color;
 	// Need to determine how to identify each frame
 	/*
 	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
@@ -340,11 +367,9 @@ void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_col
 // Obtain a reference to a cell widget by name, and set its color.
 // This is the function to call when opening or creating a new Tan file.
 // Does not trigger the signal that will then cause an update to the corresponding TanFile cell
-void MainWindow::m_setCellColor(QString m_cellName, QColor m_color)
+void MainWindow::m_setCellColor(CellWidget *m_cell, QColor color)
 {
-	CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-
-	m_cell->setColor(m_color);
+    m_cell->setColor(color);
 }
 
 
@@ -397,14 +422,14 @@ void MainWindow::updateGUIColorButtons()
 {
     ui->label_2->setText(project.getLeftColor().name());
     QString qss = ("background-color: " + project.getLeftColor().name());
-    ui->pushButton_2->setStyleSheet(qss);
+    ui->pushButton_l->setStyleSheet(qss);
 
     ui->label_3->setText(project.getRightColor().name());
     qss = ("background-color: " + project.getRightColor().name());
-    ui->pushButton_3->setStyleSheet(qss);
+    ui->pushButton_r->setStyleSheet(qss);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_l_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
     if(color.isValid())
@@ -412,9 +437,130 @@ void MainWindow::on_pushButton_2_clicked()
         project.setLeftColor(color);
         updateGUIColorButtons();
     }
+    nothingToSave = false;
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::generateThumbnailCurrent()
+{
+    QString tempString;
+    QColor tempColor;
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            tempString = ui->gridLayout->itemAtPosition(y,x)->widget()->styleSheet();
+            tempColor = QColor(tempString.mid(tempString.length()-7));
+            for (int a = 0; a < 8; a++)
+            {
+                for (int b = 0; b < 8; b++)
+                {
+                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
+                    (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
+                }
+            }
+            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+        }
+    }
+}
+
+void MainWindow::generateThumbnail(TanFrame* ptr)
+{
+    QColor tempColor;
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            tempColor = ptr->pixels[x][y].color;
+            for (int a = 0; a < 8; a++)
+            {
+                for (int b = 0; b < 8; b++)
+                {
+                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
+                    ptr->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
+                }
+            }
+            ptr->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            ptr->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            ptr->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            ptr->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+        }
+    }
+}
+
+void MainWindow::on_pushButton_prev_clicked()
+{
+    switchSelectedThumbnail((project.currFrame-project.m_frames.begin())-1);
+
+    ui->pushButton_next->setEnabled(true);
+    ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
+    ui->pushButton_next->setIconSize(QSize(240,400));
+
+    //qDebug() << (project.currFrame-project.m_frames.begin());
+    //project.currFrame--;
+    int temp = (project.currFrame-project.m_frames.begin());
+    project.currFrame = (project.m_frames.begin()+temp-1);
+    //qDebug() << (project.currFrame-project.m_frames.begin());
+
+    if ((project.currFrame-project.m_frames.begin()) == 0)
+    {
+        ui->pushButton_prev->setIcon(QIcon());
+        ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
+        ui->pushButton_prev->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_prev->setEnabled(true);
+        ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())-1))->thumbnail, Qt::AutoColor)));
+        ui->pushButton_prev->setIconSize(QSize(240,400));
+    }
+
+    QString qss;
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+    nothingToSave = false;
+}
+
+void MainWindow::on_pushButton_next_clicked()
+{
+    switchSelectedThumbnail((project.currFrame-project.m_frames.begin())+1);
+
+    ui->pushButton_prev->setEnabled(true);
+    ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
+    ui->pushButton_prev->setIconSize(QSize(240,400));
+
+    //qDebug() << (project.currFrame-project.m_frames.begin()) << " !!";
+    //project.currFrame++;
+    int temp = (project.currFrame-project.m_frames.begin());
+    //qDebug() << temp << " !!!";
+    project.currFrame = (project.m_frames.begin()+temp+1);
+    //qDebug() << (project.currFrame-project.m_frames.begin()) << " | " << (project.m_frames.end()-project.m_frames.begin());
+
+    if ((project.currFrame-project.m_frames.begin()) == (project.m_frames.end()-1-project.m_frames.begin()))
+    {
+        ui->pushButton_next->setIcon(QIcon());
+        ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+        ui->pushButton_next->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_next->setEnabled(true);
+        ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.currFrame+1))->thumbnail, Qt::AutoColor)));
+        ui->pushButton_next->setIconSize(QSize(240,400));
+    }
+
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+    nothingToSave = false;
+}
+
+void MainWindow::on_pushButton_r_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
     if(color.isValid())
@@ -422,5 +568,262 @@ void MainWindow::on_pushButton_3_clicked()
         project.setRightColor(color);
         updateGUIColorButtons();
     }
+    nothingToSave = false;
 }
 
+
+void MainWindow::on_pushButton_new_clicked()
+{
+    newFrame();
+}
+
+void MainWindow::on_pushButton_undo_clicked()
+{
+
+}
+
+void MainWindow::on_pushButton_redo_clicked()
+{
+
+}
+
+QImage MainWindow::scaleDown(QImage thumbnail)
+{
+    QImage ret = QImage(60, 100, QImage::Format_RGB32);
+    ret.fill(QColor(90,90,90));
+    QColor tempColor;
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            tempColor = thumbnail.pixelColor(((x*9)+8),((y*9)+12));
+            for (int a = 0; a < 3; a++)
+            {
+                for (int b = 0; b < 3; b++)
+                {
+                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
+                    ret.setPixelColor(((x*5)+b+1), ((y*5)+a+1), tempColor);
+                }
+            }
+        }
+    }
+    return ret;
+}
+
+void MainWindow::newFrame()
+{
+    if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(true);
+    addCurrentThumbnail();
+
+    ui->pushButton_prev->setEnabled(true);
+    ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
+    ui->pushButton_prev->setIconSize(QSize(240,400));
+
+    project.newFrame();
+    QString qss;
+    //set all pixels in grid to black
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet("background-color: #000000");
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+    nothingToSave = false;
+}
+
+
+void MainWindow::on_spinBox_valueChanged(int arg1)
+{
+    int totalTime = 0;                      //frame_legnth's < currFrame added together
+    QList<TanFrame*>::iterator i; //iterator for linked list
+    for(i = project.m_frames.begin(); i != project.m_frames.end(); i++){ //from begining of linked list to end of linked list
+        if(i == project.currFrame){                               //if iterator is on your current frame
+            (*i)->frame_length = arg1;                             //set frame length to the value in the spin box
+            (*i)->frame_start = totalTime;                         //set your current frame start time to all previous frame lengths added together
+            //qDebug() << (*i)->frame_length << (*i)->frame_start;
+        }else if(i < project.currFrame) {                          //if iterator is on a frame < your current frame
+            totalTime = totalTime + (*i)->frame_length;            //add frame legnth to total time
+        }
+    }
+    nothingToSave = false;
+}
+
+void MainWindow::clearThumbnails() // used when opening a project or starting a new project
+{
+    QPushButton* temp;
+    for (int c = 0; c < project.m_frames.size(); c++)
+    {
+        temp = ((QPushButton*)(ui->horizontalLayout_2->itemAt(0)->widget()));
+        ui->horizontalLayout_2->removeWidget(temp);
+        delete temp;
+        ui->horizontalLayout_2->update();
+    }
+    addThumbnail();
+}
+
+void MainWindow::addThumbnail() // only used when starting a new project;
+{
+    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"));
+    ui->horizontalLayout_2->addWidget(button);
+    button->show();
+    ui->horizontalLayout_2->update();
+}
+
+void MainWindow::addThumbnailToEnd(QImage in)
+{
+    QPushButton *button = newThumbnail(in);
+    ui->horizontalLayout_2->addWidget(button);
+    button->show();
+    ui->horizontalLayout_2->update();
+}
+
+void MainWindow::switchSelectedThumbnail(int index) // used when the user switches frames
+{
+    generateThumbnailCurrent();
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(scaleDown((*project.currFrame)->thumbnail), Qt::AutoColor)));
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
+
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt(index)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt(index)->widget()))->setIconSize(QSize(120,200));
+}
+
+void MainWindow::addCurrentThumbnail() // used when creating a new frame (also switches selected frame)
+{
+    generateThumbnailCurrent();
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(scaleDown((*project.currFrame)->thumbnail), Qt::AutoColor)));
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
+
+    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"));
+    ui->horizontalLayout_2->insertWidget(((project.currFrame-project.m_frames.begin())+1), button);
+    button->show();
+    ui->horizontalLayout_2->update();
+}
+
+QPushButton* MainWindow::newThumbnail(QImage in)
+{
+    QString qss;
+    QSizePolicy sizePolicy;
+    QSize size(70,100);
+
+    sizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
+    sizePolicy.setVerticalStretch(1);
+    sizePolicy.setHeightForWidth(true);
+
+    QPushButton *button = new QPushButton("", this);
+    button->setSizePolicy(sizePolicy);
+    button->setMinimumSize(size);
+    button->setMaximumSize(size);
+    // Adding cell widget to the frame's gridLayout
+    qss = QString("margin: 5px;");
+    button->setStyleSheet(qss);
+    button->setIcon(QIcon(QPixmap::fromImage(scaleDown(in), Qt::AutoColor)));
+    button->setIconSize(QSize(120,200));
+    connect(button, SIGNAL (released()),this, SLOT (on_thumbnail_clicked()));
+    return button;
+}
+
+QPushButton* MainWindow::newThumbnail(QString in)
+{
+    QString qss;
+    QSizePolicy sizePolicy;
+    QSize size(70,100);
+
+    sizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
+    sizePolicy.setVerticalStretch(1);
+    sizePolicy.setHeightForWidth(true);
+
+    QPushButton *button = new QPushButton("", this);
+    button->setSizePolicy(sizePolicy);
+    button->setMinimumSize(size);
+    button->setMaximumSize(size);
+    // Adding cell widget to the frame's gridLayout
+    qss = QString("margin: 5px;");
+    button->setStyleSheet(qss);
+    button->setIcon(QIcon(in));
+    button->setIconSize(QSize(120,200));
+    connect(button, SIGNAL (released()),this, SLOT (on_thumbnail_clicked()));
+    return button;
+}
+
+void MainWindow::on_pushButton_preview_clicked()
+{
+//    qDebug() << "====================";
+//    QString temp = "";
+//    for (int c = 0; c < 12; c++)
+//        temp.append((*project.currFrame)->pixels[c][0].color == QColor("#000000") ? "I" : "O");
+//    qDebug() << temp;
+//    qDebug() << "==================== " << (project.currFrame-project.m_frames.begin());
+}
+
+void MainWindow::on_pushButton_delete_clicked()
+{
+    QPushButton* temp;
+    if ((project.currFrame-project.m_frames.begin()) == 0)
+    { // deleting the start of the queue
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())+1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())+1)->widget()))->setIconSize(QSize(120,200));
+
+        temp = ((QPushButton*)(ui->horizontalLayout_2->itemAt(0)->widget()));
+        ui->horizontalLayout_2->removeWidget(temp);
+        delete temp;
+        ui->horizontalLayout_2->update();
+        qDebug() << (project.currFrame-project.m_frames.begin()) << "A";
+        project.removeCurrentFrame();
+        project.currFrame = project.m_frames.begin();
+        qDebug() << (project.currFrame-project.m_frames.begin()) << "A";
+        if (project.m_frames.size() == 1)
+        {
+            ui->pushButton_next->setIcon(QIcon());
+            ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+            ui->pushButton_next->setEnabled(false);
+        }
+        else
+        {
+            ui->pushButton_next->setEnabled(true);
+            ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())+1))->thumbnail, Qt::AutoColor)));
+            ui->pushButton_next->setIconSize(QSize(240,400));
+        }
+    }
+    else
+    { // not deleting the start of the queue
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIconSize(QSize(120,200));
+
+        temp = ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()));
+        ui->horizontalLayout_2->removeWidget(temp);
+        delete temp;
+        ui->horizontalLayout_2->update();
+        qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
+        project.removeCurrentFrame();
+        qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
+
+        if ((project.currFrame-project.m_frames.begin()) == 0)
+        {
+            ui->pushButton_prev->setIcon(QIcon());
+            ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
+            ui->pushButton_prev->setEnabled(false);
+        }
+        else
+        {
+            ui->pushButton_prev->setEnabled(true);
+            ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())-1))->thumbnail, Qt::AutoColor)));
+            ui->pushButton_prev->setIconSize(QSize(240,400));
+        }
+    }
+
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+
+    nothingToSave = false;
+
+    if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(false);
+}
+
+void MainWindow::on_thumbnail_clicked()
+{
+    qDebug() << "omgyay";
+}

@@ -141,8 +141,6 @@ Thumbnail::~Thumbnail()
 bool Thumbnail::event(QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
-    {
-        emit clicked(/*42*/(long int)framePtr);
-    }
+        emit clicked((long int)framePtr);
     else return QWidget::event(event);// Pass all other events down to the base class
 }

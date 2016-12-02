@@ -63,8 +63,6 @@ private slots:
     void on_pushButton_delete_clicked();
     void on_pushButton_clearFrame_clicked();
     void thumbnail_clicked(const long int);
-    //void thumbnail_clicked(const int);
-    //void thumbnail_clicked();
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();

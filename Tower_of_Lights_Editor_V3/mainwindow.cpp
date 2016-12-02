@@ -30,48 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
     undoAct->setEnabled(false);
     redoAct->setEnabled(false);
     nothingToSave = true;
-
-//    QSizePolicy sizePolicy;
-//    QSize size(70,100);
-
-//    sizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
-//    sizePolicy.setHorizontalStretch(1);
-//    sizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
-//    sizePolicy.setVerticalStretch(1);
-//    sizePolicy.setHeightForWidth(true);
-
-//    Thumbnail *button = new Thumbnail((*project.currFrame));
-//    //Thumbnail *buttoo = new Thumbnail((*project.currFrame));
-//    button->setSizePolicy(sizePolicy);
-//    //buttoo->setSizePolicy(sizePolicy);
-//    button->setMinimumSize(size);
-//    //buttoo->setMinimumSize(size);
-//    button->setMaximumSize(size);
-//    //buttoo->setMaximumSize(size);
-//    // Adding cell widget to the frame's gridLayout
-//    qss = QString("margin: 5px;");
-//    button->setStyleSheet(qss);
-//    //buttoo->setStyleSheet(qss);
-
-//    QImage ret = QImage(60, 100, QImage::Format_RGB32);
-//    ret.fill(QColor(40,90,180));
-//    //QImage retoo = QImage(60, 100, QImage::Format_RGB32);
-//    //retoo.fill(QColor(110,160,50));
-
-//    button->setIcon(QIcon(QPixmap::fromImage(ret, Qt::AutoColor)));
-//    //buttoo->setIcon(QIcon(QPixmap::fromImage(retoo, Qt::AutoColor)));
-//    button->setIconSize(QSize(120,200));
-//    //buttoo->setIconSize(QSize(120,200));
-//    //connect(button, SIGNAL (clicked(TanFrame* in)),this, SLOT (thumbnail_clicked(TanFrame* in)));
-//    //connect(button, SIGNAL (clicked(const int in)),this, SLOT (thumbnail_clicked(const int in)));
-//    //connect(button, SIGNAL (clicked()),this, SLOT (thumbnail_clicked()));
-//    connect(button, SIGNAL (clicked(const long int)),this, SLOT (thumbnail_clicked(const long int)));
-//    //connect(buttoo, SIGNAL (clicky()),this, SLOT (thumbnail_clicked()));
-
-//    ui->horizontalLayout_2->insertWidget(1, button);
-//    //ui->horizontalLayout_2->insertWidget(2, buttoo);
-//    button->show();
-//    ui->horizontalLayout_2->update();
 }
 
 MainWindow::~MainWindow()

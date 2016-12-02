@@ -353,33 +353,10 @@ void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
         m_color = project.getRightColor();
     }
     // Then update the cell color
-    //m_setCellColor(m_cell, m_color);
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,project.getLeftColor());
     nothingToSave = false;
-    //m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
-}
-
-// Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
-void MainWindow::m_updateTanFileColor(const int row, const int col, QColor m_color)
-{
-    (*project.currFrame)->pixels[col][row].color = m_color;
-	// Need to determine how to identify each frame
-	/*
-	struct TanFrame *frame = project->m_frames...@iterator@node_identifier;
-	struct TanCell *cell = frame->cells[row][col];
-	cell->color = m_color;
-	*/
-}
-
-
-// Obtain a reference to a cell widget by name, and set its color.
-// This is the function to call when opening or creating a new Tan file.
-// Does not trigger the signal that will then cause an update to the corresponding TanFile cell
-void MainWindow::m_setCellColor(CellWidget *m_cell, QColor color)
-{
-    m_cell->setColor(color);
 }
 
 

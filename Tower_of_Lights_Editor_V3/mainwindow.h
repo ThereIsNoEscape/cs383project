@@ -78,7 +78,6 @@ private:
 	void m_destroyFrame(int rows, int cols);
 	void m_connectCellSignals(CellWidget *m_cell);
     void m_updateTanFileColor(const int row, const int col, QColor m_color);
-    void m_setCellColor(CellWidget *, QColor color);
     void updateGUIColorButtons();
     void newFrame();
     void newFrameCopy();

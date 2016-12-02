@@ -160,7 +160,7 @@
             <property name="geometry">
              <rect>
               <x>60</x>
-              <y>320</y>
+              <y>330</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -205,7 +205,7 @@
             <property name="geometry">
              <rect>
               <x>40</x>
-              <y>120</y>
+              <y>130</y>
               <width>120</width>
               <height>200</height>
              </rect>
@@ -215,6 +215,22 @@
             </property>
             <property name="text">
              <string/>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_clearFrame">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>370</y>
+              <width>181</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Clear Frame</string>
             </property>
            </widget>
           </widget>
@@ -289,7 +305,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>58</x>
-              <y>320</y>
+              <y>330</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -324,7 +340,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>50</y>
+              <y>90</y>
               <width>181</width>
               <height>41</height>
              </rect>
@@ -407,7 +423,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>40</x>
-              <y>120</y>
+              <y>130</y>
               <width>120</width>
               <height>200</height>
              </rect>
@@ -417,6 +433,22 @@ border-radius: 4px;</string>
             </property>
             <property name="text">
              <string/>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_copyNew">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>50</y>
+              <width>181</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Copy To New Frame</string>
             </property>
            </widget>
           </widget>

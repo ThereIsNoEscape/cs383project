@@ -41,6 +41,7 @@ public:
     QList<TanFrame*>::iterator currFrame;       // holds current position in list of frames
 
     void newFrame(); //creates a new frame after the current one
+    void newFrameCopy(); //creates a new frame copying the current one
     void removeCurrentFrame();
 
     QList<TanFrame*> m_frames; //Frame linked list

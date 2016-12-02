@@ -22,6 +22,28 @@ void TanFile::newFrame()
     //qDebug() << (currFrame-m_frames.begin());
 }
 
+void TanFile::newFrameCopy()
+{
+    TanFrame* newf = new TanFrame;
+    newf->frame_length = (*currFrame)->frame_length;
+    newf->frame_start = (*currFrame)->frame_start;
+    for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
+    {
+        for(int j = 0; j < TAN_DEFAULT_COLS; j++)
+        {
+            newf->pixels[j][i].color = (*currFrame)->pixels[j][i].color;
+        }
+    }
+    newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
+    newf->thumbnail.fill(QColor(90,90,90));
+
+    //qDebug() << (currFrame-m_frames.begin());
+    int temp = (currFrame-m_frames.begin());
+    m_frames.insert((currFrame+1-m_frames.begin()), newf);
+    currFrame = (m_frames.begin()+temp+1);
+    //qDebug() << (currFrame-m_frames.begin());
+}
+
 void TanFile::removeCurrentFrame()
 {
     if ((currFrame-m_frames.begin()) == (m_frames.end()-1-m_frames.begin())) // deleting the last frame

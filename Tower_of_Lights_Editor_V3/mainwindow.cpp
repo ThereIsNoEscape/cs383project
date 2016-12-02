@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_prev->setEnabled(false);
     ui->pushButton_next->setStyleSheet(qss);
     ui->pushButton_next->setEnabled(false);
+    ui->pushButton_undo->setEnabled(false);
+    ui->pushButton_redo->setEnabled(false);
+    undoAct->setEnabled(false);
+    redoAct->setEnabled(false);
     nothingToSave = true;
 }
 
@@ -349,7 +353,7 @@ void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
         m_color = project.getRightColor();
     }
     // Then update the cell color
-    m_setCellColor(m_cell, m_color);
+    //m_setCellColor(m_cell, m_color);
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,project.getLeftColor());
@@ -510,6 +514,7 @@ void MainWindow::generateThumbnail(TanFrame* ptr)
 
 void MainWindow::on_pushButton_prev_clicked()
 {
+    on_change_frame();
     switchSelectedThumbnail((project.currFrame-project.m_frames.begin())-1);
 
     ui->pushButton_next->setEnabled(true);
@@ -545,6 +550,7 @@ void MainWindow::on_pushButton_prev_clicked()
 
 void MainWindow::on_pushButton_next_clicked()
 {
+    on_change_frame();
     switchSelectedThumbnail((project.currFrame-project.m_frames.begin())+1);
 
     ui->pushButton_prev->setEnabled(true);
@@ -595,14 +601,19 @@ void MainWindow::on_pushButton_new_clicked()
     newFrame();
 }
 
+void MainWindow::on_pushButton_copyNew_clicked()
+{
+    newFrameCopy();
+}
+
 void MainWindow::on_pushButton_undo_clicked()
 {
-
+    on_undo();
 }
 
 void MainWindow::on_pushButton_redo_clicked()
 {
-
+    on_redo();
 }
 
 QImage MainWindow::scaleDown(QImage thumbnail)
@@ -645,6 +656,31 @@ void MainWindow::newFrame()
             ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet("background-color: #000000");
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
+    on_change_frame();
+}
+
+void MainWindow::newFrameCopy()
+{
+    if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(true);
+    addCurrentThumbnail();
+
+    ui->pushButton_prev->setEnabled(true);
+    ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
+    ui->pushButton_prev->setIconSize(QSize(240,400));
+
+    project.newFrameCopy();
+    QString qss;
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+    {
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+        {
+            qss = "background-color: " + (*project.currFrame)->pixels[j][i].color.name();
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
+        }
+    }
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
+    nothingToSave = false;
+    on_change_frame();
 }
 
 
@@ -840,6 +876,7 @@ void MainWindow::on_pushButton_delete_clicked()
     nothingToSave = false;
 
     if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(false);
+    on_change_frame();
 }
 
 void MainWindow::on_thumbnail_clicked()
@@ -850,6 +887,7 @@ void MainWindow::on_thumbnail_clicked()
 
 
 void MainWindow::on_undo() {
+    QString qss;
     if (m_undo_index > 0) {
         m_undo_index--;
         qDebug() << m_undo_index << "-";
@@ -859,6 +897,12 @@ void MainWindow::on_undo() {
         m_cellWidget->setColor(change->old_color);
         (*project.currFrame)->pixels[change->x][change->y].color = change->old_color;
     }
+    if (m_undo_index == 0) {
+        ui->pushButton_undo->setEnabled(false);
+        undoAct->setEnabled(false);
+    }
+    ui->pushButton_redo->setEnabled(true);
+    redoAct->setEnabled(true);
 }
 
 void MainWindow::on_redo() {
@@ -870,6 +914,14 @@ void MainWindow::on_redo() {
         m_cellWidget->setColor(change->new_color);
         (*project.currFrame)->pixels[change->x][change->y].color = change->new_color;
         m_undo_index++;
+    }
+    if (m_undo_index == m_changes.size()) {
+        ui->pushButton_redo->setEnabled(false);
+        redoAct->setEnabled(false);
+    }
+    if (m_undo_index > 0) {
+        ui->pushButton_undo->setEnabled(true);
+        undoAct->setEnabled(true);
     }
 }
 
@@ -888,17 +940,39 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     m_changes.append(change);
     m_undo_index++;
     cell->setColor(p_color);
+    undoAct->setEnabled(true);
+    redoAct->setEnabled(false);
+    ui->pushButton_undo->setEnabled(true);
+    ui->pushButton_redo->setEnabled(false);
 }
 
 void MainWindow::on_change_frame() {
     m_undo_index = 0;
     m_changes.clear();
 
-    for (int x = 0; x < 12; x++) {
-        for (int y = 0; y < 20; y++)  {
-            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-            m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
+    //for (int x = 0; x < 12; x++) {
+    //    for (int y = 0; y < 20; y++)  {
+    //        QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+    //        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+    //        m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
+    //    }
+    //}
+    ui->pushButton_undo->setEnabled(false);
+    ui->pushButton_redo->setEnabled(false);
+    undoAct->setEnabled(false);
+    redoAct->setEnabled(false);
+}
+
+
+void MainWindow::on_pushButton_clearFrame_clicked()
+{
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+    {
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+        {
+            (*project.currFrame)->pixels[j][i].color = QColor(0,0,0,0);
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: #000000"));
         }
     }
+    on_change_frame();
 }

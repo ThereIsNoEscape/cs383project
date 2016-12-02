@@ -56,10 +56,12 @@ private slots:
     void on_pushButton_l_clicked();
     void on_pushButton_r_clicked();
     void on_pushButton_new_clicked();
+    void on_pushButton_copyNew_clicked();
     void on_pushButton_undo_clicked();
     void on_pushButton_redo_clicked();
     void on_pushButton_preview_clicked();
     void on_pushButton_delete_clicked();
+    void on_pushButton_clearFrame_clicked();
     void on_thumbnail_clicked();
 
 
@@ -79,6 +81,7 @@ private:
     void m_setCellColor(CellWidget *, QColor color);
     void updateGUIColorButtons();
     void newFrame();
+    void newFrameCopy();
     bool saveSequence();//returns false if the user cancels the entire process
     void createActions();
     void createMenus();

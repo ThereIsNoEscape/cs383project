@@ -891,7 +891,7 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
 }
 
 void MainWindow::on_change_frame() {
-    m_undo_index = 0;i
+    m_undo_index = 0;
     m_changes.clear();
 
     for (int x = 0; x < 12; x++) {

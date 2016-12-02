@@ -906,17 +906,19 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     while (m_undo_index < m_changes.size()) {
         m_changes.removeLast();
     }
-    qDebug() << m_undo_index << x << y;
+    //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
     QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    //CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+
     change->x = x;
     change->y = y;
-    change->old_color = cell->getColor();
+    change->old_color = QColor(ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().mid((ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().length())-7));//cell->getColor();
     change->new_color = p_color;
     m_changes.append(change);
     m_undo_index++;
-    cell->setColor(p_color);
+    //cell->setColor(p_color);
+    ui->gridLayout->itemAtPosition(x,y)->widget()->setStyleSheet((QString("background-color: ").append(p_color.name())));
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);

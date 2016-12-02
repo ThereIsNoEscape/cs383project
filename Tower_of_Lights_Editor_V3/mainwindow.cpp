@@ -207,10 +207,6 @@ void MainWindow::openFile()    //when open is clicked
     ui->pushButton_prev->setEnabled(false);
 
     updateGUIColorButtons();
-
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
     ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     if (project.m_frames.size() > 1)
@@ -238,9 +234,6 @@ void MainWindow::newFile()
     clearThumbnails();
     project = TanFile();
 
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: #000000"));
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->pushButton_next->setIcon(QIcon());
     ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
@@ -491,7 +484,6 @@ void MainWindow::generateThumbnail(TanFrame* ptr)
 
 void MainWindow::on_pushButton_prev_clicked()
 {
-    on_change_frame();
     switchSelectedThumbnail((project.currFrame-project.m_frames.begin())-1);
 
     ui->pushButton_next->setEnabled(true);
@@ -518,16 +510,13 @@ void MainWindow::on_pushButton_prev_clicked()
     }
 
     QString qss;
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
 }
 
 void MainWindow::on_pushButton_next_clicked()
 {
-    on_change_frame();
     switchSelectedThumbnail((project.currFrame-project.m_frames.begin())+1);
 
     ui->pushButton_prev->setEnabled(true);
@@ -554,9 +543,7 @@ void MainWindow::on_pushButton_next_clicked()
         ui->pushButton_next->setIconSize(QSize(240,400));
     }
 
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
 }
@@ -628,9 +615,14 @@ void MainWindow::newFrame()
     project.newFrame();
     QString qss;
     //set all pixels in grid to black
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet("background-color: #000000");
+    for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 20; y++)  {
+            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
+        }
+    }
+
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
     on_change_frame();
@@ -647,14 +639,14 @@ void MainWindow::newFrameCopy()
 
     project.newFrameCopy();
     QString qss;
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-    {
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-        {
-            qss = "background-color: " + (*project.currFrame)->pixels[j][i].color.name();
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
+    for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 20; y++)  {
+            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
         }
     }
+
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
     on_change_frame();
@@ -845,9 +837,6 @@ void MainWindow::on_pushButton_delete_clicked()
         }
     }
 
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
     ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     nothingToSave = false;
@@ -909,16 +898,16 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
     QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    //CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
 
     change->x = x;
     change->y = y;
-    change->old_color = QColor(ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().mid((ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().length())-7));//cell->getColor();
+    change->old_color = cell->getColor();
     change->new_color = p_color;
     m_changes.append(change);
     m_undo_index++;
-    //cell->setColor(p_color);
-    ui->gridLayout->itemAtPosition(x,y)->widget()->setStyleSheet((QString("background-color: ").append(p_color.name())));
+    cell->setColor(p_color);
+    //ui->gridLayout->itemAtPosition(x,y)->widget()->setStyleSheet((QString("background-color: ").append(p_color.name())));
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);
@@ -929,13 +918,13 @@ void MainWindow::on_change_frame() {
     m_undo_index = 0;
     m_changes.clear();
 
-    //for (int x = 0; x < 12; x++) {
-    //    for (int y = 0; y < 20; y++)  {
-    //        QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    //        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-    //        m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
-    //    }
-    //}
+    for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 20; y++)  {
+            QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
+        }
+    }
     ui->pushButton_undo->setEnabled(false);
     ui->pushButton_redo->setEnabled(false);
     undoAct->setEnabled(false);
@@ -949,8 +938,7 @@ void MainWindow::on_pushButton_clearFrame_clicked()
     {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
         {
-            (*project.currFrame)->pixels[j][i].color = QColor(0,0,0,0);
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: #000000"));
+            (*project.currFrame)->pixels[i][j].color = QColor(0,0,0,0);
         }
     }
     on_change_frame();

@@ -31,11 +31,9 @@ public:
 
 signals:
 
-    //void colorChanged(const int row, const int col, QColor color);
-    void rightClick(const int row,const int col,QColor color); //right click
-    void leftClick(const int row,const int col,QColor color);  //left click
+    void colorChanged(const int row, const int col, QColor color);
 
-	void clicked(const int row, const int col);
+    void clicked(const int row, const int col, const char btn);
 
 	void selected(const int row, const int col);
 

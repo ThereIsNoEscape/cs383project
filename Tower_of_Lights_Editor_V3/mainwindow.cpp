@@ -17,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+    project.setLeftColor(255,255,255);
+    project.setRightColor(255,255,255);
+    updateGUIColorButtons();
     QString qss = ("background-color: #e0e0e0");
     ui->pushButton_prev->setStyleSheet(qss);
     ui->pushButton_prev->setEnabled(false);
@@ -169,7 +172,24 @@ void MainWindow::openFile()    //when open is clicked
         //got a frame!
         prospective->m_frames.append(frame); //add the frame to the linked list
     }
+
     //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
+
+    //set time interval for each frame
+    QList<TanFrame*>::iterator iter;
+    int counter = 1;
+    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++){
+        if(counter == num_frames){          //if you're on the last frame
+            (*iter)->frame_length = 25;        //default time interval for last frame
+            //qDebug() << iter->frame_length;
+        }
+        //next frame start time - current frame start time = current frame time interval
+        (*iter)->frame_length = ((*iter) + 1)->frame_start - (*iter)->frame_start;
+        counter++;
+    }
+
+    project = TanFile(prospective);
+
     clearThumbnails();
 
     ui->pushButton_next->setIcon(QIcon());
@@ -179,12 +199,12 @@ void MainWindow::openFile()    //when open is clicked
     ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
     ui->pushButton_prev->setEnabled(false);
 
-    project = TanFile(prospective);
     updateGUIColorButtons();
 
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
             ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     if (project.m_frames.size() > 1)
     {
@@ -213,6 +233,7 @@ void MainWindow::newFile()
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
             ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: #000000"));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->pushButton_next->setIcon(QIcon());
     ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
     ui->pushButton_next->setEnabled(false);
@@ -239,9 +260,6 @@ void MainWindow::saveAs()
 // Create the grid of cell widgets
 void MainWindow::m_generateFrame(int rows, int cols)
 {
-    project.setLeftColor(255,255,255);
-    project.setRightColor(255,255,255);
-    updateGUIColorButtons();
 	int i = 0, j = 0;
 	//QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
@@ -302,43 +320,35 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-    //connect(m_cell, SIGNAL(colorChanged(const int, const int, QColor)), this, SLOT(on_cell_colorChanged(const int, const int, QColor)));
-    connect(m_cell, SIGNAL(rightClick(const int, const int, QColor)), this, SLOT(on_cell_rightChanged(const int, const int, QColor)));
-    connect(m_cell, SIGNAL(leftClick(const int, const int, QColor)), this, SLOT(on_cell_leftChanged(const int, const int, QColor)));
+    connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(on_cell_clicked(const int, const int, const char)));
 }
 
 
-// The primary handler for cell clicks
-/*void MainWindow::on_cell_colorChanged(const int row, const int col, QColor m_color)
+// Slot to respond to cell clicks
+// Determines the color to use, based on which type of click (left or right)
+// Updates the displayed color in the clicked cell and
+// updates appropriate frame of Tan file representation with color information
+void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
 {
-    //take provided color and assign it to the
     QString m_cellName = m_getObjName(QObject::sender());
     CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    QColor m_color = Qt::black;
 
-    m_setCellColor(m_cell);
-    m_updateTanFileColor(row, col, m_color);   //updates project's appropriate frame with color information
-
-}*/
-void MainWindow::on_cell_leftChanged(const int row, const int col, QColor m_color)
-{
-    nothingToSave = false;
-    //take provided color and assign it to the
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getLeftColor());
+    // Determine whether it was a left or right click
+    if (btn == 'L')
+    {
+        m_color = project.getLeftColor();
+    }
+    else if (btn == 'R')
+    {
+        m_color = project.getRightColor();
+    }
+    // Then update the cell color
+    m_setCellColor(m_cell, m_color);
+    // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,project.getLeftColor());
-    //m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
-}
-
-void MainWindow::on_cell_rightChanged(const int row, const int col, QColor m_color)
-{
     nothingToSave = false;
-    //take provided color and assign it to the
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
-    m_setCellColor(m_cell,project.getRightColor());
-    project.storeFrameColor(row,col,project.getRightColor());
-    //m_updateTanFileColor(row, col, project.getRightColor());   //updates project's appropriate frame with color information
+    //m_updateTanFileColor(row, col, project.getLeftColor());   //updates project's appropriate frame with color information
 }
 
 // Update the corresponding Cell struct in TanFrame when color is changed in a cell widget.
@@ -509,13 +519,9 @@ void MainWindow::on_pushButton_prev_clicked()
 
     QString qss;
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-    {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
-        {
-            qss= ("background-color: " + (*project.currFrame)->pixels[j][i].color.name());
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-        }
-    }
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
 }
 
@@ -547,15 +553,10 @@ void MainWindow::on_pushButton_next_clicked()
         ui->pushButton_next->setIconSize(QSize(240,400));
     }
 
-    QString qss;
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-    {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
-        {
-            qss= ("background-color: " + (*project.currFrame)->pixels[j][i].color.name());
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
-        }
-    }
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
 }
 
@@ -624,6 +625,7 @@ void MainWindow::newFrame()
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
             ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet("background-color: #000000");
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
 }
 
@@ -814,6 +816,7 @@ void MainWindow::on_pushButton_delete_clicked()
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
             ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     nothingToSave = false;
 

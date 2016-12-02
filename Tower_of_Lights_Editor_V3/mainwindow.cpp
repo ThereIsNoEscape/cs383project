@@ -339,8 +339,8 @@ void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 // updates appropriate frame of Tan file representation with color information
 void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
 {
-    QString m_cellName = m_getObjName(QObject::sender());
-    CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    //QString m_cellName = m_getObjName(QObject::sender());
+    //CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
     QColor m_color = Qt::black;
 
     // Determine whether it was a left or right click
@@ -355,7 +355,7 @@ void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
     // Then update the cell color
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
-    project.storeFrameColor(row,col,project.getLeftColor());
+    project.storeFrameColor(row,col,m_color);
     nothingToSave = false;
 }
 
@@ -872,7 +872,7 @@ void MainWindow::on_undo() {
         QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
         CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
         m_cellWidget->setColor(change->old_color);
-        (*project.currFrame)->pixels[change->x][change->y].color = change->old_color;
+        (*project.currFrame)->pixels[change->y][change->x].color = change->old_color;
     }
     if (m_undo_index == 0) {
         ui->pushButton_undo->setEnabled(false);
@@ -889,7 +889,7 @@ void MainWindow::on_redo() {
         QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
         CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
         m_cellWidget->setColor(change->new_color);
-        (*project.currFrame)->pixels[change->x][change->y].color = change->new_color;
+        (*project.currFrame)->pixels[change->y][change->x].color = change->new_color;
         m_undo_index++;
     }
     if (m_undo_index == m_changes.size()) {
@@ -906,17 +906,19 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     while (m_undo_index < m_changes.size()) {
         m_changes.removeLast();
     }
-    qDebug() << m_undo_index << x << y;
+    //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
     QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    //CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+
     change->x = x;
     change->y = y;
-    change->old_color = cell->getColor();
+    change->old_color = QColor(ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().mid((ui->gridLayout->itemAtPosition(x,y)->widget()->styleSheet().length())-7));//cell->getColor();
     change->new_color = p_color;
     m_changes.append(change);
     m_undo_index++;
-    cell->setColor(p_color);
+    //cell->setColor(p_color);
+    ui->gridLayout->itemAtPosition(x,y)->widget()->setStyleSheet((QString("background-color: ").append(p_color.name())));
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);

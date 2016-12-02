@@ -393,6 +393,15 @@ void MainWindow::createActions()
     redoAct = new QAction(tr("&Redo"), this);
     redoAct->setShortcuts(QKeySequence::Redo);
     connect(redoAct, &QAction::triggered, this, &MainWindow::on_redo);
+
+    letterAct = new QAction(tr("&Letter"), this);
+    connect(letterAct, &QAction::triggered, this, &MainWindow::on_insert_letter);
+
+    symbolAct = new QAction(tr("S&ymbol"), this);
+    connect(symbolAct, &QAction::triggered, this, &MainWindow::on_insert_symbol);
+
+    shapeAct = new QAction(tr("S&hape"), this);
+    connect(shapeAct, &QAction::triggered, this, &MainWindow::on_insert_shape);
 }
 
 void MainWindow::createMenus()
@@ -408,6 +417,11 @@ void MainWindow::createMenus()
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(undoAct);
     editMenu->addAction(redoAct);
+
+    insertMenu = menuBar()->addMenu(tr("&Insert"));
+    insertMenu->addAction(letterAct);
+    insertMenu->addAction(symbolAct);
+    insertMenu->addAction(shapeAct);
 }
 
 void MainWindow::updateGUIColorButtons()
@@ -943,3 +957,18 @@ void MainWindow::on_pushButton_clearFrame_clicked()
     }
     on_change_frame();
 }
+
+
+
+void MainWindow::on_insert_letter() {
+    qDebug() << "Letter";
+}
+
+void MainWindow::on_insert_symbol() {
+    qDebug() << "Symbol";
+}
+
+void MainWindow::on_insert_shape()  {
+    qDebug() << "Shape";
+}
+

@@ -69,6 +69,10 @@ private slots:
     void on_undo();
     void on_redo();
 
+    void on_insert_letter();
+    void on_insert_symbol();
+    void on_insert_shape();
+
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;
@@ -107,6 +111,11 @@ private:
     QMenu *editMenu;
     QAction *undoAct;
     QAction *redoAct;
+
+    QMenu *insertMenu;
+    QAction *letterAct;
+    QAction *symbolAct;
+    QAction *shapeAct;
 
     int m_undo_index = 0;
     QLinkedList<struct Change *> m_changes;

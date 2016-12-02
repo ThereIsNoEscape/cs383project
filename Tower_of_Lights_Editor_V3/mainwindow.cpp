@@ -175,22 +175,25 @@ void MainWindow::openFile()    //when open is clicked
 
     //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
 
-    //set time interval for each frame
-    QList<TanFrame*>::iterator iter;
-    int counter = 1;
-    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++){
-        if(counter == num_frames){          //if you're on the last frame
-            (*iter)->frame_length = 25;        //default time interval for last frame
-            //qDebug() << iter->frame_length;
-        }
-        //next frame start time - current frame start time = current frame time interval
-        (*iter)->frame_length = ((*iter) + 1)->frame_start - (*iter)->frame_start;
-        counter++;
-    }
+    clearThumbnails();
 
     project = TanFile(prospective);
 
-    clearThumbnails();
+    //set time interval for each frame
+    QList<TanFrame*>::iterator iter;
+    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++)
+    {
+        if((iter+1) == project.m_frames.end()) //if you're on the last frame
+        {
+            (*iter)->frame_length = 25;        //default time interval for last frame
+            //qDebug() << iter->frame_length;
+        }
+        else
+        {
+            //current frame time interval = next frame start time = current frame start time
+            (*iter)->frame_length = (*(iter + 1))->frame_start - (*iter)->frame_start;
+        }
+    }
 
     ui->pushButton_next->setIcon(QIcon());
     ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
@@ -749,6 +752,7 @@ QPushButton* MainWindow::newThumbnail(QString in)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
+    qDebug() << (*project.currFrame)->frame_length;
 //    qDebug() << "====================";
 //    QString temp = "";
 //    for (int c = 0; c < 12; c++)

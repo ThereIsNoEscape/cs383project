@@ -702,8 +702,6 @@ void MainWindow::on_pushButton_delete_clicked()
     }
     else
     { // not deleting the start of the queue
-        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
-        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIconSize(QSize(120,200));
 
         temp = ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()));
         ui->horizontalLayout_2->removeWidget(temp);
@@ -712,7 +710,11 @@ void MainWindow::on_pushButton_delete_clicked()
         qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
         project.removeCurrentFrame();
         qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
+	((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIconSize(QSize(120,200));
 
+	    
+	    
         if ((project.currFrame-project.m_frames.begin()) == 0)
         {
             ui->pushButton_prev->setIcon(QIcon());
@@ -724,7 +726,17 @@ void MainWindow::on_pushButton_delete_clicked()
             ui->pushButton_prev->setEnabled(true);
             ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())-1))->thumbnail, Qt::AutoColor)));
             ui->pushButton_prev->setIconSize(QSize(240,400));
-        }
+            ui->pushButton_next->setIcon(QIcon());
+            ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+            ui->pushButton_next->setEnabled(false);
+		
+	    if ((*project.currFrame)!=(*project.m_frames.end()))
+            {
+                ui->pushButton_next->setEnabled(true);
+                ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())+1))->thumbnail, Qt::AutoColor)));
+                ui->pushButton_next->setIconSize(QSize(240,400));
+            }
+	}
     }
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);

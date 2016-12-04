@@ -936,7 +936,8 @@ void MainWindow::on_change_frame() {
         for (int y = 0; y < 20; y++)  {
             QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
             CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-            m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
+            m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
+
         }
     }
     ui->pushButton_undo->setEnabled(false);
@@ -952,13 +953,26 @@ void MainWindow::on_pushButton_clearFrame_clicked()
     {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
         {
-            (*project.currFrame)->pixels[i][j].color = QColor(0,0,0,0);
+            (*project.currFrame)->pixels[j][i].color = QColor(0,0,0,0);
         }
     }
     on_change_frame();
 }
 
-
+void MainWindow::spawnEffect()
+{
+    //apply effect
+    for (int r=0;r<TAN_DEFAULT_ROWS;r++)
+        for (int c=0;c<TAN_DEFAULT_COLS;c++)
+        {
+            //update project
+            (*project.currFrame)->pixels[c][r].color  = e.pixels[c][r];
+            //update GUI
+            QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget->setColor((*project.currFrame)->pixels[c][r].color);
+        }
+}
 
 void MainWindow::on_insert_letter() {
     qDebug() << "Letter";

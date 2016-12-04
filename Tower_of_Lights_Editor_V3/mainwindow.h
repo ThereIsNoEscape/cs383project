@@ -15,6 +15,7 @@
 #include "config.h"
 #include "openfile.h"
 #include "cell.h"
+#include "effect.h" //for applying effects
 
 class QAction;
 class QActionGroup;
@@ -39,6 +40,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     TanFile project;   //the object that MainWindow will use for data storage
+    effect e;   //the object that that MainWindow will use to store effect data
     ~MainWindow();
 
 private slots:
@@ -64,7 +66,6 @@ private slots:
     void on_pushButton_clearFrame_clicked();
     void on_thumbnail_clicked();
 
-
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
     void on_redo();
@@ -73,6 +74,7 @@ private slots:
     void on_insert_symbol();
     void on_insert_shape();
 
+    void spawnEffect(); //runs applyEffect
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;

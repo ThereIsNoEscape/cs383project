@@ -50,6 +50,7 @@ private slots:
     void newFile();
     void save();
     void saveAs();
+    int load(QString);
 
     void on_cell_clicked(const int row, const int col, const char btn);
 

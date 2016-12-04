@@ -710,8 +710,8 @@ void MainWindow::on_pushButton_delete_clicked()
         qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
         project.removeCurrentFrame();
         qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
-        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
-	((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())-1)->widget()))->setIconSize(QSize(120,200));
+        ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
+	((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
 
 	    
 	    

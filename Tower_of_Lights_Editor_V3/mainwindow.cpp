@@ -402,6 +402,7 @@ void MainWindow::on_pushButton_prev_clicked()
     QString qss;
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
+
     nothingToSave = false;
 }
 
@@ -435,6 +436,7 @@ void MainWindow::on_pushButton_next_clicked()
 
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
+
     nothingToSave = false;
 }
 
@@ -512,6 +514,8 @@ void MainWindow::newFrame()
             m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
         }
     }
+    //update new frame's start time
+    ui->spinBox->valueChanged(25);
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
@@ -539,7 +543,7 @@ void MainWindow::newFrameCopy()
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
-    on_change_frame();
+    ui->spinBox->valueChanged((*project.currFrame)->frame_length);
 }
 
 
@@ -740,6 +744,7 @@ void MainWindow::on_pushButton_delete_clicked()
     }
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
+    ui->spinBox->valueChanged((*project.currFrame)->frame_length);
 
     nothingToSave = false;
 

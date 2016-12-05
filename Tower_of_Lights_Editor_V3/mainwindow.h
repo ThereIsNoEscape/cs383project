@@ -13,7 +13,6 @@
 #include <QLinkedList>
 #include "tanfile.h"
 #include "config.h"
-#include "openfile.h"
 #include "cell.h"
 #include "effect.h" //for applying effects
 

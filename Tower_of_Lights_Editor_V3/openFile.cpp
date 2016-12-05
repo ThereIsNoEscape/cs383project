@@ -1,4 +1,3 @@
-#include "openfile.h"
 #include "mainwindow.h"
 
 QStringList getFileContents(QString fileName)

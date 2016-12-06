@@ -57,7 +57,11 @@ bool MainWindow::saveSequence()
             return false;
     if (reply==0x00000800)  //if save selected
     {
-            if (project.Save()) nothingToSave = true;;
+            if (project.Save())
+            {
+                this->setWindowTitle(project.getFileName());
+                nothingToSave = true;
+            }
     }
     return true;
 }
@@ -75,6 +79,10 @@ void MainWindow::openFile()    //when open is clicked
 
     if (prospective == NULL) //returns if nothing was returned (the file was invalid)
         return;
+
+    //filename was good, file was loaded, proceed with updating GUI
+
+    this->setWindowTitle(project.getFileName());
 
     clearThumbnails();
 
@@ -186,6 +194,7 @@ void MainWindow::m_generateFrame(int rows, int cols)
 void MainWindow::m_destroyFrame(int rows, int cols)
 {
     QString m_cellName;
+    CellWidget* m_cellWidget;
     int i = 0, j = 0;
 
     for (i=0; i<rows; i++)
@@ -194,8 +203,8 @@ void MainWindow::m_destroyFrame(int rows, int cols)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame *project at some point
-            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+            //m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+            m_cellWidget = (CellWidget*)ui->gridLayout->itemAtPosition(i,j);// MainWindow::findChild<CellWidget*>(m_cellName);
             delete m_cellWidget;
             m_cellWidget = 0;
         }
@@ -737,8 +746,8 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     }
     //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
-    QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    CellWidget *cell = MainWindow::findChild<CellWidget*>(m_cellName);
+    //QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+    CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(x,y)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
 
     change->x = x;
     change->y = y;

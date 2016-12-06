@@ -17,7 +17,6 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
     effectSelected = false;
     effectColor = QColor("#ffffff");
 
-    int i = 0, j = 0;
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
     //QString m_cellName;
@@ -33,9 +32,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
 
     QString qss;
 
-    for (i=0; i<(TAN_DEFAULT_ROWS/2); i++)
+    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
     {
-        for (j=0; j<(TAN_DEFAULT_COLS/3); j++)
+        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame project at some point?
@@ -44,11 +43,11 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
-            qss = QString("margin: 0px; border: 3px solid rgb(0,0,0); border-radius: 4px; background-color: #000000;");
+            qss = QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #000000;");
+
             m_cellWidget->setStyleSheet(qss);
-            //m_cellWidget->setStyleSheet("background-color: #000000");
             // Adding cell widget to the frame's gridLayout
-            m_FrameLayout->addWidget(m_cellWidget, i, j);
+            m_FrameLayout->addWidget(m_cellWidget, y, x);
             m_cellWidget->show();
             m_FrameLayout->update();
         }
@@ -183,7 +182,14 @@ void symbolEffectDialog::on_pushButton_color_clicked()
 
 void symbolEffectDialog::updateGUI()
 {
+    QString qss;
     for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    {
         for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
-            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet("background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
+        {
+            qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
+
+            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
+        }
+    }
 }

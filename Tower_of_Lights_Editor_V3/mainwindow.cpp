@@ -568,7 +568,6 @@ void MainWindow::switchCurrentFrame(int index)
     on_change_frame();
     switchSelectedThumbnail(index);
 
-    int temp = (project.currFrame-project.m_frames.begin());
     project.currFrame = (project.m_frames.begin()+index);
 
     if (index == 0)

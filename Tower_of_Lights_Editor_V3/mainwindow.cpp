@@ -42,24 +42,24 @@ MainWindow::~MainWindow()
 bool MainWindow::saveSequence()
 {
     if (nothingToSave) return true;
-        QMessageBox::StandardButton reply;
+    QMessageBox::StandardButton reply;
 
-        /* Create Message Box
-         * Title of message box : "Tower Lights"
-         * Prompt message : "Would you like to save?"
-         * 3 button choices : "Save", "No", "Cancel"
-        */
+    /* Create Message Box
+     * Title of message box : "Tower Lights"
+     * Prompt message : "Would you like to save?"
+     * 3 button choices : "Save", "No", "Cancel"
+    */
 
-        reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
-                                                                    QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
+    reply = QMessageBox::question(this, "Tower Lights", "Would you like to save?",
+                                                                QMessageBox::Save|QMessageBox::No|QMessageBox::Cancel);
 
-        if (reply==0x00400000)  //if cancel selected
-                return false;
-        if (reply==0x00000800)  //if save selected
-        {
-                if (project.Save()) nothingToSave = true;;
-        }
-        return true;
+    if (reply==0x00400000)  //if cancel selected
+            return false;
+    if (reply==0x00000800)  //if save selected
+    {
+            if (project.Save()) nothingToSave = true;;
+    }
+    return true;
 }
 
 void MainWindow::openFile()    //when open is clicked
@@ -180,8 +180,8 @@ void MainWindow::openFile()    //when open is clicked
     //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
 
     clearThumbnails();
-
     project = TanFile(prospective);
+    addThumbnail();
 
     //set time interval for each frame
     QList<TanFrame*>::iterator iter;
@@ -220,7 +220,7 @@ void MainWindow::openFile()    //when open is clicked
         for (QList<TanFrame*>::iterator i = (project.m_frames.begin()+1); i != project.m_frames.end(); i++)
         {
             generateThumbnail((*i));
-            addThumbnailToEnd((*i)->thumbnail);
+            addThumbnailToEnd((*i)->thumbnail, (*i));
         }
     }
 
@@ -233,6 +233,7 @@ void MainWindow::newFile()
     if (!saveSequence()) return;
     clearThumbnails();
     project = TanFile();
+    addThumbnail();
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->pushButton_next->setIcon(QIcon());
@@ -322,7 +323,7 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 // Connecting all the cells to the same click handler
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
-    connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(on_cell_clicked(const int, const int, const char)));
+    connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(cell_clicked(const int, const int, const char)));
 }
 
 
@@ -330,7 +331,7 @@ void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 // Determines the color to use, based on which type of click (left or right)
 // Updates the displayed color in the clicked cell and
 // updates appropriate frame of Tan file representation with color information
-void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
+void MainWindow::cell_clicked(const int row, const int col, const char btn)
 {
     //QString m_cellName = m_getObjName(QObject::sender());
     //CellWidget *m_cell = MainWindow::findChild<CellWidget*>(m_cellName);
@@ -345,6 +346,8 @@ void MainWindow::on_cell_clicked(const int row, const int col, const char btn)
     {
         m_color = project.getRightColor();
     }
+    //if both colors are the same, don't bother
+    if (m_color == (*project.currFrame)->pixels[col][row].color) return;
     // Then update the cell color
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
@@ -526,7 +529,6 @@ void MainWindow::on_pushButton_prev_clicked()
     QString qss;
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-    nothingToSave = false;
 }
 
 void MainWindow::on_pushButton_next_clicked()
@@ -559,7 +561,47 @@ void MainWindow::on_pushButton_next_clicked()
 
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-    nothingToSave = false;
+}
+
+void MainWindow::switchCurrentFrame(int index)
+{
+    if (index < 0 || index >= project.m_frames.size()) return;
+    on_change_frame();
+    switchSelectedThumbnail(index);
+
+    int temp = (project.currFrame-project.m_frames.begin());
+    project.currFrame = (project.m_frames.begin()+index);
+
+    if (index == 0)
+    {
+        ui->pushButton_prev->setIcon(QIcon());
+        ui->pushButton_prev->setStyleSheet(QString("background-color: #e0e0e0"));
+        ui->pushButton_prev->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_prev->setEnabled(true);
+        ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*(project.currFrame-1))->thumbnail, Qt::AutoColor)));
+        ui->pushButton_prev->setIconSize(QSize(240,400));
+    }
+
+    if (index == (project.m_frames.size()-1))
+    {
+        ui->pushButton_next->setIcon(QIcon());
+        ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
+        ui->pushButton_next->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_next->setEnabled(true);
+        ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.currFrame+1))->thumbnail, Qt::AutoColor)));
+        ui->pushButton_next->setIconSize(QSize(240,400));
+    }
+
+    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
+        for(int j=0; j<TAN_DEFAULT_COLS; j++)
+            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
 }
 
 void MainWindow::on_pushButton_r_clicked()
@@ -620,13 +662,14 @@ QImage MainWindow::scaleDown(QImage thumbnail)
 void MainWindow::newFrame()
 {
     if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(true);
+    generateThumbnailCurrent();
+    project.newFrame();
     addCurrentThumbnail();
 
     ui->pushButton_prev->setEnabled(true);
     ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
     ui->pushButton_prev->setIconSize(QSize(240,400));
 
-    project.newFrame();
     QString qss;
     //set all pixels in grid to black
     for (int x = 0; x < 12; x++) {
@@ -645,13 +688,14 @@ void MainWindow::newFrame()
 void MainWindow::newFrameCopy()
 {
     if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(true);
+    generateThumbnailCurrent();
+    project.newFrame();
     addCurrentThumbnail();
 
     ui->pushButton_prev->setEnabled(true);
     ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*project.currFrame)->thumbnail, Qt::AutoColor)));
     ui->pushButton_prev->setIconSize(QSize(240,400));
 
-    project.newFrameCopy();
     QString qss;
     for (int x = 0; x < 12; x++) {
         for (int y = 0; y < 20; y++)  {
@@ -693,20 +737,19 @@ void MainWindow::clearThumbnails() // used when opening a project or starting a 
         delete temp;
         ui->horizontalLayout_2->update();
     }
-    addThumbnail();
 }
 
 void MainWindow::addThumbnail() // only used when starting a new project;
 {
-    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"));
+    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"), (*project.currFrame));
     ui->horizontalLayout_2->addWidget(button);
     button->show();
     ui->horizontalLayout_2->update();
 }
 
-void MainWindow::addThumbnailToEnd(QImage in)
+void MainWindow::addThumbnailToEnd(QImage in, TanFrame* ptr)
 {
-    QPushButton *button = newThumbnail(in);
+    QPushButton *button = newThumbnail(in, ptr);
     ui->horizontalLayout_2->addWidget(button);
     button->show();
     ui->horizontalLayout_2->update();
@@ -724,17 +767,16 @@ void MainWindow::switchSelectedThumbnail(int index) // used when the user switch
 
 void MainWindow::addCurrentThumbnail() // used when creating a new frame (also switches selected frame)
 {
-    generateThumbnailCurrent();
-    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(scaleDown((*project.currFrame)->thumbnail), Qt::AutoColor)));
-    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()-1))->widget()))->setIcon(QIcon(QPixmap::fromImage(scaleDown((*(project.currFrame-1))->thumbnail), Qt::AutoColor)));
+    ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()-1))->widget()))->setIconSize(QSize(120,200));
 
-    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"));
-    ui->horizontalLayout_2->insertWidget(((project.currFrame-project.m_frames.begin())+1), button);
+    QPushButton *button = newThumbnail(QString(":/resources/currSelect.png"), (*project.currFrame));
+    ui->horizontalLayout_2->insertWidget((project.currFrame-project.m_frames.begin()), button);
     button->show();
     ui->horizontalLayout_2->update();
 }
 
-QPushButton* MainWindow::newThumbnail(QImage in)
+Thumbnail* MainWindow::newThumbnail(QImage in, TanFrame* ptr)
 {
     QString qss;
     QSizePolicy sizePolicy;
@@ -746,7 +788,7 @@ QPushButton* MainWindow::newThumbnail(QImage in)
     sizePolicy.setVerticalStretch(1);
     sizePolicy.setHeightForWidth(true);
 
-    QPushButton *button = new QPushButton("", this);
+    Thumbnail *button = new Thumbnail(ptr);
     button->setSizePolicy(sizePolicy);
     button->setMinimumSize(size);
     button->setMaximumSize(size);
@@ -755,11 +797,11 @@ QPushButton* MainWindow::newThumbnail(QImage in)
     button->setStyleSheet(qss);
     button->setIcon(QIcon(QPixmap::fromImage(scaleDown(in), Qt::AutoColor)));
     button->setIconSize(QSize(120,200));
-    connect(button, SIGNAL (released()),this, SLOT (on_thumbnail_clicked()));
+    connect(button, SIGNAL (clicked(const long int)),this, SLOT (thumbnail_clicked(const long int)));
     return button;
 }
 
-QPushButton* MainWindow::newThumbnail(QString in)
+Thumbnail* MainWindow::newThumbnail(QString in, TanFrame* ptr)
 {
     QString qss;
     QSizePolicy sizePolicy;
@@ -771,7 +813,7 @@ QPushButton* MainWindow::newThumbnail(QString in)
     sizePolicy.setVerticalStretch(1);
     sizePolicy.setHeightForWidth(true);
 
-    QPushButton *button = new QPushButton("", this);
+    Thumbnail *button = new Thumbnail(ptr);
     button->setSizePolicy(sizePolicy);
     button->setMinimumSize(size);
     button->setMaximumSize(size);
@@ -780,7 +822,7 @@ QPushButton* MainWindow::newThumbnail(QString in)
     button->setStyleSheet(qss);
     button->setIcon(QIcon(in));
     button->setIconSize(QSize(120,200));
-    connect(button, SIGNAL (released()),this, SLOT (on_thumbnail_clicked()));
+    connect(button, SIGNAL (clicked(const long int)),this, SLOT (thumbnail_clicked(const long int)));
     return button;
 }
 
@@ -859,12 +901,18 @@ void MainWindow::on_pushButton_delete_clicked()
     on_change_frame();
 }
 
-void MainWindow::on_thumbnail_clicked()
+void MainWindow::thumbnail_clicked(const long int in)
 {
-    qDebug() << "omgyay";
+    //qDebug() << "tanframe!!! length: " << ((TanFrame*)in)->frame_length;
+    for (QList<TanFrame*>::iterator i = project.m_frames.begin(); i != project.m_frames.end(); i++)
+    {
+        if (((long int)(*(i))) == in)
+        {
+            switchCurrentFrame((i-project.m_frames.begin()));
+            break;
+        }
+    }
 }
-
-
 
 void MainWindow::on_undo() {
     QString qss;

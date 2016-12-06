@@ -24,7 +24,7 @@ TanFile::TanFile() {
     m_frames = QList<TanFrame*>();
     //make blank frame
     TanFrame* newf = new TanFrame();
-    newf->frame_length = 0;
+    newf->frame_length = 25; // default to 25
     newf->frame_start = 0;
     for(int i = 0; i < 20; i++)
     {

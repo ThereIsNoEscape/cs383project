@@ -813,29 +813,43 @@ void MainWindow::on_pushButton_clearFrame_clicked()
     on_change_frame();
 }
 
-void MainWindow::spawnEffect()
+void MainWindow::spawnEffect(const effect* e)
 {
     //apply effect
     for (int r=0;r<TAN_DEFAULT_ROWS;r++)
+    {
         for (int c=0;c<TAN_DEFAULT_COLS;c++)
         {
-            //update project
-            (*project.currFrame)->pixels[c][r].color  = e.pixels[c][r];
-            //update GUI
-            QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-            m_cellWidget->setColor((*project.currFrame)->pixels[c][r].color);
+            if (e->pixels[c][r].alpha() == 255) // check to make sure there's something there
+            {
+                //update project
+                (*project.currFrame)->pixels[c][r].color  = e->pixels[c][r];
+                //update GUI
+                QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
+                CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+                m_cellWidget->setColor(e->pixels[c][r]);
+            }
         }
+    }
 }
 
 void MainWindow::insert_letter() {
     qDebug() << "Letter";
+    letterEffectDialog d;
+    connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
+    d.exec();
 }
 
 void MainWindow::insert_symbol() {
     qDebug() << "Symbol";
+    symbolEffectDialog d;
+    connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
+    d.exec();
 }
 
 void MainWindow::insert_shape()  {
     qDebug() << "Shape";
+    shapeEffectDialog d;
+    connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
+    d.exec();
 }

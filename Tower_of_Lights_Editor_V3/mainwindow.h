@@ -14,7 +14,10 @@
 #include "tanfile.h"
 #include "config.h"
 #include "cell.h"
-#include "effect.h" //for applying effects
+#include "effect.h" //for storing effects
+#include "lettereffectdialog.h"
+#include "symboleffectdialog.h"
+#include "shapeeffectdialog.h"
 
 class QAction;
 class QActionGroup;
@@ -39,7 +42,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     TanFile project;   //the object that MainWindow will use for data storage
-    effect e;   //the object that that MainWindow will use to store effect data
     ~MainWindow();
 
 private slots:
@@ -74,7 +76,7 @@ private slots:
     void insert_symbol();
     void insert_shape();
 
-    void spawnEffect(); //runs applyEffect
+    void spawnEffect(const effect*); //signaled from dialog
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;

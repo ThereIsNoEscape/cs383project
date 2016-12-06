@@ -322,12 +322,19 @@ void MainWindow::createMenus()
 void MainWindow::updateGUIColorButtons()
 {
     ui->label_2->setText(project.getLeftColor().name());
-    QString qss = ("background-color: " + project.getLeftColor().name());
+    QString qss;
+    if (project.getLeftColor().red() < 191 && project.getLeftColor().green() < 191 && project.getLeftColor().blue() < 191)
+        qss = ("color: #ffffff; background-color: " + project.getLeftColor().name());
+    else qss = ("color: #000000; background-color: " + project.getLeftColor().name());
     ui->pushButton_l->setStyleSheet(qss);
+    ui->pushButton_l->setText("L");
 
     ui->label_3->setText(project.getRightColor().name());
-    qss = ("background-color: " + project.getRightColor().name());
+    if (project.getRightColor().red() < 191 && project.getRightColor().green() < 191 && project.getRightColor().blue() < 191)
+        qss = ("color: #ffffff; background-color: " + project.getRightColor().name());
+    else qss = ("color: #000000; background-color: " + project.getRightColor().name());
     ui->pushButton_r->setStyleSheet(qss);
+    ui->pushButton_r->setText("R");
 }
 
 void MainWindow::on_pushButton_l_clicked()

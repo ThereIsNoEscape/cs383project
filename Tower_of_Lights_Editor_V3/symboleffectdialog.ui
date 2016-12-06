@@ -173,6 +173,35 @@ border-radius: 4px;</string>
     <string>I would like a question mark</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>180</y>
+     <width>59</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Color:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_color">
+   <property name="geometry">
+    <rect>
+     <x>244</x>
+     <y>180</y>
+     <width>127</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #ffffff</string>
+   </property>
+   <property name="text">
+    <string>#ffffff</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

@@ -3,21 +3,23 @@
 
 // Constructor
 CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent)
-	:	QWidget(parent),
-		_row(x),
-		_col(y),
-		_state(false)
+    :	QWidget(parent),
+        _row(x),
+        _col(y),
+        _state(false)
 {
-	setObjectName(name);
-	// Set initial styles
-    QString qss = QString("margin: 0px; border: 2px solid rgb(192,192,192); border-radius: 4px;");
-	setStyleSheet(qss);
-	setColor(color);
+    setObjectName(name);
+    // Set initial styles
+    QString qss;
+    if (x < 8 && x > 3 && y < 15 && y > 4) qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px;");
+    else qss= QString("margin: 0px; border: 2px solid rgb(0,0,0); border-radius: 4px;");
+    setStyleSheet(qss);
+    setColor(color);
 
-	if (_row < 0 || _col < 0)
-	{
-		setObjectName(QString("cellInvalid%1%2").arg(x,y));
-	}
+    if (_row < 0 || _col < 0)
+    {
+        setObjectName(QString("cellInvalid%1%2").arg(x,y));
+    }
 }
 
 
@@ -31,14 +33,14 @@ CellWidget::~CellWidget()
 // Return this widget's row, corresponding with an index in TanFrame
 int CellWidget::getRow()
 {
-	return _row;
+    return _row;
 }
 
 
 // Return this widget's column, corresponding with an index in TanFrame
 int CellWidget::getColumn()
 {
-	return _col;
+    return _col;
 }
 
 
@@ -46,18 +48,22 @@ int CellWidget::getColumn()
 // Returns the color that was set, for verification purposes
 QColor CellWidget::setColor(QColor rgb)
 {
-	QString qss = QString("background-color: ");
+    QString qss;
 
-	if (!(rgb.isValid()))
-	{
-		rgb = Qt::black;
-	}
-	_color = rgb;
+    if (_col < 8 && _col > 3 && _row < 15 && _row > 4) qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: ");
+    else qss= QString("margin: 0px; border: 2px solid rgb(0,0,0); border-radius: 4px; background-color: ");
 
-	qss += _color.name();
-	setStyleSheet(qss);
 
-	return getColor();
+    if (!(rgb.isValid()))
+    {
+        rgb = Qt::black;
+    }
+    _color = rgb;
+
+    qss += _color.name();
+    setStyleSheet(qss);
+
+    return getColor();
 }
 
 
@@ -65,24 +71,24 @@ QColor CellWidget::setColor(QColor rgb)
 // Returns the color that was set, for verification purposes
 QColor CellWidget::changeColor(QColor rgb)
 {
-	setColor(rgb);
+    setColor(rgb);
 
-	emit colorChanged(getRow(), getColumn(), getColor());
-	return getColor();
+    emit colorChanged(getRow(), getColumn(), getColor());
+    return getColor();
 }
 
 
 // Return the current color
 QColor CellWidget::getColor()
 {
-	return _color;
+    return _color;
 }
 
 
 // Returns the current state of the widget, indicating currently selected or not
 bool CellWidget::getState()
 {
-	return _state;
+    return _state;
 }
 
 
@@ -90,9 +96,9 @@ bool CellWidget::getState()
 bool CellWidget::event(QEvent *event)
 {
 
-	if (event->type() == QEvent::MouseButtonPress)
-	{
-		QMouseEvent *qme = static_cast<QMouseEvent*>(event);
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent *qme = static_cast<QMouseEvent*>(event);
         char btn = 'X';
 
         // Handle left-click here
@@ -104,8 +110,8 @@ bool CellWidget::event(QEvent *event)
         // Handle right-click here
         // Right-click changes the color based on
         // the current rightColor of the Tan file representation
-		else if (qme->button() == Qt::RightButton)
-		{
+        else if (qme->button() == Qt::RightButton)
+        {
             btn = 'R';
         }
         emit clicked(getRow(), getColumn(), btn);
@@ -122,10 +128,10 @@ bool CellWidget::event(QEvent *event)
 // Reimplementing base widget paintEvent in order for the stylesheet to work
 void CellWidget::paintEvent(QPaintEvent *event)
 {
-		QStyleOption opt;
-		opt.initFrom(this);
-		QPainter p(this);
-		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+        QStyleOption opt;
+        opt.initFrom(this);
+        QPainter p(this);
+        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 Thumbnail::Thumbnail(TanFrame* fin)

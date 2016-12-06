@@ -24,7 +24,8 @@ HEADERS  += mainwindow.h \
     cell.h \
     config.h \
     tanfile.h \
-    openfile.h
+    openfile.h \
+    effect.h
 
 FORMS    += mainwindow.ui
 

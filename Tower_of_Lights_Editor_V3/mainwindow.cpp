@@ -432,7 +432,7 @@ void MainWindow::switchCurrentFrame(int index)
 
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(QString("background-color: " + (*project.currFrame)->pixels[j][i].color.name()));
+            ((CellWidget*)(ui->gridLayout->itemAtPosition(i,j)->widget()))->setColor((*project.currFrame)->pixels[j][i].color);
     ui->spinBox->setValue((*project.currFrame)->frame_length);
 }
 
@@ -763,7 +763,6 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
     m_changes.append(change);
     m_undo_index++;
     cell->setColor(p_color);
-    //ui->gridLayout->itemAtPosition(x,y)->widget()->setStyleSheet((QString("background-color: ").append(p_color.name())));
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);

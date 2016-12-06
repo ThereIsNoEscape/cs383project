@@ -49,9 +49,9 @@ private slots:
     void newFile();
     void save();
     void saveAs();
-    int load(QString);
+    TanFile* load(QString);
 
-    void on_cell_clicked(const int row, const int col, const char btn);
+    void cell_clicked(const int row, const int col, const char btn);
 
     void on_pushButton_prev_clicked();
     void on_pushButton_next_clicked();
@@ -64,15 +64,15 @@ private slots:
     void on_pushButton_preview_clicked();
     void on_pushButton_delete_clicked();
     void on_pushButton_clearFrame_clicked();
-    void on_thumbnail_clicked();
+    void thumbnail_clicked(const long int);
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
     void on_redo();
 
-    void on_insert_letter();
-    void on_insert_symbol();
-    void on_insert_shape();
+    void insert_letter();
+    void insert_symbol();
+    void insert_shape();
 
     void spawnEffect(); //runs applyEffect
 private:
@@ -90,16 +90,17 @@ private:
     bool saveSequence();//returns false if the user cancels the entire process
     void createActions();
     void createMenus();
+    void switchCurrentFrame(int index);
     void generateThumbnailCurrent();
     void generateThumbnail(TanFrame* ptr);
     QImage scaleDown(QImage thumbnail);
     void clearThumbnails(); // used when opening a project or starting a new project
     void addThumbnail(); // only used when starting a new project;
-    void addThumbnailToEnd(QImage in);
+    void addThumbnailToEnd(QImage in, TanFrame*);
     void switchSelectedThumbnail(int index);
     void addCurrentThumbnail();
-    QPushButton* newThumbnail(QImage in);
-    QPushButton* newThumbnail(QString in);
+    Thumbnail* newThumbnail(QImage in, TanFrame*);
+    Thumbnail* newThumbnail(QString in, TanFrame*);
     void on_change_color(int x, int y, const QColor& p_color);
     void on_change_frame();
 

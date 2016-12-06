@@ -23,7 +23,7 @@ QStringList getFileContents(QString fileName)
     }
 }
 
-int MainWindow::load(QString fileName)
+TanFile* MainWindow::load(QString fileName)
 {
     TanFile* prospective = new TanFile(fileName);//this will temporarily hold the information so that if there's something wrong with this file we haven't written in bad data to the project object
     //this object is deleted when this function returns, so no memory is leaked
@@ -33,7 +33,7 @@ int MainWindow::load(QString fileName)
     if (contents[0]!="0.4")    //error checking
     {
         QMessageBox::information(0,"error","File is an unsupported version");
-        return -1;
+        return NULL;
     }
     //set audio filename
     prospective->setAudioFile(contents[1]);   //set audio filename
@@ -51,7 +51,7 @@ int MainWindow::load(QString fileName)
     if ((r<0)||(r>255)||(g<0)||(g>255)||(b<0)||(b>255)) //error checking on rgb values
     {
         QMessageBox::information(0,"error","current rgb color is not within range (0-255)");
-        return -1;
+        return NULL;
     }
     prospective->setLeftColor(r,g,b);     //set the rgb value
 
@@ -72,13 +72,13 @@ int MainWindow::load(QString fileName)
     if (num_frames<1)   //error checking the number of frames
     {
         QMessageBox::information(0,"error","number of frames must be at least 1");
-        return -1;
+        return NULL;
     }
     //error check dimensions
     if (hype[1]!="10" || hype[2]!="4")
     {
         QMessageBox::information(0,"error","invalid dimensions");
-        return -1;
+        return NULL;
     }
 
     /*************************************************************************************/
@@ -87,7 +87,7 @@ int MainWindow::load(QString fileName)
     if (((contents.size()-5) % 21)!=0)
     {
         QMessageBox::information(0,"error","frames corrupt");
-        return -1;
+        return NULL;
     }
     else if (num_frames!=((contents.size() - 5) / 21))
     {
@@ -112,7 +112,7 @@ int MainWindow::load(QString fileName)
             if (hype.size()!=TAN_DEFAULT_COLS*3)
             {
                 QMessageBox::information(0,"error","frame contains invalid number of rgb values");
-                return -1;
+                return NULL;
             }
             for (int j=0,g=0;j<TAN_DEFAULT_COLS*3;j+=3,g++) //the increment for columns
             {
@@ -122,7 +122,7 @@ int MainWindow::load(QString fileName)
                 if ((rgb[0]<0)||(rgb[0]>255)||(rgb[1]<0)||(rgb[1]>255)||(rgb[2]<0)||(rgb[2]>255)) //error checking on rgb values
                 {
                     QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
-                    return -1;
+                    return NULL;
                 }
                 frame->pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
             }
@@ -133,26 +133,5 @@ int MainWindow::load(QString fileName)
 
     //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
 
-    clearThumbnails();
-
-    project = TanFile(prospective);
-
-    delete prospective;
-
-    //set time interval for each frame
-    QList<TanFrame*>::iterator iter;
-    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++)
-    {
-        if((iter+1) == project.m_frames.end()) //if you're on the last frame
-        {
-            (*iter)->frame_length = 25;        //default time interval for last frame
-            //qDebug() << iter->frame_length;
-        }
-        else
-        {
-            //current frame time interval = next frame start time = current frame start time
-            (*iter)->frame_length = (*(iter + 1))->frame_start - (*iter)->frame_start;
-        }
-    }
-    return 1;
+    return prospective;
 }

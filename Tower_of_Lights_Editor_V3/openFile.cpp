@@ -1,3 +1,4 @@
+#include "openfile.h"
 #include "mainwindow.h"
 
 QStringList getFileContents(QString fileName)
@@ -154,5 +155,4 @@ int MainWindow::load(QString fileName)
             (*iter)->frame_length = (*(iter + 1))->frame_start - (*iter)->frame_start;
         }
     }
-    return 0;
 }

@@ -402,7 +402,6 @@ void MainWindow::on_pushButton_prev_clicked()
     QString qss;
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-
     nothingToSave = false;
 }
 
@@ -436,7 +435,6 @@ void MainWindow::on_pushButton_next_clicked()
 
     on_change_frame();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-
     nothingToSave = false;
 }
 
@@ -514,8 +512,6 @@ void MainWindow::newFrame()
             m_cellWidget->setColor((*project.currFrame)->pixels[y][x].color);
         }
     }
-    //update new frame's start time
-    ui->spinBox->valueChanged(25);
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
@@ -543,7 +539,7 @@ void MainWindow::newFrameCopy()
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
-    ui->spinBox->valueChanged((*project.currFrame)->frame_length);
+    on_change_frame();
 }
 
 
@@ -717,8 +713,6 @@ void MainWindow::on_pushButton_delete_clicked()
         ((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
 	((QPushButton*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
 
-	    
-	    
         if ((project.currFrame-project.m_frames.begin()) == 0)
         {
             ui->pushButton_prev->setIcon(QIcon());
@@ -730,21 +724,29 @@ void MainWindow::on_pushButton_delete_clicked()
             ui->pushButton_prev->setEnabled(true);
             ui->pushButton_prev->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())-1))->thumbnail, Qt::AutoColor)));
             ui->pushButton_prev->setIconSize(QSize(240,400));
+        }
+
+        if ((project.m_frames.end() - project.currFrame) == 1) {
             ui->pushButton_next->setIcon(QIcon());
             ui->pushButton_next->setStyleSheet(QString("background-color: #e0e0e0"));
             ui->pushButton_next->setEnabled(false);
-		
-	    if ((*project.currFrame)!=(*project.m_frames.end()))
-            {
-                ui->pushButton_next->setEnabled(true);
-                ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.m_frames.begin()+(project.currFrame-project.m_frames.begin())+1))->thumbnail, Qt::AutoColor)));
-                ui->pushButton_next->setIconSize(QSize(240,400));
-            }
-	}
+        }
+    }
+
+    QList<TanFrame*>::iterator thing = project.currFrame;
+    int time;
+    if (thing == project.m_frames.begin()) {
+        time = 0;
+    } else {
+        time = (*(thing - 1))->frame_start + (*(thing - 1))->frame_length;
+    }
+    while (thing < project.m_frames.end()) {
+        (*thing)->frame_start = time;
+        time += (*thing)->frame_length;
+        thing++;
     }
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-    ui->spinBox->valueChanged((*project.currFrame)->frame_length);
 
     nothingToSave = false;
 

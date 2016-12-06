@@ -12,9 +12,10 @@ shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
             retEffect->pixels[y][x] = QColor(0,0,0,0);
     retEffect->primary = QColor(0,0,0,0);
     retEffect->secondary = QColor(0,0,0,0);
-    int offsetX = 0;
-    int offsetY = 0;
+    offsetX = 0;
+    offsetY = 0;
     effectSelected = false;
+    effectColor = QColor("#ffffff");
 
     int i = 0, j = 0;
     //QFrame *m_Frame = ui->frame;
@@ -62,7 +63,16 @@ shapeEffectDialog::~shapeEffectDialog()
 void shapeEffectDialog::on_buttonBox_accepted()
 {
     if (effectSelected)
+    {
+        QColor backup[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
+        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+                backup[x][y] = retEffect->pixels[x][y];
+        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+                retEffect->pixels[x][y] = backup[(x-offsetX)%TAN_DEFAULT_COLS][(y-offsetY)%TAN_DEFAULT_ROWS];
         emit accepted(retEffect);
+    }
 }
 
 void shapeEffectDialog:: on_pushButton_test_clicked()
@@ -70,42 +80,110 @@ void shapeEffectDialog:: on_pushButton_test_clicked()
     ui->label->move(QPoint(180,120));
     ui->pushButton_test->setEnabled(false);
     ui->label->setText(QString("Good because that's the\nonly effect we've got"));
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
 
     effectSelected = true;
 
-    retEffect->pixels[4][8] = QColor(165,190,165,255);
-    retEffect->pixels[5][7] = QColor(190,155,155,255);
-    retEffect->pixels[6][8] = QColor(145,145,190,255);
-    retEffect->pixels[6][9] = QColor(135,135,190,255);
-    retEffect->pixels[5][10] = QColor(190,125,125,255);
-    retEffect->pixels[5][12] = QColor(190,115,115,255);
+    retEffect->pixels[4][8] = effectColor;
+    retEffect->pixels[5][7] = effectColor;
+    retEffect->pixels[6][8] = effectColor;
+    retEffect->pixels[6][9] = effectColor;
+    retEffect->pixels[5][10] = effectColor;
+    retEffect->pixels[5][12] = effectColor;
 
     updateGUI();
 }
 
 void shapeEffectDialog::on_pushButton_up_clicked()
 {
-    //offsetY--;
+    offsetY--;
+    if (isTouchingYBoundaries())
+        ui->pushButton_up->setEnabled(false);
+    ui->pushButton_down->setEnabled(true);
+    updateGUI();
 }
 
 void shapeEffectDialog::on_pushButton_down_clicked()
 {
-    //offsetY++;
+    offsetY++;
+    if (isTouchingYBoundaries())
+        ui->pushButton_down->setEnabled(false);
+    ui->pushButton_up->setEnabled(true);
+    updateGUI();
 }
 
 void shapeEffectDialog::on_pushButton_left_clicked()
 {
-    //offsetX--;
+    offsetX--;
+    if (isTouchingXBoundaries())
+        ui->pushButton_left->setEnabled(false);
+    ui->pushButton_right->setEnabled(true);
+    updateGUI();
 }
 
 void shapeEffectDialog::on_pushButton_right_clicked()
 {
-    //offsetX++;
+    offsetX++;
+    if (isTouchingXBoundaries())
+        ui->pushButton_right->setEnabled(false);
+    ui->pushButton_left->setEnabled(true);
+    updateGUI();
+}
+
+bool shapeEffectDialog::isTouchingXBoundaries()
+{
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            if (retEffect->pixels[x][y].alpha() == 255 && ((x+offsetX) == 0 || (x+offsetX) == (TAN_DEFAULT_COLS-1)))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool shapeEffectDialog::isTouchingYBoundaries()
+{
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            if (retEffect->pixels[x][y].alpha() == 255 && ((y+offsetY) == 0 || (y+offsetY) == (TAN_DEFAULT_ROWS-1)))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void shapeEffectDialog::on_pushButton_color_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this );
+    if(color.isValid())
+    {
+        effectColor = color;
+        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+                if (retEffect->pixels[x][y].alpha() == 255)
+                    retEffect->pixels[x][y] = color;
+        if (color.red() < 191 && color.green() < 191 && color.blue() < 191)
+            ui->pushButton_color->setStyleSheet("color: #ffffff; background-color: " + color.name());
+        else ui->pushButton_color->setStyleSheet("color: #000000; background-color: " + color.name());
+        ui->pushButton_color->setText(color.name());
+        updateGUI();
+    }
 }
 
 void shapeEffectDialog::updateGUI()
 {
     for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
         for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
-            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet("background-color: " + retEffect->pixels[x+4][y+5].name());
+            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet("background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
 }

@@ -3,8 +3,8 @@
 void TanFile::newFrame()
 {
     TanFrame* newf = new TanFrame;
-    newf->frame_length = 0;
-    newf->frame_start = 0;
+    newf->frame_length = (*currFrame)->frame_length;
+    newf->frame_start = (*currFrame)->frame_start;
     for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
@@ -20,6 +20,12 @@ void TanFile::newFrame()
     m_frames.insert((currFrame+1-m_frames.begin()), newf);
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
+
+    QList<TanFrame *>::iterator thing = currFrame;
+    while (thing < m_frames.end()) {
+        (*thing)->frame_start += newf->frame_length;
+        thing++;
+    }
 }
 
 void TanFile::newFrameCopy()
@@ -42,6 +48,12 @@ void TanFile::newFrameCopy()
     m_frames.insert((currFrame+1-m_frames.begin()), newf);
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
+
+    QList<TanFrame *>::iterator thing = currFrame;
+    while (thing < m_frames.end()) {
+        (*thing)->frame_start += newf->frame_length;
+        thing++;
+    }
 }
 
 void TanFile::removeCurrentFrame()

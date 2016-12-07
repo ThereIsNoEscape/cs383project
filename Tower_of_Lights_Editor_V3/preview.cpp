@@ -1,17 +1,15 @@
 #include "preview.h"
 #include "ui_preview.h"
 
-Preview::Preview(TanFile* project, int s, QWidget *parent) :
+Preview::Preview(TanFile project, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Preview)
 {
     ui->setupUi(this);
 
     file = project;
-    size = s;
-    index = 0;
 
-    file->currFrame = file->m_frames.begin();
+    file.currFrame = file.m_frames.begin();
 
     t = new myThread;
 
@@ -74,10 +72,9 @@ void Preview::on_pushButton_play_clicked()
     else
     {
         playing = true;
-        if (file->currFrame == (file->m_frames.end()-1))
+        if (file.currFrame == (file.m_frames.end()-1))
         {
-            file->currFrame = file->m_frames.begin();
-            index = 0;
+            file.currFrame = file.m_frames.begin();
             updateGUI();
         }
         else
@@ -88,56 +85,40 @@ void Preview::on_pushButton_play_clicked()
             ui->pushButton_forward10->setEnabled(false);
             ui->pushButton_play->setText("Pause");
         }
-        t->setMilliseconds((*file->currFrame)->frame_length);
+        t->setMilliseconds((*file.currFrame)->frame_length);
         t->start();
     }
 }
 
 void Preview::on_pushButton_back1_clicked()
 {
-    if (file->currFrame == file->m_frames.begin()) return;
-    file->currFrame--;
-    index--;
+    if (file.currFrame == file.m_frames.begin()) return;
+    file.currFrame--;
     updateGUI();
 }
 
 void Preview::on_pushButton_back10_clicked()
 {
-    if (file->currFrame == file->m_frames.begin()) return;
-    if ((file->currFrame-file->m_frames.begin()) < 10)
-    {
-        file->currFrame = file->m_frames.begin();
-        index = 0;
-    }
-    else
-    {
-        file->currFrame -= 10;
-        index -= 10;
-    }
+    if (file.currFrame == file.m_frames.begin()) return;
+    if ((file.currFrame-file.m_frames.begin()) < 10)
+        file.currFrame = file.m_frames.begin();
+    else file.currFrame -= 10;
     updateGUI();
 }
 
 void Preview::on_pushButton_forward1_clicked()
 {
-    if (file->currFrame == (file->m_frames.end()-1)) return;
-    file->currFrame++;
-    index++;
+    if (file.currFrame == (file.m_frames.end()-1)) return;
+    file.currFrame++;
     updateGUI();
 }
 
 void Preview::on_pushButton_forward10_clicked()
 {
-    if (file->currFrame == (file->m_frames.end()-1)) return;
-    if ((file->currFrame-file->m_frames.begin()) > (file->m_frames.size()-11))
-    {
-        file->currFrame = (file->m_frames.end()-1);
-        index = (size-1);
-    }
-    else
-    {
-        file->currFrame += 10;
-        index += 10;
-    }
+    if (file.currFrame == (file.m_frames.end()-1)) return;
+    if ((file.currFrame-file.m_frames.begin()) > (file.m_frames.size()-11))
+        file.currFrame = (file.m_frames.end()-1);
+    else file.currFrame += 10;
     updateGUI();
 }
 
@@ -145,7 +126,7 @@ void Preview::updateGUI()
 {
     for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
         for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
-            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + (*file->currFrame)->pixels[x+4][y+5].color.name()));
+            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + (*file.currFrame)->pixels[x+4][y+5].color.name()));
     if (playing)
     {
         ui->pushButton_back10->setEnabled(false);
@@ -156,14 +137,14 @@ void Preview::updateGUI()
     }
     else
     {
-        if (file->currFrame == file->m_frames.begin())
+        if (file.currFrame == file.m_frames.begin())
         {
             ui->pushButton_back10->setEnabled(false);
             ui->pushButton_back1->setEnabled(false);
             ui->pushButton_forward1->setEnabled(true);
             ui->pushButton_forward10->setEnabled(true);
         }
-        else if (file->currFrame == (file->m_frames.end()-1))
+        else if (file.currFrame == (file.m_frames.end()-1))
         {
             ui->pushButton_back10->setEnabled(true);
             ui->pushButton_back1->setEnabled(true);
@@ -179,23 +160,22 @@ void Preview::updateGUI()
         }
         ui->pushButton_play->setText("Play");
     }
-    ui->label->setText("Frame " + QString::number(index+1));
+    this->setWindowTitle("Frame " + QString::number(file.currFrame+1-file.m_frames.begin()));
 }
 
 void Preview::next_frame()
 {
     if (!playing) return;
-    if (file->currFrame == (file->m_frames.end()-1))
+    if (file.currFrame == (file.m_frames.end()-1))
     {
         playing = false;
         updateGUI();
     }
     else
     {
-        file->currFrame++;
-        index++;
+        file.currFrame++;
         updateGUI();
-        t->setMilliseconds((*file->currFrame)->frame_length);
+        t->setMilliseconds((*file.currFrame)->frame_length);
         t->start();
     }
 }

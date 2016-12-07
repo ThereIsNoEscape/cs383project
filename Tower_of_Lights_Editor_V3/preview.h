@@ -17,7 +17,7 @@ class Preview : public QDialog
     Q_OBJECT
 
 public:
-    explicit Preview(TanFile* project, int s, QWidget *parent = 0);
+    explicit Preview(TanFile project, QWidget *parent = 0);
     ~Preview();
 
 private slots:
@@ -31,11 +31,9 @@ private slots:
 
 private:
     Ui::Preview *ui;
-    TanFile* file;
+    TanFile file;
     bool playing;
     myThread* t;
-    int size;
-    int index;
     void updateGUI();
 };
 

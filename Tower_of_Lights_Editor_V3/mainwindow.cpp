@@ -326,6 +326,9 @@ void MainWindow::createActions()
 
     shapeAct = new QAction(tr("S&hape"), this);
     connect(shapeAct, &QAction::triggered, this, &MainWindow::insert_shape);
+
+    infoAct = new QAction(tr("Info"), this);
+    connect(infoAct, &QAction::triggered, this, &MainWindow::info);
 }
 
 void MainWindow::createMenus()
@@ -346,6 +349,9 @@ void MainWindow::createMenus()
     insertMenu->addAction(letterAct);
     insertMenu->addAction(symbolAct);
     insertMenu->addAction(shapeAct);
+
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(infoAct);
 }
 
 void MainWindow::updateGUIColorButtons()
@@ -391,14 +397,29 @@ void MainWindow::generateThumbnailCurrent()
             {
                 for (int b = 0; b < 8; b++)
                 {
-                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
-                    (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
+                    if (a == 0 || a == 7 || b == 0 || b == 7)
+                    {
+                        if (x < 8 && x > 3 && y < 15 && y > 4)
+                            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), QColor(127,127,127));
+                        else (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), QColor(90,90,90));
+                    }
+                    else (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
                 }
             }
-            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+            {
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+2), QColor(127,127,127));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+2), QColor(127,127,127));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+7), QColor(127,127,127));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+7), QColor(127,127,127));
+            }
+            else
+            {
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+2), QColor(90,90,90));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+2), QColor(90,90,90));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+7), QColor(90,90,90));
+                (*project.currFrame)->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+7), QColor(90,90,90));
+            }
         }
     }
 }
@@ -415,14 +436,29 @@ void MainWindow::generateThumbnail(TanFrame* ptr)
             {
                 for (int b = 0; b < 8; b++)
                 {
-                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
-                    ptr->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
+                    if (a == 0 || a == 7 || b == 0 || b == 7)
+                    {
+                        if (x < 8 && x > 3 && y < 15 && y > 4)
+                            ptr->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), QColor(127,127,127));
+                        else ptr->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), QColor(90,90,90));
+                    }
+                    else ptr->thumbnail.setPixelColor(((x*9+6)+1+b), ((y*9+10)+1+a), tempColor);
                 }
             }
-            ptr->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            ptr->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+1), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            ptr->thumbnail.setPixelColor(((x*9+6)+1), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
-            ptr->thumbnail.setPixelColor(((x*9+6)+8), ((y*9+10)+8), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+            {
+                ptr->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+2), QColor(127,127,127));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+2), QColor(127,127,127));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+7), QColor(127,127,127));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+7), QColor(127,127,127));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            }
+            else
+            {
+                ptr->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+2), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+2), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+2), ((y*9+10)+78), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+                ptr->thumbnail.setPixelColor(((x*9+6)+7), ((y*9+10)+78), QColor(90,90,90));//ui->gridLayout->itemAtPosition(x,y)->widget()->palette().color(QWidget::backgroundRole()));
+            }
         }
     }
 }
@@ -499,12 +535,21 @@ QImage MainWindow::scaleDown(QImage thumbnail)
     {
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
-            tempColor = thumbnail.pixelColor(((x*9)+8),((y*9)+12));
+            tempColor = thumbnail.pixelColor(((x*9)+9),((y*9)+13));
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+            {
+                for (int a = 0; a < 5; a++)
+                {
+                    for (int b = 0; b < 5; b++)
+                    {
+                        ret.setPixelColor(((x*5)+b), ((y*5)+a), QColor(127,127,127));
+                    }
+                }
+            }
             for (int a = 0; a < 3; a++)
             {
                 for (int b = 0; b < 3; b++)
                 {
-                    //qDebug() << x << " " << y << " " << a << " " << b << " " << temp << " | " << tempColor.name();
                     ret.setPixelColor(((x*5)+b+1), ((y*5)+a+1), tempColor);
                 }
             }
@@ -660,7 +705,7 @@ Thumbnail* MainWindow::newThumbnail(QString in, TanFrame* ptr)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
-    Preview* p = new Preview(&project, (project.m_frames.size()));
+    Preview* p = new Preview(project);
     p->setModal(false);
     p->show();
     p->raise();
@@ -1029,4 +1074,12 @@ void MainWindow::insert_shape()  {
     shapeEffectDialog d;
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
+}
+
+void MainWindow::info()  {
+    infoDialog* d = new infoDialog;
+    d->setModal(false);
+    d->show();
+    d->raise();
+    d->activateWindow();
 }

@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     symboleffectdialog.cpp \
     shapeeffectdialog.cpp \
     preview.cpp \
-    thread.cpp
+    thread.cpp \
+    infodialog.cpp
 
 HEADERS  += mainwindow.h \
     cell.h \
@@ -34,13 +35,15 @@ HEADERS  += mainwindow.h \
     symboleffectdialog.h \
     shapeeffectdialog.h \
     preview.h \
-    thread.h
+    thread.h \
+    infodialog.h
 
 FORMS    += mainwindow.ui \
     lettereffectdialog.ui \
     symboleffectdialog.ui \
     shapeeffectdialog.ui \
-    preview.ui
+    preview.ui \
+    infodialog.ui
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/mainwindows/menus

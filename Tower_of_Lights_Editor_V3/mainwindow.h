@@ -55,6 +55,7 @@ private slots:
     TanFile* load(QString);
 
     void cell_clicked(const int row, const int col, const char btn);
+    void cell_doubleClicked(const char btn, const QColor);
 
     void on_pushButton_prev_clicked();
     void on_pushButton_next_clicked();

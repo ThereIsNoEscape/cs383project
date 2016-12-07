@@ -227,6 +227,7 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
     connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(cell_clicked(const int, const int, const char)));
+    connect(m_cell, SIGNAL(doubleClicked(const char, const QColor)), this, SLOT(cell_doubleClicked(const char, const QColor)));
 }
 
 
@@ -255,6 +256,24 @@ void MainWindow::cell_clicked(const int row, const int col, const char btn)
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,m_color);
+    nothingToSave = false;
+}
+
+
+void MainWindow::cell_doubleClicked(const char btn, const QColor clr)
+{
+    // Determine whether it was a left or right double click
+    if (btn == 'L')
+    {
+        project.setLeftColor(clr);
+    }
+    else if (btn == 'R')
+    {
+        project.setRightColor(clr);
+    }
+
+    updateGUIColorButtons();
+
     nothingToSave = false;
 }
 

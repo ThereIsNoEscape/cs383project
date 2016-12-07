@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>754</width>
-    <height>685</height>
+    <width>755</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -64,8 +64,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>742</width>
-         <height>496</height>
+         <width>743</width>
+         <height>537</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -92,7 +92,7 @@
              <x>0</x>
              <y>0</y>
              <width>198</width>
-             <height>470</height>
+             <height>517</height>
             </rect>
            </property>
            <widget class="QPushButton" name="pushButton_l">
@@ -322,8 +322,8 @@ border-radius: 4px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>294</width>
-             <height>468</height>
+             <width>309</width>
+             <height>515</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_4">
@@ -357,7 +357,7 @@ border-radius: 4px;</string>
              <x>0</x>
              <y>0</y>
              <width>198</width>
-             <height>470</height>
+             <height>517</height>
             </rect>
            </property>
            <widget class="QLabel" name="label_5">
@@ -597,7 +597,7 @@ length</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>742</width>
+         <width>743</width>
          <height>122</height>
         </rect>
        </property>
@@ -605,7 +605,7 @@ length</string>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>-1</number>
+           <number>6</number>
           </property>
          </layout>
         </item>
@@ -621,8 +621,8 @@ length</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>754</width>
-     <height>22</height>
+     <width>755</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

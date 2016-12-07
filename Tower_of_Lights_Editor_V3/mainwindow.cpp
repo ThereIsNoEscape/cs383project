@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/resources/icon.png"));
 
     createActions();
     createMenus();
@@ -986,9 +987,10 @@ void MainWindow::spawnEffect(const effect* e)
                 //update project
                 (*project.currFrame)->pixels[c][r].color  = e->pixels[c][r];
                 //update GUI
-                QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
-                CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-                m_cellWidget->setColor(e->pixels[c][r]);
+                //QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
+                //CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
+                //m_cellWidget->setColor(e->pixels[c][r]);
+                on_change_color(r, c, e->pixels[c][r]);
             }
         }
     }

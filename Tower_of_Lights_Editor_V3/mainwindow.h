@@ -18,6 +18,7 @@
 #include "lettereffectdialog.h"
 #include "symboleffectdialog.h"
 #include "shapeeffectdialog.h"
+#include "preview.h"
 
 class QAction;
 class QActionGroup;

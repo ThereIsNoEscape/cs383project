@@ -11,7 +11,7 @@ CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent
     setObjectName(name);
     // Set initial styles
     QString qss;
-    if (x < 8 && x > 3 && y < 15 && y > 4) qss= QString("margin: 0px; border: 2px solid rgb(192,192,192); border-radius: 4px;");
+    if (x < 8 && x > 3 && y < 15 && y > 4) qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px;");
     else qss= QString("margin: 0px; border: 2px solid rgb(0,0,0); border-radius: 4px;");
     setStyleSheet(qss);
     setColor(color);

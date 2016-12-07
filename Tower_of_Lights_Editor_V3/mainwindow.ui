@@ -99,7 +99,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>45</y>
+              <y>40</y>
               <width>81</width>
               <height>81</height>
              </rect>
@@ -120,7 +120,7 @@
             <property name="geometry">
              <rect>
               <x>110</x>
-              <y>45</y>
+              <y>40</y>
               <width>81</width>
               <height>81</height>
              </rect>
@@ -138,7 +138,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>125</y>
+              <y>120</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -154,7 +154,7 @@
             <property name="geometry">
              <rect>
               <x>110</x>
-              <y>125</y>
+              <y>120</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -241,27 +241,6 @@
             </property>
             <property name="text">
              <string>Clear Frame</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label_4">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>27</y>
-              <width>181</width>
-              <height>21</height>
-             </rect>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>(double click a pixel to pick its color)</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
             </property>
            </widget>
            <widget class="QLabel" name="label_12">
@@ -472,7 +451,7 @@ length</string>
            </widget>
            <widget class="QPushButton" name="pushButton_preview">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>

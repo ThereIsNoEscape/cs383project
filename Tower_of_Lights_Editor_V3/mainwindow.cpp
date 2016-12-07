@@ -108,20 +108,20 @@ void MainWindow::openFile()    //when open is clicked
     }
 
     updateGUIColorButtons();
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->lineEdit->setText(project.getAudioFile());
 
     addThumbnail();
 
     if (project.m_frames.size() > 1)
     {
-
+        ui->pushButton_delete->setEnabled(true);
         for (QList<TanFrame*>::iterator i = (project.m_frames.begin()+1); i != project.m_frames.end(); i++)
         {
             generateThumbnail((*i));
             addThumbnailToEnd((*i)->thumbnail, (*i));
         }
     }
+    else ui->pushButton_delete->setEnabled(false);
 
     on_change_frame();
     nothingToSave = true;
@@ -133,8 +133,8 @@ void MainWindow::newFile()
     clearThumbnails();
     project = TanFile();
     addThumbnail();
+    ui->pushButton_delete->setEnabled(false);
 
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->lineEdit->setText("");
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
@@ -179,19 +179,19 @@ void MainWindow::m_generateFrame(int rows, int cols)
     m_cellSizePolicy.setVerticalStretch(1);
     m_cellSizePolicy.setHeightForWidth(true);
 
-    for (i=0; i<rows; i++)
+    for (j=0; j<rows; j++)
     {
-        for (j=0; j<cols; j++)
+        for (i=0; i<cols; i++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame project at some point?
-            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
+            m_cellName = "cell" + (QString("%1").arg((j*cols + i), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = new CellWidget(m_cellName, j, i);
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
             // Adding cell widget to the frame's gridLayout
-            m_FrameLayout->addWidget(m_cellWidget, i, j);
+            m_FrameLayout->addWidget(m_cellWidget, j, i);
             m_cellWidget->show();
             // Connecting each cell's signals to appropriate generic slots
             m_connectCellSignals(m_cellWidget);
@@ -204,18 +204,17 @@ void MainWindow::m_generateFrame(int rows, int cols)
 // Destroy the grid of cell widgets
 void MainWindow::m_destroyFrame(int rows, int cols)
 {
-    QString m_cellName;
     CellWidget* m_cellWidget;
     int i = 0, j = 0;
 
-    for (i=0; i<rows; i++)
+    for (j=0; j<rows; j++)
     {
-        for (j=0; j<cols; j++)
+        for (i=0; i<cols; i++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame *project at some point
             //m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-            m_cellWidget = (CellWidget*)ui->gridLayout->itemAtPosition(i,j);// MainWindow::findChild<CellWidget*>(m_cellName);
+            m_cellWidget = (CellWidget*)ui->gridLayout->itemAtPosition(j,i)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
             delete m_cellWidget;
             m_cellWidget = 0;
         }
@@ -436,7 +435,6 @@ void MainWindow::on_pushButton_prev_clicked()
     project.currFrame = (project.m_frames.begin()+temp-1);
 
     on_change_frame();
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
 }
 
 void MainWindow::on_pushButton_next_clicked()
@@ -447,7 +445,6 @@ void MainWindow::on_pushButton_next_clicked()
     project.currFrame = (project.m_frames.begin()+temp+1);
 
     on_change_frame();
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
 }
 
 void MainWindow::switchCurrentFrame(int index)
@@ -459,11 +456,6 @@ void MainWindow::switchCurrentFrame(int index)
     project.currFrame = (project.m_frames.begin()+index);
 
     on_change_frame();
-
-    for(int i=0; i<TAN_DEFAULT_ROWS; i++)
-        for(int j=0; j<TAN_DEFAULT_COLS; j++)
-            ((CellWidget*)(ui->gridLayout->itemAtPosition(i,j)->widget()))->setColor((*project.currFrame)->pixels[j][i].color);
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
 }
 
 void MainWindow::on_pushButton_r_clicked()
@@ -528,7 +520,6 @@ void MainWindow::newFrame()
     project.newFrame();
     addCurrentThumbnail();
 
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
     on_change_frame();
 }
@@ -540,25 +531,31 @@ void MainWindow::newFrameCopy()
     project.newFrameCopy();
     addCurrentThumbnail();
 
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
     nothingToSave = false;
     on_change_frame();
 }
 
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
-{
-    int totalTime = 0;                      //frame_legnth's < currFrame added together
-    QList<TanFrame*>::iterator i; //iterator for linked list
-    for(i = project.m_frames.begin(); i != project.m_frames.end(); i++){ //from begining of linked list to end of linked list
-        if(i == project.currFrame){                               //if iterator is on your current frame
-            (*i)->frame_length = arg1;                             //set frame length to the value in the spin box
-            (*i)->frame_start = totalTime;                         //set your current frame start time to all previous frame lengths added together
-            //qDebug() << (*i)->frame_length << (*i)->frame_start;
-        }else if(i < project.currFrame) {                          //if iterator is on a frame < your current frame
-            totalTime = totalTime + (*i)->frame_length;            //add frame legnth to total time
-        }
+{// I recoded this because it wasn't working properly
+    int totalTime = (*project.currFrame)->frame_start + arg1;
+    (*project.currFrame)->frame_length = arg1;
+    for (QList<TanFrame*>::iterator i = (project.currFrame+1); i != project.m_frames.end(); i++)
+    {
+        (*i)->frame_start = totalTime;
+        totalTime += (*i)->frame_length;
     }
+    //int totalTime = 0;                      //frame_legnth's < currFrame added together
+//    QList<TanFrame*>::iterator i; //iterator for linked list
+//    for(i = project.m_frames.begin(); i != project.m_frames.end(); i++){ //from begining of linked list to end of linked list
+//        if(i == project.currFrame){                               //if iterator is on your current frame
+//            (*i)->frame_length = arg1;                             //set frame length to the value in the spin box
+//            (*i)->frame_start = totalTime;                         //set your current frame start time to all previous frame lengths added together
+//            //qDebug() << (*i)->frame_length << (*i)->frame_start;
+//        }else if(i < project.currFrame) {                          //if iterator is on a frame < your current frame
+//            totalTime = totalTime + (*i)->frame_length;            //add frame legnth to total time
+//        }
+//    }
     nothingToSave = false;
 }
 
@@ -663,7 +660,7 @@ Thumbnail* MainWindow::newThumbnail(QString in, TanFrame* ptr)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
-    Preview* p = new Preview(&project);
+    Preview* p = new Preview(&project, (project.m_frames.size()));
     p->setModal(false);
     p->show();
     p->raise();
@@ -798,8 +795,9 @@ void MainWindow::on_pushButton_delete_clicked()
 {
     if (project.m_frames.size() == 1) return;
     Thumbnail* temp;
-    if ((project.currFrame-project.m_frames.begin()) == 0)
-    { // deleting the start of the queue
+    int totalTime;
+    if (project.currFrame == project.m_frames.begin())
+    { // deleting the first frame (move right)
         ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())+1)->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
         ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin())+1)->widget()))->setIconSize(QSize(120,200));
 
@@ -807,39 +805,45 @@ void MainWindow::on_pushButton_delete_clicked()
         ui->horizontalLayout_2->removeWidget(temp);
         delete temp;
         ui->horizontalLayout_2->update();
-        qDebug() << (project.currFrame-project.m_frames.begin()) << "A";
         project.removeCurrentFrame();
         project.currFrame = project.m_frames.begin();
-        qDebug() << (project.currFrame-project.m_frames.begin()) << "A";
+
+        totalTime = 0;
+        for (QList<TanFrame*>::iterator i = project.currFrame; i != project.m_frames.end(); i++)
+        {
+            (*i)->frame_start = totalTime;
+            totalTime += (*i)->frame_length;
+        }
     }
     else
-    { // not deleting the start of the queue
-
+    { // not deleting the first frame (move left)
         temp = ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()));
         ui->horizontalLayout_2->removeWidget(temp);
         delete temp;
         ui->horizontalLayout_2->update();
-        qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
         project.removeCurrentFrame();
-        qDebug() << (project.currFrame-project.m_frames.begin()) << "B";
         ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIcon(QIcon(QPixmap::fromImage(QImage(":/resources/currSelect.png"), Qt::AutoColor)));
-    ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
-    }
+        ((Thumbnail*)(ui->horizontalLayout_2->itemAt((project.currFrame-project.m_frames.begin()))->widget()))->setIconSize(QSize(120,200));
 
-    QList<TanFrame*>::iterator thing = project.currFrame;
-    int time;
-    if (thing == project.m_frames.begin()) {
-        time = 0;
-    } else {
-        time = (*(thing - 1))->frame_start + (*(thing - 1))->frame_length;
+        if (project.currFrame == project.m_frames.begin())
+        {
+            totalTime = 0;
+            for (QList<TanFrame*>::iterator i = project.currFrame; i != project.m_frames.end(); i++)
+            {
+                (*i)->frame_start = totalTime;
+                totalTime += (*i)->frame_length;
+            }
+        }
+        else
+        {
+            totalTime = (*(project.currFrame-1))->frame_start + (*(project.currFrame-1))->frame_length;
+            for (QList<TanFrame*>::iterator i = project.currFrame; i != project.m_frames.end(); i++)
+            {
+                (*i)->frame_start = totalTime;
+                totalTime += (*i)->frame_length;
+            }
+        }
     }
-    while (thing < project.m_frames.end()) {
-        (*thing)->frame_start = time;
-        time += (*thing)->frame_length;
-        thing++;
-    }
-
-    ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     nothingToSave = false;
 
@@ -880,10 +884,8 @@ void MainWindow::on_undo() {
         m_undo_index--;
         qDebug() << m_undo_index << "-";
         struct Change *change = *(m_changes.begin() + m_undo_index);
-        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
-        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-        m_cellWidget->setColor(change->old_color);
-        (*project.currFrame)->pixels[change->y][change->x].color = change->old_color;
+        ((CellWidget*)ui->gridLayout->itemAtPosition(change->y,change->x)->widget())->setColor(change->old_color);
+        (*project.currFrame)->pixels[change->x][change->y].color = change->old_color;
     }
     if (m_undo_index == 0) {
         ui->pushButton_undo->setEnabled(false);
@@ -897,10 +899,8 @@ void MainWindow::on_redo() {
     if (m_undo_index < m_changes.size()) {
         qDebug() << m_undo_index << "+";
         struct Change *change = *(m_changes.begin() + m_undo_index);
-        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
-        CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-        m_cellWidget->setColor(change->new_color);
-        (*project.currFrame)->pixels[change->y][change->x].color = change->new_color;
+        ((CellWidget*)(ui->gridLayout->itemAtPosition(change->y,change->x)->widget()))->setColor(change->new_color);
+        (*project.currFrame)->pixels[change->x][change->y].color = change->new_color;
         m_undo_index++;
     }
     if (m_undo_index == m_changes.size()) {
@@ -913,14 +913,14 @@ void MainWindow::on_redo() {
     }
 }
 
-void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
+void MainWindow::on_change_color(int y, int x, const QColor& p_color) {
     while (m_undo_index < m_changes.size()) {
         m_changes.removeLast();
     }
     //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
     //QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(x,y)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
+    CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(y,x)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
 
     change->x = x;
     change->y = y;
@@ -939,13 +939,11 @@ void MainWindow::on_change_frame() {
     m_undo_index = 0;
     m_changes.clear();
 
-    for (int x = 0; x < 12; x++) {
-        for (int y = 0; y < 20; y++)  {
-            QString m_cellName = "cell" + (QString("%1").arg((y*12 + x), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-            m_cellWidget->setColor((*project.currFrame)->pixels[x][y].color);
-        }
-    }
+    for (int y = 0; y < 20; y++)
+        for (int x = 0; x < 12; x++)
+            ((CellWidget*)(ui->gridLayout->itemAtPosition(y,x)->widget()))->setColor((*project.currFrame)->pixels[x][y].color);
+
+    ui->spinBox->setValue((*project.currFrame)->frame_length);
 
     if ((project.currFrame-project.m_frames.begin()) == 0)
     {

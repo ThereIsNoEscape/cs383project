@@ -20,7 +20,7 @@ class CellWidget : public QWidget {
     Q_OBJECT
 
 public:
-    CellWidget(QString name, int x, int y, QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
+    CellWidget(QString name, int y, int x , QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
 	~CellWidget();
 
     int getRow();

@@ -2,10 +2,10 @@
 #include "cell.h"
 
 // Constructor
-CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent)
+CellWidget::CellWidget(QString name, int y, int x, QColor color, QWidget *parent)
     :	QWidget(parent),
-        _row(x),
-        _col(y),
+        _row(y),
+        _col(x),
         _state(false)
 {
     setObjectName(name);
@@ -19,7 +19,7 @@ CellWidget::CellWidget(QString name, int x, int y, QColor color, QWidget *parent
 
     if (_row < 0 || _col < 0)
     {
-        setObjectName(QString("cellInvalid%1%2").arg(x,y));
+        setObjectName(QString("cellInvalid%1%2").arg(y,x));
     }
 }
 

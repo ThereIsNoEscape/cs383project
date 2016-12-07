@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     lettereffectdialog.cpp \
     symboleffectdialog.cpp \
     shapeeffectdialog.cpp \
-    preview.cpp
+    preview.cpp \
+    thread.cpp
 
 HEADERS  += mainwindow.h \
     cell.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     lettereffectdialog.h \
     symboleffectdialog.h \
     shapeeffectdialog.h \
-    preview.h
+    preview.h \
+    thread.h
 
 FORMS    += mainwindow.ui \
     lettereffectdialog.ui \

@@ -11,6 +11,8 @@
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTime>
+#include <QCoreApplication>
 #include "tanfile.h"
 
 class CellWidget : public QWidget {
@@ -36,6 +38,8 @@ signals:
 
     void clicked(const int row, const int col, const char btn);
 
+    void doubleClicked(const char btn, const QColor);
+
 	void selected(const int row, const int col);
 
 private slots:
@@ -51,10 +55,13 @@ private:
 	const int _row;
 	const int _col;
 
+    bool doubleclicked;
+
 	QColor _color;
 
 	bool _state;
 
+    void delay(double time);
 };
 
 class Thumbnail : public QPushButton {

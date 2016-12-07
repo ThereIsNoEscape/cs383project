@@ -3,8 +3,8 @@
 void TanFile::newFrame()
 {
     TanFrame* newf = new TanFrame;
-    newf->frame_length = (*currFrame)->frame_length;
-    newf->frame_start = (*currFrame)->frame_start;
+    newf->frame_length = 25;
+    newf->frame_start = (*currFrame)->frame_start + (*currFrame)->frame_length;
     for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
@@ -32,7 +32,7 @@ void TanFile::newFrameCopy()
 {
     TanFrame* newf = new TanFrame;
     newf->frame_length = (*currFrame)->frame_length;
-    newf->frame_start = (*currFrame)->frame_start;
+    newf->frame_start = (*currFrame)->frame_start + (*currFrame)->frame_length;
     for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)

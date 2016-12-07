@@ -115,13 +115,14 @@ void MainWindow::openFile()    //when open is clicked
 
     if (project.m_frames.size() > 1)
     {
-
+        ui->pushButton_delete->setEnabled(true);
         for (QList<TanFrame*>::iterator i = (project.m_frames.begin()+1); i != project.m_frames.end(); i++)
         {
             generateThumbnail((*i));
             addThumbnailToEnd((*i)->thumbnail, (*i));
         }
     }
+    else ui->pushButton_delete->setEnabled(false);
 
     on_change_frame();
     nothingToSave = true;
@@ -133,6 +134,7 @@ void MainWindow::newFile()
     clearThumbnails();
     project = TanFile();
     addThumbnail();
+    ui->pushButton_delete->setEnabled(false);
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
     ui->lineEdit->setText("");

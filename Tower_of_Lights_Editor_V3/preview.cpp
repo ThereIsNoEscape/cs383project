@@ -9,6 +9,10 @@ Preview::Preview(TanFile* project, QWidget *parent) :
 
     file = project;
 
+    file->currFrame = file->m_frames.begin();
+
+    playing = false;
+
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
     //QString m_cellName;
@@ -35,7 +39,7 @@ Preview::Preview(TanFile* project, QWidget *parent) :
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
-            qss = ("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #" + (*(file->m_frames.begin()))->pixels[x][y].color.name());
+            qss = ("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #" + (*file->currFrame)->pixels[x][y].color.name());
 
             m_cellWidget->setStyleSheet(qss);
             // Adding cell widget to the frame's gridLayout
@@ -58,7 +62,15 @@ void Preview::on_pushButton_close_clicked()
 
 void Preview::on_pushButton_play_clicked()
 {
+    if (playing)
+    {
+        playing = false;
+    }
+    else
+    {
+        playing = true;
 
+    }
 }
 
 void Preview::on_pushButton_back1_clicked()

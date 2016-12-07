@@ -64,6 +64,8 @@ TanFile* MainWindow::load(QString fileName)
     for (int i=0;i<TAN_DEFAULT_COLORPRESETS*3;i++)
         presetRGB[i]=buffer[i].toInt(); //places ints into presetRGB
 
+    prospective->setRightColor(QColor(presetRGB[0],presetRGB[1],presetRGB[2]));
+
     prospective->setPresetColor(presetRGB);
 
     //get the number of frames

@@ -27,6 +27,7 @@ private slots:
 private:
     Ui::Preview *ui;
     TanFile* file;
+    bool playing;
 };
 
 #endif // PREVIEW_H

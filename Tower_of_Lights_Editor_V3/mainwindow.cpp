@@ -83,11 +83,11 @@ void MainWindow::openFile()    //when open is clicked
 
     //filename was good, file was loaded, proceed with updating GUI
 
-    this->setWindowTitle(project.getFileName());
-
     clearThumbnails();
 
     project = TanFile(prospective);
+
+    this->setWindowTitle(project.getFileName());
 
     delete prospective;
 
@@ -145,13 +145,21 @@ void MainWindow::newFile()
 
 void MainWindow::save()
 {
-    if (project.Save()) nothingToSave = true;
+    if (project.Save())
+    {
+        nothingToSave = true;
+        this->setWindowTitle(project.getFileName());
+    }
 }
 
 void MainWindow::saveAs()
 {
     //qDebug("saving as");
-    if (project.SaveAs()) nothingToSave = true;
+    if (project.SaveAs())
+    {
+        nothingToSave = true;
+        this->setWindowTitle(project.getFileName());
+    }
 }
 
 // Create the grid of cell widgets
@@ -219,6 +227,7 @@ void MainWindow::m_destroyFrame(int rows, int cols)
 void MainWindow::m_connectCellSignals(CellWidget *m_cell)
 {
     connect(m_cell, SIGNAL(clicked(const int, const int, const char)), this, SLOT(cell_clicked(const int, const int, const char)));
+    connect(m_cell, SIGNAL(doubleClicked(const char, const QColor)), this, SLOT(cell_doubleClicked(const char, const QColor)));
 }
 
 
@@ -247,6 +256,24 @@ void MainWindow::cell_clicked(const int row, const int col, const char btn)
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
     project.storeFrameColor(row,col,m_color);
+    nothingToSave = false;
+}
+
+
+void MainWindow::cell_doubleClicked(const char btn, const QColor clr)
+{
+    // Determine whether it was a left or right double click
+    if (btn == 'L')
+    {
+        project.setLeftColor(clr);
+    }
+    else if (btn == 'R')
+    {
+        project.setRightColor(clr);
+    }
+
+    updateGUIColorButtons();
+
     nothingToSave = false;
 }
 
@@ -636,127 +663,129 @@ Thumbnail* MainWindow::newThumbnail(QString in, TanFrame* ptr)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
-    QWidget* temp;
-//    while (true)
-//    {
-        temp = QApplication::focusWidget();
-        if (temp == (QWidget*)ui->centralWidget)
-            qDebug() << "centralWidget";
-        else
-        if (temp == (QWidget*)ui->gridLayout)
-            qDebug() << "gridLayout";
-        else
-        if (temp == (QWidget*)ui->gridLayout_4)
-            qDebug() << "gridLayout_4";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout)
-            qDebug() << "horizontalLayout";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout_2)
-            qDebug() << "horizontalLayout_2";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout_3)
-            qDebug() << "horizontalLayout_3";
-        else
-        if (temp == (QWidget*)ui->label_2)
-            qDebug() << "label_2";
-        else
-        if (temp == (QWidget*)ui->label_3)
-            qDebug() << "label_3";
-        else
-        if (temp == (QWidget*)ui->label_4)
-            qDebug() << "label_4";
-        else
-        if (temp == (QWidget*)ui->label_5)
-            qDebug() << "label_5";
-        else
-        if (temp == (QWidget*)ui->label_6)
-            qDebug() << "label_6";
-        else
-        if (temp == (QWidget*)ui->label_8)
-            qDebug() << "label_8";
-        else
-        if (temp == (QWidget*)ui->label_9)
-            qDebug() << "label_9";
-        else
-        if (temp == (QWidget*)ui->menuBar)
-            qDebug() << "menuBar";
-        else
-        if (temp == (QWidget*)ui->pushButton_clearFrame)
-            qDebug() << "pushButton_clearFrame";
-        else
-        if (temp == (QWidget*)ui->pushButton_copyNew)
-            qDebug() << "pushButton_copyNew";
-        else
-        if (temp == (QWidget*)ui->pushButton_delete)
-            qDebug() << "pushButton_delete";
-        else
-        if (temp == (QWidget*)ui->pushButton_l)
-            qDebug() << "pushButton_l";
-        else
-        if (temp == (QWidget*)ui->pushButton_new)
-            qDebug() << "pushButton_new";
-        else
-        if (temp == (QWidget*)ui->pushButton_next)
-            qDebug() << "pushButton_next";
-        else
-        if (temp == (QWidget*)ui->pushButton_prev)
-            qDebug() << "pushButton_prev";
-        else
-        if (temp == (QWidget*)ui->pushButton_preview)
-            qDebug() << "pushButton_preview";
-        else
-        if (temp == (QWidget*)ui->pushButton_r)
-            qDebug() << "pushButton_r";
-        else
-        if (temp == (QWidget*)ui->pushButton_redo)
-            qDebug() << "pushButton_redo";
-        else
-        if (temp == (QWidget*)ui->pushButton_undo)
-            qDebug() << "pushButton_undo";
-        else
-        if (temp == (QWidget*)ui->scrollArea)
-            qDebug() << "scrollArea";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents)
-            qDebug() << "scrollAreaWidgetContents";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_3)
-            qDebug() << "scrollAreaWidgetContents_3";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_4)
-            qDebug() << "scrollAreaWidgetContents_4";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_5)
-            qDebug() << "scrollAreaWidgetContents_5";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_6)
-            qDebug() << "scrollAreaWidgetContents_6";
-        else
-        if (temp == (QWidget*)ui->scrollArea_2)
-            qDebug() << "scrollArea_2";
-        else
-        if (temp == (QWidget*)ui->scrollArea_3)
-            qDebug() << "scrollArea_3";
-        else
-        if (temp == (QWidget*)ui->scrollArea_4)
-            qDebug() << "scrollArea_4";
-        else
-        if (temp == (QWidget*)ui->scrollArea_5)
-            qDebug() << "scrollArea_5";
-        else
-        if (temp == (QWidget*)ui->spinBox)
-            qDebug() << "spinBox";
-        else
-        if (temp == (QWidget*)ui->statusBar)
-            qDebug() << "statusBar";
-        else
-        if (temp == (QWidget*)ui->verticalLayout)
-            qDebug() << "verticalLayout";
-        else
-            qDebug() << "default";
-//    }
-    //qDebug() << (*project.currFrame)->frame_length;
+    Preview* p = new Preview(&project);
+    p->setModal(false);
+    p->show();
+    p->raise();
+    p->activateWindow();
+//    QWidget* temp;
+//    temp = QApplication::focusWidget();
+//    if (temp == (QWidget*)ui->centralWidget)
+//        qDebug() << "centralWidget";
+//    else
+//    if (temp == (QWidget*)ui->gridLayout)
+//        qDebug() << "gridLayout";
+//    else
+//    if (temp == (QWidget*)ui->gridLayout_4)
+//        qDebug() << "gridLayout_4";
+//    else
+//    if (temp == (QWidget*)ui->horizontalLayout)
+//        qDebug() << "horizontalLayout";
+//    else
+//    if (temp == (QWidget*)ui->horizontalLayout_2)
+//        qDebug() << "horizontalLayout_2";
+//    else
+//    if (temp == (QWidget*)ui->horizontalLayout_3)
+//        qDebug() << "horizontalLayout_3";
+//    else
+//    if (temp == (QWidget*)ui->label_2)
+//        qDebug() << "label_2";
+//    else
+//    if (temp == (QWidget*)ui->label_3)
+//        qDebug() << "label_3";
+//    else
+//    if (temp == (QWidget*)ui->label_4)
+//        qDebug() << "label_4";
+//    else
+//    if (temp == (QWidget*)ui->label_5)
+//        qDebug() << "label_5";
+//    else
+//    if (temp == (QWidget*)ui->label_6)
+//        qDebug() << "label_6";
+//    else
+//    if (temp == (QWidget*)ui->label_8)
+//        qDebug() << "label_8";
+//    else
+//    if (temp == (QWidget*)ui->label_9)
+//        qDebug() << "label_9";
+//    else
+//    if (temp == (QWidget*)ui->menuBar)
+//        qDebug() << "menuBar";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_clearFrame)
+//        qDebug() << "pushButton_clearFrame";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_copyNew)
+//        qDebug() << "pushButton_copyNew";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_delete)
+//        qDebug() << "pushButton_delete";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_l)
+//        qDebug() << "pushButton_l";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_new)
+//        qDebug() << "pushButton_new";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_next)
+//        qDebug() << "pushButton_next";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_prev)
+//        qDebug() << "pushButton_prev";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_preview)
+//        qDebug() << "pushButton_preview";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_r)
+//        qDebug() << "pushButton_r";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_redo)
+//        qDebug() << "pushButton_redo";
+//    else
+//    if (temp == (QWidget*)ui->pushButton_undo)
+//        qDebug() << "pushButton_undo";
+//    else
+//    if (temp == (QWidget*)ui->scrollArea)
+//        qDebug() << "scrollArea";
+//    else
+//    if (temp == (QWidget*)ui->scrollAreaWidgetContents)
+//        qDebug() << "scrollAreaWidgetContents";
+//    else
+//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_3)
+//        qDebug() << "scrollAreaWidgetContents_3";
+//    else
+//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_4)
+//        qDebug() << "scrollAreaWidgetContents_4";
+//    else
+//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_5)
+//        qDebug() << "scrollAreaWidgetContents_5";
+//    else
+//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_6)
+//        qDebug() << "scrollAreaWidgetContents_6";
+//    else
+//    if (temp == (QWidget*)ui->scrollArea_2)
+//        qDebug() << "scrollArea_2";
+//    else
+//    if (temp == (QWidget*)ui->scrollArea_3)
+//        qDebug() << "scrollArea_3";
+//    else
+//    if (temp == (QWidget*)ui->scrollArea_4)
+//        qDebug() << "scrollArea_4";
+//    else
+//    if (temp == (QWidget*)ui->scrollArea_5)
+//        qDebug() << "scrollArea_5";
+//    else
+//    if (temp == (QWidget*)ui->spinBox)
+//        qDebug() << "spinBox";
+//    else
+//    if (temp == (QWidget*)ui->statusBar)
+//        qDebug() << "statusBar";
+//    else
+//    if (temp == (QWidget*)ui->verticalLayout)
+//        qDebug() << "verticalLayout";
+//    else
+//        qDebug() << "default";
+//    qDebug() << (*project.currFrame)->frame_length;
 //    qDebug() << "====================";
 //    QString temp = "";
 //    for (int c = 0; c < 12; c++)

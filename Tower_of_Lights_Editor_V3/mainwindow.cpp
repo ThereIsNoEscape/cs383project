@@ -846,17 +846,15 @@ void MainWindow::on_lineEdit_editingFinished()
 }
 
 void MainWindow::on_undo() {
-    QString qss;
-    if (m_undo_index > 0) {
-        m_undo_index--;
-        qDebug() << m_undo_index << "-";
-        struct Change *change = *(m_changes.begin() + m_undo_index);
-        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+    if ((*project.currFrame)->m_undo_index > 0) {
+        (*project.currFrame)->m_undo_index--;
+        struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
+        QString m_cellName = "cell" + (QString("%1").arg((change->row*12 + change->col), 3, 10, QChar('0')));
         CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
         m_cellWidget->setColor(change->old_color);
-        (*project.currFrame)->pixels[change->y][change->x].color = change->old_color;
+        (*project.currFrame)->pixels[change->col][change->row].color = change->old_color;
     }
-    if (m_undo_index == 0) {
+    if ((*project.currFrame)->m_undo_index == 0) {
         ui->pushButton_undo->setEnabled(false);
         undoAct->setEnabled(false);
     }
@@ -865,40 +863,39 @@ void MainWindow::on_undo() {
 }
 
 void MainWindow::on_redo() {
-    if (m_undo_index < m_changes.size()) {
-        qDebug() << m_undo_index << "+";
-        struct Change *change = *(m_changes.begin() + m_undo_index);
-        QString m_cellName = "cell" + (QString("%1").arg((change->x*12 + change->y), 3, 10, QChar('0')));
+    if ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
+        struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
+        QString m_cellName = "cell" + (QString("%1").arg((change->row*12 + change->col), 3, 10, QChar('0')));
         CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
         m_cellWidget->setColor(change->new_color);
-        (*project.currFrame)->pixels[change->y][change->x].color = change->new_color;
-        m_undo_index++;
+        (*project.currFrame)->pixels[change->col][change->row].color = change->new_color;
+        (*project.currFrame)->m_undo_index++;
     }
-    if (m_undo_index == m_changes.size()) {
+    if ((*project.currFrame)->m_undo_index == (*project.currFrame)->m_changes.size()) {
         ui->pushButton_redo->setEnabled(false);
         redoAct->setEnabled(false);
     }
-    if (m_undo_index > 0) {
+    if ((*project.currFrame)->m_undo_index > 0) {
         ui->pushButton_undo->setEnabled(true);
         undoAct->setEnabled(true);
     }
 }
 
-void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
-    while (m_undo_index < m_changes.size()) {
-        m_changes.removeLast();
+void MainWindow::on_change_color(int row, int col, const QColor& p_color) {
+    while ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
+        (*project.currFrame)->m_changes.removeLast();
     }
     //qDebug() << m_undo_index << x << y;
     struct Change *change = new struct Change;
     //QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
-    CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(x,y)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
+    CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(row,col)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
 
-    change->x = x;
-    change->y = y;
+    change->row = row;
+    change->col = col;
     change->old_color = cell->getColor();
     change->new_color = p_color;
-    m_changes.append(change);
-    m_undo_index++;
+    (*project.currFrame)->m_changes.append(change);
+    (*project.currFrame)->m_undo_index++;
     cell->setColor(p_color);
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
@@ -907,8 +904,8 @@ void MainWindow::on_change_color(int x, int y, const QColor& p_color) {
 }
 
 void MainWindow::on_change_frame() {
-    m_undo_index = 0;
-    m_changes.clear();
+    //m_undo_index = 0;
+    //m_changes.clear();
 
     for (int x = 0; x < 12; x++) {
         for (int y = 0; y < 20; y++)  {
@@ -946,10 +943,20 @@ void MainWindow::on_change_frame() {
         ui->pushButton_next->setIconSize(QSize(240,400));
     }
 
-    ui->pushButton_undo->setEnabled(false);
-    ui->pushButton_redo->setEnabled(false);
-    undoAct->setEnabled(false);
-    redoAct->setEnabled(false);
+    if ((*project.currFrame)->m_undo_index > 0) {
+        undoAct->setEnabled(true);
+        ui->pushButton_undo->setEnabled(true);
+    } else {
+        undoAct->setEnabled(false);
+        ui->pushButton_undo->setEnabled(false);
+    }
+    if ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
+        redoAct->setEnabled(true);
+        ui->pushButton_redo->setEnabled(true);
+    } else {
+        redoAct->setEnabled(false);
+        ui->pushButton_redo->setEnabled(false);
+    }
 }
 
 

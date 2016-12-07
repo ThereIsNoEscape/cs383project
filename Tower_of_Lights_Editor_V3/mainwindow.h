@@ -24,13 +24,6 @@ class QActionGroup;
 class QLabel;
 class QMenu;
 
-struct Change {
-    int x;
-    int y;
-    QColor  old_color;
-    QColor  new_color;
-};
-
 namespace Ui {
 class MainWindow;
 }
@@ -104,7 +97,7 @@ private:
     void addCurrentThumbnail();
     Thumbnail* newThumbnail(QImage in, TanFrame*);
     Thumbnail* newThumbnail(QString in, TanFrame*);
-    void on_change_color(int x, int y, const QColor& p_color);
+    void on_change_color(int row, int col, const QColor& p_color);
     void on_change_frame();
 
     QMenu *fileMenu;
@@ -122,9 +115,6 @@ private:
     QAction *letterAct;
     QAction *symbolAct;
     QAction *shapeAct;
-
-    int m_undo_index = 0;
-    QLinkedList<struct Change *> m_changes;
 };
 
 #endif // MAINWINDOW_H

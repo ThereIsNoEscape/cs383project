@@ -52,8 +52,12 @@ bool TanFile::SaveAs(const QString& p_filename) {
         file << m_color_left.green() << " ";
         file << m_color_left.blue() << "\r\n";
 
+        file << m_color_right.red() << " ";
+        file << m_color_right.green() << " ";
+        file << m_color_right.blue() << " ";
+
         // Palette
-        for (int i = 0; i < TAN_DEFAULT_COLORPRESETS-1; i++) {
+        for (int i = 1; i < TAN_DEFAULT_COLORPRESETS-1; i++) {
             file << m_color_preset[i].red() << " ";
             file << m_color_preset[i].green() << " ";
             file << m_color_preset[i].blue() << " ";

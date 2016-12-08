@@ -14,12 +14,22 @@ struct TanCell {
     QString name;
 };
 
+struct Change {
+    int col;
+    int row;
+    QColor  old_color;
+    QColor  new_color;
+};
+
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
     TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     int frame_length; // >= 25ms
     int frame_start; // in ms
     QImage thumbnail;
+
+    int m_undo_index;
+    QLinkedList<struct Change *> m_changes;
 };
 
 // TAN File

@@ -6,6 +6,7 @@ letterEffectDialog::letterEffectDialog(QWidget *parent) :
     ui(new Ui::letterEffectDialog)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/resources/icon.png"));
     retEffect = new effect;
     for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
         for (int y = 0; y < TAN_DEFAULT_COLS; y++)

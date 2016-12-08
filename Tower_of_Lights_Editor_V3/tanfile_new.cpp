@@ -30,7 +30,7 @@ TanFile::TanFile() {
     {
         for(int j = 0; j < 12; j++)
         {
-            newf->pixels[j][i].color.setRgb(0,0,0,255);
+            newf->pixels[j][i].setRgb(0,0,0,255);
         }
     }
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);

@@ -8,12 +8,6 @@
 #include "config.h"
 #include <QDebug>        // for testing purposes
 
-// Tower Frame
-struct TanCell {
-    QColor color;
-    QString name;
-};
-
 struct Change {
     int col;
     int row;
@@ -23,7 +17,7 @@ struct Change {
 
 struct TanFrame {
     // [x][y] ; tower : x=4..7,y=5..14
-    TanCell pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
+    QColor pixels[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     int frame_length; // >= 25ms
     int frame_start; // in ms
     QImage thumbnail;

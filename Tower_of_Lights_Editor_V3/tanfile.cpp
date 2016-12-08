@@ -9,7 +9,7 @@ void TanFile::newFrame()
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
         {
-            newf->pixels[j][i].color.setRgb(0,0,0,255);
+            newf->pixels[j][i].setRgb(0,0,0,255);
         }
     }
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
@@ -36,7 +36,7 @@ void TanFile::newFrameCopy()
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
         {
-            newf->pixels[j][i].color = (*currFrame)->pixels[j][i].color;
+            newf->pixels[j][i] = (*currFrame)->pixels[j][i];
         }
     }
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
@@ -184,7 +184,7 @@ QColor TanFile::getPresetColor(int index)
 
 void TanFile::storeFrameColor(int row, int col, QColor m_color){
     //Takes updated color and stores in project
-    (*currFrame)->pixels[col][row].color = m_color;
+    (*currFrame)->pixels[col][row] = m_color;
 
 
     //Test to ensure correct color

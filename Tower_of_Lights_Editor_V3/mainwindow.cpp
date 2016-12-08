@@ -252,7 +252,7 @@ void MainWindow::cell_clicked(const int row, const int col, const char btn)
         m_color = project.getRightColor();
     }
     //if both colors are the same, don't bother
-    if (m_color == (*project.currFrame)->pixels[col][row].color) return;
+    if (m_color == (*project.currFrame)->pixels[col][row]) return;
     // Then update the cell color
     on_change_color(row, col, m_color);
     // And update the corresponding color in the Tan file representation
@@ -433,7 +433,7 @@ void MainWindow::generateThumbnail(TanFrame* ptr)
     {
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
-            tempColor = ptr->pixels[x][y].color;
+            tempColor = ptr->pixels[x][y];
             for (int a = 0; a < 8; a++)
             {
                 for (int b = 0; b < 8; b++)
@@ -833,7 +833,7 @@ void MainWindow::on_pushButton_preview_clicked()
 //    qDebug() << "====================";
 //    QString temp = "";
 //    for (int c = 0; c < 12; c++)
-//        temp.append((*project.currFrame)->pixels[c][0].color == QColor("#000000") ? "I" : "O");
+//        temp.append((*project.currFrame)->pixels[c][0] == QColor("#000000") ? "I" : "O");
 //    qDebug() << temp;
 //    qDebug() << "==================== " << (project.currFrame-project.m_frames.begin());
 }
@@ -931,7 +931,7 @@ void MainWindow::on_undo()
         (*project.currFrame)->m_undo_index--;
         struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
         ((CellWidget*)ui->gridLayout->itemAtPosition(change->row,change->col)->widget())->setColor(change->old_color);
-        (*project.currFrame)->pixels[change->col][change->row].color = change->old_color;
+        (*project.currFrame)->pixels[change->col][change->row] = change->old_color;
     }
     if ((*project.currFrame)->m_undo_index == 0) {
         ui->pushButton_undo->setEnabled(false);
@@ -946,7 +946,7 @@ void MainWindow::on_redo()
     if ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
         struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
         ((CellWidget*)(ui->gridLayout->itemAtPosition(change->row,change->col)->widget()))->setColor(change->new_color);
-        (*project.currFrame)->pixels[change->col][change->row].color = change->new_color;
+        (*project.currFrame)->pixels[change->col][change->row] = change->new_color;
         (*project.currFrame)->m_undo_index++;
     }
     if ((*project.currFrame)->m_undo_index == (*project.currFrame)->m_changes.size()) {
@@ -987,7 +987,7 @@ void MainWindow::on_change_frame() {
 
     for (int y = 0; y < 20; y++)
         for (int x = 0; x < 12; x++)
-            ((CellWidget*)(ui->gridLayout->itemAtPosition(y,x)->widget()))->setColor((*project.currFrame)->pixels[x][y].color);
+            ((CellWidget*)(ui->gridLayout->itemAtPosition(y,x)->widget()))->setColor((*project.currFrame)->pixels[x][y]);
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
 
@@ -1041,7 +1041,7 @@ void MainWindow::on_pushButton_clearFrame_clicked()
     {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
         {
-            (*project.currFrame)->pixels[j][i].color = QColor(0,0,0,0);
+            (*project.currFrame)->pixels[j][i] = QColor(0,0,0,0);
         }
     }
     on_change_frame();
@@ -1057,7 +1057,7 @@ void MainWindow::spawnEffect(const effect* e)
             if (e->pixels[c][r].alpha() == 255) // check to make sure there's something there
             {
                 //update project
-                (*project.currFrame)->pixels[c][r].color  = e->pixels[c][r];
+                (*project.currFrame)->pixels[c][r]  = e->pixels[c][r];
                 //update GUI
                 //QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
                 //CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);

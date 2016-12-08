@@ -68,20 +68,20 @@ bool TanFile::SaveAs(const QString& p_filename) {
 
         // Stuff
         file << m_frames.size() << " 10 4\r\n";
-        //qDebug() << (*m_frames.begin())->pixels[0][0].color.red();
+        //qDebug() << (*m_frames.begin())->pixels[0][0].red();
 
         // Frames
         for (int i = 0; i < m_frames.size(); i++) {
             file << (*(m_frames.begin()+i))->frame_start << "\r\n";
             for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
                 for (int x = 0; x < TAN_DEFAULT_COLS-1; x++) {
-                    file << (*(m_frames.begin()+i))->pixels[x][y].color.red() << " ";
-                    file << (*(m_frames.begin()+i))->pixels[x][y].color.green() << " ";
-                    file << (*(m_frames.begin()+i))->pixels[x][y].color.blue() << " ";
+                    file << (*(m_frames.begin()+i))->pixels[x][y].red() << " ";
+                    file << (*(m_frames.begin()+i))->pixels[x][y].green() << " ";
+                    file << (*(m_frames.begin()+i))->pixels[x][y].blue() << " ";
                 }
-                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].color.red() << " ";
-                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].color.green() << " ";
-                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].color.blue() << "\r\n";
+                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].red() << " ";
+                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].green() << " ";
+                file << (*(m_frames.begin()+i))->pixels[TAN_DEFAULT_COLS-1][y].blue() << "\r\n";
             }
         }
 

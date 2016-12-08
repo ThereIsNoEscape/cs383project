@@ -99,7 +99,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>40</y>
+              <y>30</y>
               <width>81</width>
               <height>81</height>
              </rect>
@@ -120,7 +120,7 @@
             <property name="geometry">
              <rect>
               <x>110</x>
-              <y>40</y>
+              <y>30</y>
               <width>81</width>
               <height>81</height>
              </rect>
@@ -138,7 +138,7 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>120</y>
+              <y>110</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -154,7 +154,7 @@
             <property name="geometry">
              <rect>
               <x>110</x>
-              <y>120</y>
+              <y>110</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -170,7 +170,7 @@
             <property name="geometry">
              <rect>
               <x>50</x>
-              <y>345</y>
+              <y>330</y>
               <width>101</width>
               <height>21</height>
              </rect>
@@ -215,7 +215,7 @@
             <property name="geometry">
              <rect>
               <x>40</x>
-              <y>145</y>
+              <y>130</y>
               <width>120</width>
               <height>200</height>
              </rect>
@@ -243,44 +243,27 @@
              <string>Clear Frame</string>
             </property>
            </widget>
-           <widget class="QLabel" name="label_12">
+           <widget class="QLabel" name="label_audiofile">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>370</y>
-              <width>71</width>
-              <height>31</height>
+              <x>17</x>
+              <y>355</y>
+              <width>167</width>
+              <height>16</height>
              </rect>
             </property>
             <property name="text">
-             <string>Audio
-filename</string>
+             <string>Audio File: unset</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit">
-            <property name="geometry">
-             <rect>
-              <x>80</x>
-              <y>374</y>
-              <width>104</width>
-              <height>24</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>unset</string>
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
            </widget>
            <widget class="QLabel" name="label_7">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>10</y>
+              <y>8</y>
               <width>181</width>
               <height>21</height>
              </rect>
@@ -295,6 +278,19 @@ filename</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_changeAudioFile">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>371</y>
+              <width>181</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Change Audio File</string>
             </property>
            </widget>
           </widget>
@@ -369,7 +365,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>50</x>
-              <y>345</y>
+              <y>330</y>
               <width>101</width>
               <height>21</height>
              </rect>
@@ -419,25 +415,24 @@ border-radius: 4px;</string>
            <widget class="QLabel" name="label_8">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>370</y>
-              <width>71</width>
-              <height>31</height>
+              <x>17</x>
+              <y>360</y>
+              <width>91</width>
+              <height>16</height>
              </rect>
             </property>
             <property name="text">
-             <string>Frame
-length</string>
+             <string>Frame length:</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
            </widget>
            <widget class="QLabel" name="label_9">
             <property name="geometry">
              <rect>
-              <x>150</x>
-              <y>372</y>
+              <x>157</x>
+              <y>359</y>
               <width>31</width>
               <height>21</height>
              </rect>
@@ -468,15 +463,15 @@ length</string>
            <widget class="QSpinBox" name="spinBox">
             <property name="geometry">
              <rect>
-              <x>80</x>
-              <y>374</y>
-              <width>71</width>
+              <x>107</x>
+              <y>358</y>
+              <width>51</width>
               <height>24</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>71</width>
+              <width>20</width>
               <height>24</height>
              </size>
             </property>
@@ -491,7 +486,7 @@ length</string>
             <property name="geometry">
              <rect>
               <x>40</x>
-              <y>145</y>
+              <y>130</y>
               <width>120</width>
               <height>200</height>
              </rect>

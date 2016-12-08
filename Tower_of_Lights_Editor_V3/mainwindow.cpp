@@ -108,7 +108,9 @@ void MainWindow::openFile()    //when open is clicked
     }
 
     updateGUIColorButtons();
-    ui->lineEdit->setText(project.getAudioFile());
+    if (project.getAudioFile().compare(QString("NoAudioFile")))
+        ui->label_audiofile->setText(project.getAudioFile());
+    else ui->label_audiofile->setText("unset");
 
     addThumbnail();
 
@@ -135,7 +137,7 @@ void MainWindow::newFile()
     addThumbnail();
     ui->pushButton_delete->setEnabled(false);
 
-    ui->lineEdit->setText("");
+    ui->label_audiofile->setText("Audio File: unset");
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
     updateGUIColorButtons();
@@ -909,18 +911,18 @@ void MainWindow::thumbnail_clicked(const long int in)
     }
 }
 
-
-void MainWindow::on_lineEdit_editingFinished()
+void MainWindow::on_pushButton_changeAudioFile_clicked()
 {
-    QString audiofilename = ui->lineEdit->text();
-
-    if (audiofilename.mid((audiofilename.length()-4),4).compare(QString(".wav")))
-    {
-        audiofilename.append(".wav");
-        ui->lineEdit->setText(audiofilename);
-    }
+    //get the filename
+    QString audiofilename = QFileDialog::getOpenFileName(this, tr("Select audio file"),"",    //user selects fileName
+                                             "Wav File (*.wav*);;All files (*.*)");
+    if (audiofilename=="")   //checking if blank name is selected
+        return;
 
     project.setAudioFile(audiofilename);
+    int fslash = audiofilename.lastIndexOf('\\');
+    int bslash = audiofilename.lastIndexOf('/');
+    ui->label_audiofile->setText("Audio File: " + (fslash > bslash ? audiofilename.mid(fslash+1) : audiofilename.mid(bslash+1)));
 }
 
 void MainWindow::on_undo()

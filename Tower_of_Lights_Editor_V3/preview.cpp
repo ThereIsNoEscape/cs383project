@@ -161,6 +161,8 @@ void Preview::updateGUI()
         ui->pushButton_play->setText("Play");
     }
     this->setWindowTitle("Frame " + QString::number(file.currFrame+1-file.m_frames.begin()));
+    ui->label_start->setText(QString::number((*file.currFrame)->frame_start) + " ms");
+    ui->label_duration->setText(QString::number((*file.currFrame)->frame_length) + " ms");
 }
 
 void Preview::next_frame()

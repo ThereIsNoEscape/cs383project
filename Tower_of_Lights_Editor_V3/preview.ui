@@ -178,6 +178,70 @@ border-radius: 4px;</string>
     <string>Close</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>678</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start time</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>678</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Duration</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_duration">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>697</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>25 ms</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_start">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>697</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0 ms</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

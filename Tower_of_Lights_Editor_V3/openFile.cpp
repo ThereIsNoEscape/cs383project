@@ -126,7 +126,7 @@ TanFile* MainWindow::load(QString fileName)
                     QMessageBox::information(0,"error","frame contains nonvalid rgb colors");
                     return NULL;
                 }
-                frame->pixels[g][i].color.setRgb(rgb[0],rgb[1],rgb[2],255);
+                frame->pixels[g][i].setRgb(rgb[0],rgb[1],rgb[2],255);
             }
         }
         //got a frame!

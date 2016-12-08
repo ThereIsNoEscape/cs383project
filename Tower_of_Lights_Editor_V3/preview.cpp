@@ -126,7 +126,7 @@ void Preview::updateGUI()
 {
     for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
         for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
-            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + (*file.currFrame)->pixels[x+4][y+5].color.name()));
+            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + (*file.currFrame)->pixels[x+4][y+5].name()));
     if (playing)
     {
         ui->pushButton_back10->setEnabled(false);

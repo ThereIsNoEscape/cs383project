@@ -3,14 +3,21 @@
 
 #include <QThread>
 #include <QDebug>
+#include <QTime>
+#include <QCoreApplication>
 
-class thread : public QThread
+class myThread : public QThread
 {
     Q_OBJECT
 public:
-    thread();
+    myThread();
+    void setMilliseconds(double);
+signals:
+    void countdownDone();
 protected:
     void run();
+private:
+    double milliseconds;
 };
 
 #endif // THREAD_H

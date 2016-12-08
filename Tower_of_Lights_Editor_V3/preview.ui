@@ -10,6 +10,18 @@
     <height>715</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>280</width>
+    <height>715</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>280</width>
+    <height>715</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -95,7 +107,7 @@ border-radius: 4px;</string>
   </widget>
   <widget class="QPushButton" name="pushButton_play">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -164,6 +176,70 @@ border-radius: 4px;</string>
    </property>
    <property name="text">
     <string>Close</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>678</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start time</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>678</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Duration</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_duration">
+   <property name="geometry">
+    <rect>
+     <x>195</x>
+     <y>697</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>25 ms</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_start">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>697</y>
+     <width>80</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0 ms</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

@@ -23,11 +23,8 @@ void TanFile::newFrame()
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
 
-    QList<TanFrame *>::iterator thing = currFrame;
-    while (thing < m_frames.end()) {
-        (*thing)->frame_start += newf->frame_length;
-        thing++;
-    }
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
 }
 
 void TanFile::newFrameCopy()
@@ -54,23 +51,23 @@ void TanFile::newFrameCopy()
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
 
-    QList<TanFrame *>::iterator thing = currFrame;
-    while (thing < m_frames.end()) {
-        (*thing)->frame_start += newf->frame_length;
-        thing++;
-    }
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
 }
 
 void TanFile::removeCurrentFrame()
 {
-    if ((currFrame-m_frames.begin()) == (m_frames.end()-1-m_frames.begin())) // deleting the last frame
-    {qDebug() << "Y";
-         m_frames.removeAt(currFrame-m_frames.begin());
-         currFrame = (m_frames.end()-1);
+    if (m_frames.size() == 1) return; // don't delete if there's only one frame
+    if (currFrame == m_frames.begin()) // deleting the first frame (move right)
+    {
+        m_frames.removeFirst();
+        currFrame = (m_frames.begin());
     }
-    else // not deleting the last frame
-    {qDebug() << "N";
-         m_frames.removeAt(currFrame-m_frames.begin());
+    else // not deleting the first frame (move left)
+    {
+        int temp = (currFrame-m_frames.begin());
+        m_frames.removeAt(temp);
+        currFrame = (m_frames.begin()+temp-1);
     }
 }
 

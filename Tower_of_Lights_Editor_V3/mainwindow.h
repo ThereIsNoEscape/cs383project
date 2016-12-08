@@ -19,6 +19,7 @@
 #include "symboleffectdialog.h"
 #include "shapeeffectdialog.h"
 #include "preview.h"
+#include "infodialog.h"
 
 class QAction;
 class QActionGroup;
@@ -72,6 +73,8 @@ private slots:
     void insert_symbol();
     void insert_shape();
 
+    void info();
+
     void spawnEffect(const effect*); //signaled from dialog
 private:
 	Ui::MainWindow *ui;
@@ -117,6 +120,9 @@ private:
     QAction *letterAct;
     QAction *symbolAct;
     QAction *shapeAct;
+
+    QMenu *helpMenu;
+    QAction *infoAct;
 };
 
 #endif // MAINWINDOW_H

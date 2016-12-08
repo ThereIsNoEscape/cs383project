@@ -22,7 +22,8 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
     QGridLayout *m_FrameLayout = ui->gridLayout;
     //QString m_cellName;
     QSizePolicy m_cellSizePolicy;
-    QSize m_cellSize(16,16);
+    QSize m_cellSize(15,15);
+    ui->gridLayout->setSpacing(1);
 
     // Configure the size policy that every cell widget will use
     m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
@@ -33,9 +34,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
 
     QString qss;
 
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < (TAN_DEFAULT_ROWS); y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < (TAN_DEFAULT_COLS); x++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame project at some point?
@@ -44,7 +45,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
-            qss = QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #000000;");
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: #000000;");
+            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: #000000;");
 
             m_cellWidget->setStyleSheet(qss);
             // Adding cell widget to the frame's gridLayout
@@ -77,9 +80,9 @@ void symbolEffectDialog::on_buttonBox_accepted()
 
 void symbolEffectDialog:: on_pushButton_test_clicked()
 {
-    ui->label->move(QPoint(180,120));
+    ui->label->move(QPoint(270,90));
     ui->pushButton_test->setEnabled(false);
-    ui->label->setText(QString("Good because that's the\nonly effect we've got"));
+    ui->label->setText(QString("Good because that's the only effect we've got"));
     ui->pushButton_up->setEnabled(true);
     ui->pushButton_down->setEnabled(true);
     ui->pushButton_left->setEnabled(true);
@@ -184,12 +187,13 @@ void symbolEffectDialog::on_pushButton_color_clicked()
 void symbolEffectDialog::updateGUI()
 {
     QString qss;
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
-            qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
-
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
             ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
         }
     }

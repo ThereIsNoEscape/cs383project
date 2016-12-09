@@ -1,7 +1,7 @@
 #ifndef TANFILE_H
 #define TANFILE_H
 
-#include <QLinkedList>
+#include <QStack>
 #include <QString>
 #include <QColor>
 #include <QMessageBox>
@@ -22,8 +22,8 @@ struct TanFrame {
     int frame_start; // in ms
     QImage thumbnail;
 
-    int m_undo_index;
-    QLinkedList<struct Change *> m_changes;
+    QStack<Change*> undoStack;
+    QStack<Change*> redoStack;
 };
 
 // TAN File

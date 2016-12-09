@@ -712,130 +712,6 @@ void MainWindow::on_pushButton_preview_clicked()
     p->show();
     p->raise();
     p->activateWindow();
-//    QWidget* temp;
-//    temp = QApplication::focusWidget();
-//    if (temp == (QWidget*)ui->centralWidget)
-//        qDebug() << "centralWidget";
-//    else
-//    if (temp == (QWidget*)ui->gridLayout)
-//        qDebug() << "gridLayout";
-//    else
-//    if (temp == (QWidget*)ui->gridLayout_4)
-//        qDebug() << "gridLayout_4";
-//    else
-//    if (temp == (QWidget*)ui->horizontalLayout)
-//        qDebug() << "horizontalLayout";
-//    else
-//    if (temp == (QWidget*)ui->horizontalLayout_2)
-//        qDebug() << "horizontalLayout_2";
-//    else
-//    if (temp == (QWidget*)ui->horizontalLayout_3)
-//        qDebug() << "horizontalLayout_3";
-//    else
-//    if (temp == (QWidget*)ui->label_2)
-//        qDebug() << "label_2";
-//    else
-//    if (temp == (QWidget*)ui->label_3)
-//        qDebug() << "label_3";
-//    else
-//    if (temp == (QWidget*)ui->label_4)
-//        qDebug() << "label_4";
-//    else
-//    if (temp == (QWidget*)ui->label_5)
-//        qDebug() << "label_5";
-//    else
-//    if (temp == (QWidget*)ui->label_6)
-//        qDebug() << "label_6";
-//    else
-//    if (temp == (QWidget*)ui->label_8)
-//        qDebug() << "label_8";
-//    else
-//    if (temp == (QWidget*)ui->label_9)
-//        qDebug() << "label_9";
-//    else
-//    if (temp == (QWidget*)ui->menuBar)
-//        qDebug() << "menuBar";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_clearFrame)
-//        qDebug() << "pushButton_clearFrame";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_copyNew)
-//        qDebug() << "pushButton_copyNew";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_delete)
-//        qDebug() << "pushButton_delete";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_l)
-//        qDebug() << "pushButton_l";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_new)
-//        qDebug() << "pushButton_new";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_next)
-//        qDebug() << "pushButton_next";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_prev)
-//        qDebug() << "pushButton_prev";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_preview)
-//        qDebug() << "pushButton_preview";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_r)
-//        qDebug() << "pushButton_r";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_redo)
-//        qDebug() << "pushButton_redo";
-//    else
-//    if (temp == (QWidget*)ui->pushButton_undo)
-//        qDebug() << "pushButton_undo";
-//    else
-//    if (temp == (QWidget*)ui->scrollArea)
-//        qDebug() << "scrollArea";
-//    else
-//    if (temp == (QWidget*)ui->scrollAreaWidgetContents)
-//        qDebug() << "scrollAreaWidgetContents";
-//    else
-//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_3)
-//        qDebug() << "scrollAreaWidgetContents_3";
-//    else
-//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_4)
-//        qDebug() << "scrollAreaWidgetContents_4";
-//    else
-//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_5)
-//        qDebug() << "scrollAreaWidgetContents_5";
-//    else
-//    if (temp == (QWidget*)ui->scrollAreaWidgetContents_6)
-//        qDebug() << "scrollAreaWidgetContents_6";
-//    else
-//    if (temp == (QWidget*)ui->scrollArea_2)
-//        qDebug() << "scrollArea_2";
-//    else
-//    if (temp == (QWidget*)ui->scrollArea_3)
-//        qDebug() << "scrollArea_3";
-//    else
-//    if (temp == (QWidget*)ui->scrollArea_4)
-//        qDebug() << "scrollArea_4";
-//    else
-//    if (temp == (QWidget*)ui->scrollArea_5)
-//        qDebug() << "scrollArea_5";
-//    else
-//    if (temp == (QWidget*)ui->spinBox)
-//        qDebug() << "spinBox";
-//    else
-//    if (temp == (QWidget*)ui->statusBar)
-//        qDebug() << "statusBar";
-//    else
-//    if (temp == (QWidget*)ui->verticalLayout)
-//        qDebug() << "verticalLayout";
-//    else
-//        qDebug() << "default";
-//    qDebug() << (*project.currFrame)->frame_length;
-//    qDebug() << "====================";
-//    QString temp = "";
-//    for (int c = 0; c < 12; c++)
-//        temp.append((*project.currFrame)->pixels[c][0] == QColor("#000000") ? "I" : "O");
-//    qDebug() << temp;
-//    qDebug() << "==================== " << (project.currFrame-project.m_frames.begin());
 }
 
 void MainWindow::on_pushButton_delete_clicked()
@@ -927,53 +803,51 @@ void MainWindow::on_pushButton_changeAudioFile_clicked()
 
 void MainWindow::on_undo()
 {
-    if ((*project.currFrame)->m_undo_index > 0) {
-        (*project.currFrame)->m_undo_index--;
-        struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
+    if ((*project.currFrame)->undoStack.size() > 0)
+    {
+        Change* change = (*project.currFrame)->undoStack.pop();
+        (*project.currFrame)->redoStack.push(change);
         ((CellWidget*)ui->gridLayout->itemAtPosition(change->row,change->col)->widget())->setColor(change->old_color);
         (*project.currFrame)->pixels[change->col][change->row] = change->old_color;
+        ui->pushButton_redo->setEnabled(true);
+        redoAct->setEnabled(true);
     }
-    if ((*project.currFrame)->m_undo_index == 0) {
+    if ((*project.currFrame)->undoStack.size() == 0)
+    {
         ui->pushButton_undo->setEnabled(false);
         undoAct->setEnabled(false);
     }
-    ui->pushButton_redo->setEnabled(true);
-    redoAct->setEnabled(true);
 }
 
 void MainWindow::on_redo()
 {
-    if ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
-        struct Change *change = *((*project.currFrame)->m_changes.begin() + (*project.currFrame)->m_undo_index);
+    if ((*project.currFrame)->redoStack.size() > 0)
+    {
+        Change* change = (*project.currFrame)->redoStack.pop();
+        (*project.currFrame)->undoStack.push(change);
         ((CellWidget*)(ui->gridLayout->itemAtPosition(change->row,change->col)->widget()))->setColor(change->new_color);
         (*project.currFrame)->pixels[change->col][change->row] = change->new_color;
-        (*project.currFrame)->m_undo_index++;
-    }
-    if ((*project.currFrame)->m_undo_index == (*project.currFrame)->m_changes.size()) {
-        ui->pushButton_redo->setEnabled(false);
-        redoAct->setEnabled(false);
-    }
-    if ((*project.currFrame)->m_undo_index > 0) {
         ui->pushButton_undo->setEnabled(true);
         undoAct->setEnabled(true);
     }
+    if ((*project.currFrame)->redoStack.size() == 0) {
+        ui->pushButton_redo->setEnabled(false);
+        redoAct->setEnabled(false);
+    }
 }
 
-void MainWindow::on_change_color(int row, int col, const QColor& p_color) {
-    while ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
-        (*project.currFrame)->m_changes.removeLast();
-    }
-    //qDebug() << m_undo_index << x << y;
-    struct Change *change = new struct Change;
-    //QString m_cellName = "cell" + (QString("%1").arg((x*12 + y), 3, 10, QChar('0')));
+void MainWindow::on_change_color(int row, int col, const QColor& p_color)
+{
+    (*project.currFrame)->redoStack.clear();
+
+    Change* change = new Change;
     CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(row,col)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
 
     change->row = row;
     change->col = col;
     change->old_color = cell->getColor();
     change->new_color = p_color;
-    (*project.currFrame)->m_changes.append(change);
-    (*project.currFrame)->m_undo_index++;
+    (*project.currFrame)->undoStack.push(change);
     cell->setColor(p_color);
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
@@ -981,10 +855,8 @@ void MainWindow::on_change_color(int row, int col, const QColor& p_color) {
     ui->pushButton_redo->setEnabled(false);
 }
 
-void MainWindow::on_change_frame() {
-    //m_undo_index = 0;
-    //m_changes.clear();
-
+void MainWindow::on_change_frame()
+{
     for (int y = 0; y < 20; y++)
         for (int x = 0; x < 12; x++)
             ((CellWidget*)(ui->gridLayout->itemAtPosition(y,x)->widget()))->setColor((*project.currFrame)->pixels[x][y]);
@@ -1018,14 +890,14 @@ void MainWindow::on_change_frame() {
         ui->pushButton_next->setIcon(QIcon(QPixmap::fromImage((*(project.currFrame+1))->thumbnail, Qt::AutoColor)));
         ui->pushButton_next->setIconSize(QSize(240,400));
     }
-    if ((*project.currFrame)->m_undo_index > 0) {
+    if ((*project.currFrame)->undoStack.size() > 0) {
         undoAct->setEnabled(true);
         ui->pushButton_undo->setEnabled(true);
     } else {
         undoAct->setEnabled(false);
         ui->pushButton_undo->setEnabled(false);
     }
-    if ((*project.currFrame)->m_undo_index < (*project.currFrame)->m_changes.size()) {
+    if ((*project.currFrame)->redoStack.size() > 0) {
         redoAct->setEnabled(true);
         ui->pushButton_redo->setEnabled(true);
     } else {
@@ -1069,7 +941,7 @@ void MainWindow::spawnEffect(const effect* e)
 }
 
 void MainWindow::insert_letter() {
-    letterEffectDialog d;
+    letterEffectDialog d((*project.currFrame)->pixels);
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
 }

@@ -104,6 +104,7 @@ private:
     Thumbnail* newThumbnail(QString in, TanFrame*);
     void on_change_color(int row, int col, const QColor& p_color);
     void on_change_frame();
+    void on_change_file();
 
     QMenu *fileMenu;
     QAction *newAct;

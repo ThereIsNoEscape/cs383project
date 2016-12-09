@@ -15,8 +15,6 @@ void TanFile::newFrame()
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
     newf->thumbnail.fill(QColor(90,90,90));
 
-    newf->m_undo_index = 0;
-
     //qDebug() << (currFrame-m_frames.begin());
     int temp = (currFrame-m_frames.begin());
     m_frames.insert((currFrame+1-m_frames.begin()), newf);
@@ -42,8 +40,8 @@ void TanFile::newFrameCopy()
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
     newf->thumbnail.fill(QColor(90,90,90));
 
-    newf->m_undo_index = (*currFrame)->m_undo_index;
-    newf->m_changes = (*currFrame)->m_changes;
+    newf->undoStack = (*currFrame)->undoStack;
+    newf->redoStack = (*currFrame)->redoStack;
 
     //qDebug() << (currFrame-m_frames.begin());
     int temp = (currFrame-m_frames.begin());

@@ -31,8 +31,6 @@ private slots:
     void on_pushButton_right_clicked();
     void on_pushButton_color_clicked();
 
-    void on_comboBox_activated(int index);
-
 private:
     Ui::symbolEffectDialog *ui;
     effect* retEffect;

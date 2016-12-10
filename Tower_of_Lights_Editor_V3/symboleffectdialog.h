@@ -24,12 +24,13 @@ signals:
 
 private slots:
     void on_buttonBox_accepted();
-    void on_pushButton_test_clicked();
     void on_pushButton_up_clicked();
     void on_pushButton_down_clicked();
     void on_pushButton_left_clicked();
     void on_pushButton_right_clicked();
     void on_pushButton_color_clicked();
+
+    void on_comboBox_activated(int index);
 
 private:
     Ui::symbolEffectDialog *ui;

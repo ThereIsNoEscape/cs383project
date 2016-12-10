@@ -198,3 +198,291 @@ void symbolEffectDialog::updateGUI()
         }
     }
 }
+
+void symbolEffectDialog::on_comboBox_activated(int index)
+{
+    qInfo("index test");
+    qInfo("%d", index);
+
+
+    //Unsure what to do if blank box is selected
+
+    if(index != 0){
+        ui->pushButton_up->setEnabled(true);
+        ui->pushButton_down->setEnabled(true);
+        ui->pushButton_left->setEnabled(true);
+        ui->pushButton_right->setEnabled(true);
+
+        effectSelected = true;
+    }
+
+
+    if(index == 1){ // Question Mark
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 2){ // Exclamation Mark
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 3){ // Dollar Sign
+        retEffect->pixels[6][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[7][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[7][10] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[7][11] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        retEffect->pixels[6][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 4){ // Percent Sign
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[7][8] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[7][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 5){ // Left Paren
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 6){ // Right Paren
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 7){ // Left Square Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 8){ // Right Square Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 9){ // Plus Sign
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 10){ // Minus Sign
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 11){ // Equals Sign
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[7][8] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[7][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 12){ // Up Caret
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 13){ // Left Caret
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 14){ // Right Caret
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 15){ // Left Hook Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 16){ // Right Hook Bracket
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 17){ // Forward Slash
+        retEffect->pixels[6][7] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 18){ // Backwards Slash
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[6][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 19){ // Semicolon
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 20){ // Colon
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 21){ // Asterisk
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[8][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[7][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[7][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[8][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 22){ // Bar
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 23){ // Tetris I
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 24){ // Tetris O
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 25){ // Tetris T
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 26){ // Tetris S
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 27){ // Tetris Z
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 28){ // Tetris J
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+
+        updateGUI();
+    }
+    if(index == 29){ // Tetris L
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+
+        updateGUI();
+    }
+}

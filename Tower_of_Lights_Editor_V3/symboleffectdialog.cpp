@@ -1,7 +1,7 @@
 #include "symboleffectdialog.h"
 #include "ui_symboleffectdialog.h"
 
-symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
+symbolEffectDialog::symbolEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent) :
     QDialog(parent),
     ui(new Ui::symbolEffectDialog)
 {
@@ -17,6 +17,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
     offsetY = 0;
     effectSelected = false;
     effectColor = QColor("#ffffff");
+    for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+            backgroundFrame[x][y] = frame[x][y];
 
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
@@ -46,8 +49,8 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
             if (x < 8 && x > 3 && y < 15 && y > 4)
-                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: #000000;");
-            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: #000000;");
+                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
 
             m_cellWidget->setStyleSheet(qss);
             // Adding cell widget to the frame's gridLayout
@@ -192,8 +195,17 @@ void symbolEffectDialog::updateGUI()
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
             if (x < 8 && x > 3 && y < 15 && y > 4)
-                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
-            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
+            else
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
             ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
         }
     }

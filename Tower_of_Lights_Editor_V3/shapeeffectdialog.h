@@ -16,7 +16,7 @@ class shapeEffectDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit shapeEffectDialog(QWidget *parent = 0);
+    explicit shapeEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent = 0);
     ~shapeEffectDialog();
 
 signals:
@@ -37,6 +37,7 @@ private:
     int offsetX;
     int offsetY;
     bool effectSelected;
+    QColor backgroundFrame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     QColor effectColor;
     void updateGUI();
     bool isTouchingXBoundaries();

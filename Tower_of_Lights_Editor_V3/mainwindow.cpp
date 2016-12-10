@@ -947,13 +947,13 @@ void MainWindow::insert_letter() {
 }
 
 void MainWindow::insert_symbol() {
-    symbolEffectDialog d;
+    symbolEffectDialog d((*project.currFrame)->pixels);
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
 }
 
 void MainWindow::insert_shape()  {
-    shapeEffectDialog d;
+    shapeEffectDialog d((*project.currFrame)->pixels);
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
 }

@@ -1,6 +1,6 @@
 #ifndef EFFECT_H
 #define EFFECT_H
-#include <QColor.h>
+#include <QColor>
 #include <config.h>
 
 struct effect

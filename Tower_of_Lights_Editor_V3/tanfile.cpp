@@ -3,13 +3,13 @@
 void TanFile::newFrame()
 {
     TanFrame* newf = new TanFrame;
-    newf->frame_length = (*currFrame)->frame_length;
-    newf->frame_start = (*currFrame)->frame_start;
+    newf->frame_length = 25;
+    newf->frame_start = (*currFrame)->frame_start + (*currFrame)->frame_length;
     for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
         {
-            newf->pixels[j][i].color.setRgb(0,0,0,255);
+            newf->pixels[j][i].setRgb(0,0,0,255);
         }
     }
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
@@ -21,27 +21,27 @@ void TanFile::newFrame()
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
 
-    QList<TanFrame *>::iterator thing = currFrame;
-    while (thing < m_frames.end()) {
-        (*thing)->frame_start += newf->frame_length;
-        thing++;
-    }
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
 }
 
 void TanFile::newFrameCopy()
 {
     TanFrame* newf = new TanFrame;
     newf->frame_length = (*currFrame)->frame_length;
-    newf->frame_start = (*currFrame)->frame_start;
+    newf->frame_start = (*currFrame)->frame_start + (*currFrame)->frame_length;
     for(int i = 0; i < TAN_DEFAULT_ROWS; i++)
     {
         for(int j = 0; j < TAN_DEFAULT_COLS; j++)
         {
-            newf->pixels[j][i].color = (*currFrame)->pixels[j][i].color;
+            newf->pixels[j][i] = (*currFrame)->pixels[j][i];
         }
     }
     newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
     newf->thumbnail.fill(QColor(90,90,90));
+
+    newf->undoStack = (*currFrame)->undoStack;
+    newf->redoStack = (*currFrame)->redoStack;
 
     //qDebug() << (currFrame-m_frames.begin());
     int temp = (currFrame-m_frames.begin());
@@ -49,23 +49,23 @@ void TanFile::newFrameCopy()
     currFrame = (m_frames.begin()+temp+1);
     //qDebug() << (currFrame-m_frames.begin());
 
-    QList<TanFrame *>::iterator thing = currFrame;
-    while (thing < m_frames.end()) {
-        (*thing)->frame_start += newf->frame_length;
-        thing++;
-    }
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
 }
 
 void TanFile::removeCurrentFrame()
 {
-    if ((currFrame-m_frames.begin()) == (m_frames.end()-1-m_frames.begin())) // deleting the last frame
-    {qDebug() << "Y";
-         m_frames.removeAt(currFrame-m_frames.begin());
-         currFrame = (m_frames.end()-1);
+    if (m_frames.size() == 1) return; // don't delete if there's only one frame
+    if (currFrame == m_frames.begin()) // deleting the first frame (move right)
+    {
+        m_frames.removeFirst();
+        currFrame = (m_frames.begin());
     }
-    else // not deleting the last frame
-    {qDebug() << "N";
-         m_frames.removeAt(currFrame-m_frames.begin());
+    else // not deleting the first frame (move left)
+    {
+        int temp = (currFrame-m_frames.begin());
+        m_frames.removeAt(temp);
+        currFrame = (m_frames.begin()+temp-1);
     }
 }
 
@@ -182,7 +182,7 @@ QColor TanFile::getPresetColor(int index)
 
 void TanFile::storeFrameColor(int row, int col, QColor m_color){
     //Takes updated color and stores in project
-    (*currFrame)->pixels[col][row].color = m_color;
+    (*currFrame)->pixels[col][row] = m_color;
 
 
     //Test to ensure correct color

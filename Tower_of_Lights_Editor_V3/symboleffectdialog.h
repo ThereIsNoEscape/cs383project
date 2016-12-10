@@ -24,7 +24,6 @@ signals:
 
 private slots:
     void on_buttonBox_accepted();
-    void on_pushButton_test_clicked();
     void on_pushButton_up_clicked();
     void on_pushButton_down_clicked();
     void on_pushButton_left_clicked();

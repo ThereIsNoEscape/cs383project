@@ -18,16 +18,38 @@ SOURCES += main.cpp\
     cell.cpp \
     tanfile.cpp \
     openfile.cpp \
-    tanfile_save.cpp
+    tanfile_save.cpp \
+    lettereffectdialog.cpp \
+    symboleffectdialog.cpp \
+    shapeeffectdialog.cpp \
+    preview.cpp \
+    thread.cpp \
+    infodialog.cpp
 
 HEADERS  += mainwindow.h \
     cell.h \
     config.h \
     tanfile.h \
+<<<<<<< HEAD
     openfile.h \
     effect.h
 
 FORMS    += mainwindow.ui
+=======
+    effect.h \
+    lettereffectdialog.h \
+    symboleffectdialog.h \
+    shapeeffectdialog.h \
+    preview.h \
+    thread.h \
+    infodialog.h
+
+FORMS    += mainwindow.ui \
+    lettereffectdialog.ui \
+    symboleffectdialog.ui \
+    shapeeffectdialog.ui \
+    preview.ui \
+    infodialog.ui
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/mainwindows/menus

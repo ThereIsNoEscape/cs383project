@@ -14,19 +14,17 @@
 #include "tanfile.h"
 #include "config.h"
 #include "cell.h"
-#include "effect.h" //for applying effects
+#include "effect.h" //for storing effects
+#include "lettereffectdialog.h"
+#include "symboleffectdialog.h"
+#include "shapeeffectdialog.h"
+#include "preview.h"
+#include "infodialog.h"
 
 class QAction;
 class QActionGroup;
 class QLabel;
 class QMenu;
-
-struct Change {
-    int x;
-    int y;
-    QColor  old_color;
-    QColor  new_color;
-};
 
 namespace Ui {
 class MainWindow;
@@ -39,7 +37,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     TanFile project;   //the object that MainWindow will use for data storage
-    effect e;   //the object that that MainWindow will use to store effect data
     ~MainWindow();
 
 private slots:
@@ -49,9 +46,10 @@ private slots:
     void newFile();
     void save();
     void saveAs();
-    int load(QString);
+    TanFile* load(QString);
 
-    void on_cell_clicked(const int row, const int col, const char btn);
+    void cell_clicked(const int row, const int col, const char btn);
+    void cell_doubleClicked(const char btn, const QColor);
 
     void on_pushButton_prev_clicked();
     void on_pushButton_next_clicked();
@@ -64,17 +62,20 @@ private slots:
     void on_pushButton_preview_clicked();
     void on_pushButton_delete_clicked();
     void on_pushButton_clearFrame_clicked();
-    void on_thumbnail_clicked();
+    void thumbnail_clicked(const long int);
+    void on_pushButton_changeAudioFile_clicked();
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
     void on_redo();
 
-    void on_insert_letter();
-    void on_insert_symbol();
-    void on_insert_shape();
+    void insert_letter();
+    void insert_symbol();
+    void insert_shape();
 
-    void spawnEffect(); //runs applyEffect
+    void info();
+
+    void spawnEffect(const effect*); //signaled from dialog
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;
@@ -90,18 +91,20 @@ private:
     bool saveSequence();//returns false if the user cancels the entire process
     void createActions();
     void createMenus();
+    void switchCurrentFrame(int index);
     void generateThumbnailCurrent();
     void generateThumbnail(TanFrame* ptr);
     QImage scaleDown(QImage thumbnail);
     void clearThumbnails(); // used when opening a project or starting a new project
     void addThumbnail(); // only used when starting a new project;
-    void addThumbnailToEnd(QImage in);
+    void addThumbnailToEnd(QImage in, TanFrame*);
     void switchSelectedThumbnail(int index);
     void addCurrentThumbnail();
-    QPushButton* newThumbnail(QImage in);
-    QPushButton* newThumbnail(QString in);
-    void on_change_color(int x, int y, const QColor& p_color);
+    Thumbnail* newThumbnail(QImage in, TanFrame*);
+    Thumbnail* newThumbnail(QString in, TanFrame*);
+    void on_change_color(int row, int col, const QColor& p_color);
     void on_change_frame();
+    void on_change_file();
 
     QMenu *fileMenu;
     QAction *newAct;
@@ -119,8 +122,8 @@ private:
     QAction *symbolAct;
     QAction *shapeAct;
 
-    int m_undo_index = 0;
-    QLinkedList<struct Change *> m_changes;
+    QMenu *helpMenu;
+    QAction *infoAct;
 };
 
 #endif // MAINWINDOW_H

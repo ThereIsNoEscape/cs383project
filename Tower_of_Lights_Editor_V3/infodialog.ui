@@ -57,7 +57,9 @@
 
 - By double clicking a pixel, you can assign its color to the mouse button you double clicked with.
 
-- You can click on a thumbnail at the bottom of the screen to select that frame for editing.</string>
+- You can click on a thumbnail at the bottom of the screen to select that frame for editing.
+
+-A blank frame is appended to files if the last frame in the project is not a blank frame. This is so that the player does not cut off the last frame upon display</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

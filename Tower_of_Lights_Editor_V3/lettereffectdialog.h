@@ -16,7 +16,7 @@ class letterEffectDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit letterEffectDialog(QWidget *parent = 0);
+    explicit letterEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent = 0);
     ~letterEffectDialog();
 
 signals:
@@ -37,6 +37,7 @@ private:
     int offsetX;
     int offsetY;
     bool effectSelected;
+    QColor backgroundFrame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
     QColor effectColor;
     void updateGUI();
     bool isTouchingXBoundaries();

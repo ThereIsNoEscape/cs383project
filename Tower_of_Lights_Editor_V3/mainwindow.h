@@ -18,18 +18,13 @@
 #include "lettereffectdialog.h"
 #include "symboleffectdialog.h"
 #include "shapeeffectdialog.h"
+#include "preview.h"
+#include "infodialog.h"
 
 class QAction;
 class QActionGroup;
 class QLabel;
 class QMenu;
-
-struct Change {
-    int x;
-    int y;
-    QColor  old_color;
-    QColor  new_color;
-};
 
 namespace Ui {
 class MainWindow;
@@ -54,6 +49,7 @@ private slots:
     TanFile* load(QString);
 
     void cell_clicked(const int row, const int col, const char btn);
+    void cell_doubleClicked(const char btn, const QColor);
 
     void on_pushButton_prev_clicked();
     void on_pushButton_next_clicked();
@@ -67,7 +63,7 @@ private slots:
     void on_pushButton_delete_clicked();
     void on_pushButton_clearFrame_clicked();
     void thumbnail_clicked(const long int);
-    void on_lineEdit_editingFinished();
+    void on_pushButton_changeAudioFile_clicked();
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
@@ -76,6 +72,8 @@ private slots:
     void insert_letter();
     void insert_symbol();
     void insert_shape();
+
+    void info();
 
     void spawnEffect(const effect*); //signaled from dialog
 private:
@@ -104,8 +102,9 @@ private:
     void addCurrentThumbnail();
     Thumbnail* newThumbnail(QImage in, TanFrame*);
     Thumbnail* newThumbnail(QString in, TanFrame*);
-    void on_change_color(int x, int y, const QColor& p_color);
+    void on_change_color(int row, int col, const QColor& p_color);
     void on_change_frame();
+    void on_change_file();
 
     QMenu *fileMenu;
     QAction *newAct;
@@ -123,8 +122,8 @@ private:
     QAction *symbolAct;
     QAction *shapeAct;
 
-    int m_undo_index = 0;
-    QLinkedList<struct Change *> m_changes;
+    QMenu *helpMenu;
+    QAction *infoAct;
 };
 
 #endif // MAINWINDOW_H

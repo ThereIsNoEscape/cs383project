@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>340</height>
+    <width>450</width>
+    <height>431</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>431</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>400</width>
-    <height>360</height>
+    <width>460</width>
+    <height>440</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,8 +28,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>126</x>
-     <y>300</y>
+     <x>205</x>
+     <y>391</y>
      <width>231</width>
      <height>32</height>
     </rect>
@@ -46,8 +46,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>140</width>
-     <height>320</height>
+     <width>250</width>
+     <height>411</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -72,8 +72,8 @@ border-radius: 4px;</string>
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>121</width>
-      <height>301</height>
+      <width>231</width>
+      <height>391</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -89,9 +89,9 @@ border-radius: 4px;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>241</y>
-     <width>71</width>
+     <x>274</x>
+     <y>302</y>
+     <width>61</width>
      <height>41</height>
     </rect>
    </property>
@@ -105,9 +105,9 @@ border-radius: 4px;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>238</x>
-     <y>222</y>
-     <width>71</width>
+     <x>325</x>
+     <y>283</y>
+     <width>61</width>
      <height>41</height>
     </rect>
    </property>
@@ -121,9 +121,9 @@ border-radius: 4px;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>238</x>
-     <y>260</y>
-     <width>71</width>
+     <x>325</x>
+     <y>321</y>
+     <width>61</width>
      <height>41</height>
     </rect>
    </property>
@@ -137,9 +137,9 @@ border-radius: 4px;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>306</x>
-     <y>241</y>
-     <width>71</width>
+     <x>376</x>
+     <y>302</y>
+     <width>61</width>
      <height>41</height>
     </rect>
    </property>
@@ -147,37 +147,11 @@ border-radius: 4px;</string>
     <string>Right</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>40</y>
-     <width>181</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Which effect would you like?</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_test">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>70</y>
-     <width>221</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>I would like a question mark</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>180</y>
+     <x>288</x>
+     <y>176</y>
      <width>59</width>
      <height>21</height>
     </rect>
@@ -189,9 +163,9 @@ border-radius: 4px;</string>
   <widget class="QPushButton" name="pushButton_color">
    <property name="geometry">
     <rect>
-     <x>244</x>
-     <y>180</y>
-     <width>127</width>
+     <x>334</x>
+     <y>176</y>
+     <width>87</width>
      <height>21</height>
     </rect>
    </property>
@@ -201,6 +175,166 @@ border-radius: 4px;</string>
    <property name="text">
     <string>#ffffff</string>
    </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>60</y>
+     <width>171</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Select a symbol</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Question Mark</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Exclamation Mark</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dollar Sign</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Percent Sign</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Left Parenthesis</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Right Parenthesis</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Left Square Bracket</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Right Square Bracket</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Plus Sign</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Minus Sign</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Equals Sign</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Up Caret</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Left Caret</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Right Caret</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Left Hook Bracket</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Right Hook Bracket</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Forward Slash</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Backward Slash</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Semicolon</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Colon</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Asterisk</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Bar</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece I</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece O</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece T</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece S</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece Z</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece J</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tetris Piece L</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

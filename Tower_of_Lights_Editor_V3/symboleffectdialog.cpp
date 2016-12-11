@@ -1,27 +1,32 @@
 #include "symboleffectdialog.h"
 #include "ui_symboleffectdialog.h"
 
-symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
+symbolEffectDialog::symbolEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent) :
     QDialog(parent),
     ui(new Ui::symbolEffectDialog)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/resources/icon.png"));
     retEffect = new effect;
-    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
-        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
-            retEffect->pixels[y][x] = QColor(0,0,0,0);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+            retEffect->pixels[x][y] = QColor(0,0,0,0);
     retEffect->primary = QColor(0,0,0,0);
     retEffect->secondary = QColor(0,0,0,0);
     offsetX = 0;
     offsetY = 0;
     effectSelected = false;
     effectColor = QColor("#ffffff");
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+            backgroundFrame[x][y] = frame[x][y];
 
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
     //QString m_cellName;
     QSizePolicy m_cellSizePolicy;
-    QSize m_cellSize(16,16);
+    QSize m_cellSize(15,15);
+    ui->gridLayout->setSpacing(1);
 
     // Configure the size policy that every cell widget will use
     m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
@@ -32,9 +37,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
 
     QString qss;
 
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < (TAN_DEFAULT_ROWS); y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < (TAN_DEFAULT_COLS); x++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame project at some point?
@@ -43,7 +48,9 @@ symbolEffectDialog::symbolEffectDialog(QWidget *parent) :
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
-            qss = QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #000000;");
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
 
             m_cellWidget->setStyleSheet(qss);
             // Adding cell widget to the frame's gridLayout
@@ -72,28 +79,6 @@ void symbolEffectDialog::on_buttonBox_accepted()
                 retEffect->pixels[x][y] = backup[(x-offsetX)%TAN_DEFAULT_COLS][(y-offsetY)%TAN_DEFAULT_ROWS];
         emit accepted(retEffect);
     }
-}
-
-void symbolEffectDialog:: on_pushButton_test_clicked()
-{
-    ui->label->move(QPoint(180,120));
-    ui->pushButton_test->setEnabled(false);
-    ui->label->setText(QString("Good because that's the\nonly effect we've got"));
-    ui->pushButton_up->setEnabled(true);
-    ui->pushButton_down->setEnabled(true);
-    ui->pushButton_left->setEnabled(true);
-    ui->pushButton_right->setEnabled(true);
-
-    effectSelected = true;
-
-    retEffect->pixels[4][8] = effectColor;
-    retEffect->pixels[5][7] = effectColor;
-    retEffect->pixels[6][8] = effectColor;
-    retEffect->pixels[6][9] = effectColor;
-    retEffect->pixels[5][10] = effectColor;
-    retEffect->pixels[5][12] = effectColor;
-
-    updateGUI();
 }
 
 void symbolEffectDialog::on_pushButton_up_clicked()
@@ -135,30 +120,18 @@ void symbolEffectDialog::on_pushButton_right_clicked()
 bool symbolEffectDialog::isTouchingXBoundaries()
 {
     for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-    {
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-        {
             if (retEffect->pixels[x][y].alpha() == 255 && ((x+offsetX) == 0 || (x+offsetX) == (TAN_DEFAULT_COLS-1)))
-            {
                 return true;
-            }
-        }
-    }
     return false;
 }
 
 bool symbolEffectDialog::isTouchingYBoundaries()
 {
     for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-    {
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-        {
             if (retEffect->pixels[x][y].alpha() == 255 && ((y+offsetY) == 0 || (y+offsetY) == (TAN_DEFAULT_ROWS-1)))
-            {
                 return true;
-            }
-        }
-    }
     return false;
 }
 
@@ -183,13 +156,259 @@ void symbolEffectDialog::on_pushButton_color_clicked()
 void symbolEffectDialog::updateGUI()
 {
     QString qss;
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
-            qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
-
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
+            else
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
             ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
         }
     }
+}
+
+void symbolEffectDialog::on_comboBox_activated(int index)
+{
+    if (index == 0) return;
+
+    for (int y = 0; y < (TAN_DEFAULT_ROWS); y++)
+        for (int x = 0; x < (TAN_DEFAULT_COLS); x++)
+            retEffect->pixels[x][y] = QColor(0,0,0,0); // clear any previous symbol inserted
+
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    switch (index)
+    {
+    case 1: // Question Mark
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        break;
+    case 2:  // Exclamation Mark
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        break;
+    case 3: // Dollar Sign
+        retEffect->pixels[6][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[7][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[7][10] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[7][11] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        retEffect->pixels[6][12] = effectColor;
+        break;
+    case 4: // Percent Sign
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[7][9] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        retEffect->pixels[7][12] = effectColor;
+        break;
+    case 5: // Left Paren
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        break;
+    case 6: // Right Paren
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        break;
+    case 7: // Left Square Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        break;
+    case 8: // Right Square Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        retEffect->pixels[5][12] = effectColor;
+        break;
+    case 9: // Plus Sign
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        break;
+    case 10: // Minus Sign
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        break;
+    case 11: // Equals Sign
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        break;
+    case 12: // Up Caret
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        break;
+    case 13: // Left Caret
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+        break;
+    case 14: // Right Caret
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        break;
+    case 15: // Left Hook Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        break;
+    case 16: // Right Hook Bracket
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[5][7] = effectColor;
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        break;
+    case 17: // Forward Slash
+        retEffect->pixels[6][7] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        break;
+    case 18: // Backwards Slash
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[6][12] = effectColor;
+        break;
+    case 19: // Semicolon
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        break;
+    case 20: // Colon
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        break;
+    case 21: // Asterisk
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[6][8] = effectColor;
+        retEffect->pixels[8][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[7][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        retEffect->pixels[7][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[6][11] = effectColor;
+        retEffect->pixels[8][11] = effectColor;
+        break;
+    case 22: // Bar
+        retEffect->pixels[4][7] = effectColor;
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        retEffect->pixels[4][12] = effectColor;
+        break;
+    case 23: // Tetris I
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[4][11] = effectColor;
+        break;
+    case 24: // Tetris O
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        break;
+    case 25: // Tetris T
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        break;
+    case 26: // Tetris S
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[6][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        break;
+    case 27: // Tetris Z
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[6][10] = effectColor;
+        break;
+    case 28: // Tetris J
+        retEffect->pixels[5][8] = effectColor;
+        retEffect->pixels[5][9] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        break;
+    case 29: // Tetris L
+        retEffect->pixels[4][8] = effectColor;
+        retEffect->pixels[4][9] = effectColor;
+        retEffect->pixels[4][10] = effectColor;
+        retEffect->pixels[5][10] = effectColor;
+        break;
+    default:
+        break;
+    }
+
+    updateGUI();
 }

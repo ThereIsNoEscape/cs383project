@@ -2,34 +2,32 @@
 #include "ui_shapeeffectdialog.h"
 #include <QDebug>
 
-shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
+shapeEffectDialog::shapeEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent) :
     QDialog(parent),
     ui(new Ui::shapeEffectDialog)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/resources/icon.png"));
     retEffect = new effect;
-    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
-        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
-            retEffect->pixels[y][x] = QColor(0,0,0,0);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+            retEffect->pixels[x][y] = QColor(0,0,0,0);
     retEffect->primary = QColor(0,0,0,0);
     retEffect->secondary = QColor(0,0,0,0);
     offsetX = 0;
     offsetY = 0;
     effectSelected = false;
-    circleSelected = false;
-    squareSelected = false;
-    verRecSelected = false;
-    horRecSelected = false;
-
-    effectFillColor = QColor("#ffffff");
-    effectBorderColor = QColor("#ffffff");
-
+    effectColor = QColor("#ffffff");
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+            backgroundFrame[x][y] = frame[x][y];
 
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
     //QString m_cellName;
     QSizePolicy m_cellSizePolicy;
-    QSize m_cellSize(16,16);
+    QSize m_cellSize(15,15);
+    ui->gridLayout->setSpacing(1);
 
     // Configure the size policy that every cell widget will use
     m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
@@ -40,9 +38,9 @@ shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
 
     QString qss;
 
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
             // Generate the name for each cell, based on rows and cols
             // Relocate this job to TanFrame project at some point?
@@ -51,7 +49,9 @@ shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
-            qss = QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: #000000;");
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
 
             m_cellWidget->setStyleSheet(qss);
             // Adding cell widget to the frame's gridLayout
@@ -167,16 +167,6 @@ void shapeEffectDialog::on_pushButton_color_clicked()
         else ui->pushButton_color->setStyleSheet("color: #000000; background-color: " + color.name());
         ui->pushButton_color->setText(color.name());
 
-        if(circleSelected)
-            createCircle();
-        else if(squareSelected)
-            createSquare();
-        else if(verRecSelected)
-            createVerticalRectangle();
-        else if(horRecSelected)
-            createHorizontalRectangle();
-        else
-            qDebug() << "everything is set to false";
     }
 }
 
@@ -196,43 +186,63 @@ void shapeEffectDialog::on_pushButton_color_2_clicked()
         else ui->pushButton_color_2->setStyleSheet("color: #000000; background-color: " + color.name());
         ui->pushButton_color->setText(color.name());
 
-        if(circleSelected)
-            createCircle();
-        else if(squareSelected)
-            createSquare();
-        else if(verRecSelected)
-            createVerticalRectangle();
-        else if(horRecSelected)
-            createHorizontalRectangle();
-        else
-            qDebug() << "everything is set to false";
     }
 }
 
 void shapeEffectDialog::updateGUI()
 {
     QString qss;
-    for (int y = 0; y < (TAN_DEFAULT_ROWS/2); y++)
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
     {
-        for (int x = 0; x < (TAN_DEFAULT_COLS/3); x++)
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
-            qss= QString("margin: 0px; border: 2px solid rgb(127,127,127); border-radius: 4px; background-color: " + retEffect->pixels[x+4-offsetX][y+5-offsetY].name());
-
+            if (x < 8 && x > 3 && y < 15 && y > 4)
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
+            else
+            {
+                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
+                    qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
+                else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
+            }
             ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
         }
     }
-
 }
 
+//clear grid
+void shapeEffectDialog::on_pushButton_clicked()
+{
+    clearGrid();
+}
+
+void shapeEffectDialog::clearGrid()
+{
+    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
+        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
+            retEffect->pixels[y][x] = QColor(0,0,0,0);
+    /*
+    circleSelected = false;
+    squareSelected = false;
+    verRecSelected = false;
+    horRecSelected = false;
+    */
+    updateGUI();
+}
 
 void shapeEffectDialog::on_comboBox_activated(int index)
 {
     clearGrid();
     updateGUI();
+    /*
     circleSelected = false;
     squareSelected = false;
     verRecSelected = false;
     horRecSelected = false;
+    */
     switch(index){
       case 0 :
         createCircle();
@@ -283,6 +293,8 @@ void shapeEffectDialog::on_comboBox_2_activated(int index)
 }
 
 
+//all shapes
+
 void shapeEffectDialog::createCircle()
 {
     ui->pushButton_up->setEnabled(true);
@@ -291,7 +303,7 @@ void shapeEffectDialog::createCircle()
     ui->pushButton_right->setEnabled(true);
 
     effectSelected = true;
-    circleSelected = true;
+    //circleSelected = true;
 
     if(ui->noFill->checkState() == Qt::Unchecked){
         //border
@@ -340,7 +352,7 @@ void shapeEffectDialog::createSquare()
     ui->pushButton_right->setEnabled(true);
 
     effectSelected = true;
-    squareSelected = true;
+    //squareSelected = true;
 
     if(ui->noFill->checkState() == Qt::Unchecked){
 
@@ -397,7 +409,7 @@ void shapeEffectDialog::createVerticalRectangle()
     ui->pushButton_right->setEnabled(true);
 
     effectSelected = true;
-    verRecSelected = true;
+    //verRecSelected = true;
 
     if(ui->noFill->checkState() == Qt::Unchecked){
         //border
@@ -463,7 +475,7 @@ void shapeEffectDialog::createHorizontalRectangle()
     ui->pushButton_right->setEnabled(true);
 
     effectSelected = true;
-    horRecSelected = true;
+    //horRecSelected = true;
 
     if(ui->noFill->checkState() == Qt::Unchecked){
 
@@ -621,25 +633,5 @@ void shapeEffectDialog::createLineShape()
     retEffect->pixels[5][10] = effectFillColor;
     retEffect->pixels[5][11] = effectFillColor;
 
-    updateGUI();
-}
-
-
-//clear grid
-void shapeEffectDialog::on_pushButton_clicked()
-{
-    clearGrid();
-}
-
-
-void shapeEffectDialog::clearGrid()
-{
-    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
-        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
-            retEffect->pixels[y][x] = QColor(0,0,0,0);
-    circleSelected = false;
-    squareSelected = false;
-    verRecSelected = false;
-    horRecSelected = false;
     updateGUI();
 }

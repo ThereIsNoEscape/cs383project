@@ -10,6 +10,9 @@
 #include <QColor>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QTime>
+#include <QCoreApplication>
 #include "tanfile.h"
 
 class CellWidget : public QWidget {
@@ -17,7 +20,7 @@ class CellWidget : public QWidget {
     Q_OBJECT
 
 public:
-    CellWidget(QString name, int x, int y, QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
+    CellWidget(QString name, int y, int x , QColor color = QColor(Qt::black), QWidget *parent=Q_NULLPTR);
 	~CellWidget();
 
     int getRow();
@@ -35,6 +38,8 @@ signals:
 
     void clicked(const int row, const int col, const char btn);
 
+    void doubleClicked(const char btn, const QColor);
+
 	void selected(const int row, const int col);
 
 private slots:
@@ -50,10 +55,13 @@ private:
 	const int _row;
 	const int _col;
 
+    bool doubleclicked;
+
 	QColor _color;
 
 	bool _state;
 
+    void delay(double time);
 };
 
 class Thumbnail : public QPushButton {
@@ -67,6 +75,18 @@ protected:
     bool event(QEvent *event);
 private:
     TanFrame* framePtr;
+};
+
+class interactableArea : public QScrollArea {
+    Q_OBJECT
+public:
+    interactableArea();
+    ~interactableArea();
+signals:
+    void clicked(const long int);
+protected:
+    bool event(QEvent *event);
+private:
 };
 
 #endif // CELL_H

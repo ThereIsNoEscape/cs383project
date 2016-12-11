@@ -135,28 +135,5 @@ TanFile* MainWindow::load(QString fileName)
 
     //if we've gotten this far without returning, the file is good and the real project can be set to the value of the temp
 
-<<<<<<< HEAD
-    clearThumbnails();
-
-    project = TanFile(prospective);
-
-    delete prospective;
-
-    //set time interval for each frame
-    QList<TanFrame*>::iterator iter;
-    for(iter = project.m_frames.begin(); iter != project.m_frames.end(); iter++)
-    {
-        if((iter+1) == project.m_frames.end()) //if you're on the last frame
-        {
-            (*iter)->frame_length = 25;        //default time interval for last frame
-            //qDebug() << iter->frame_length;
-        }
-        else
-        {
-            //current frame time interval = next frame start time = current frame start time
-            (*iter)->frame_length = (*(iter + 1))->frame_start - (*iter)->frame_start;
-        }
-    }
-
     return prospective;
 }

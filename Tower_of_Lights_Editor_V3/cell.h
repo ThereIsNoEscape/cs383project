@@ -10,7 +10,6 @@
 #include <QColor>
 #include <QMouseEvent>
 #include <QPushButton>
-#include <QScrollArea>
 #include "tanfile.h"
 
 class CellWidget : public QWidget {
@@ -68,18 +67,6 @@ protected:
     bool event(QEvent *event);
 private:
     TanFrame* framePtr;
-};
-
-class interactableArea : public QScrollArea {
-    Q_OBJECT
-public:
-    interactableArea();
-    ~interactableArea();
-signals:
-    void clicked(const long int);
-protected:
-    bool event(QEvent *event);
-private:
 };
 
 #endif // CELL_H

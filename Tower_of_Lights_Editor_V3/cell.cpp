@@ -153,22 +153,3 @@ bool Thumbnail::event(QEvent *event)
     }
     return QWidget::event(event);// Pass all other events down to the base class
 }
-
-interactableArea::interactableArea()
-{
-
-}
-
-interactableArea::~interactableArea()
-{
-
-}
-
-bool interactableArea::event(QEvent *event)
-{
-    if (event->type() == QEvent::MouseMove)
-    {
-        return true;
-    }
-    return QWidget::event(event);// Pass all other events down to the base class
-}

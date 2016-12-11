@@ -1,5 +1,6 @@
 #include "shapeeffectdialog.h"
 #include "ui_shapeeffectdialog.h"
+#include <QDebug>
 
 shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
     QDialog(parent),
@@ -15,7 +16,14 @@ shapeEffectDialog::shapeEffectDialog(QWidget *parent) :
     offsetX = 0;
     offsetY = 0;
     effectSelected = false;
-    effectColor = QColor("#ffffff");
+    circleSelected = false;
+    squareSelected = false;
+    verRecSelected = false;
+    horRecSelected = false;
+
+    effectFillColor = QColor("#ffffff");
+    effectBorderColor = QColor("#ffffff");
+
 
     //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
@@ -74,27 +82,6 @@ void shapeEffectDialog::on_buttonBox_accepted()
     }
 }
 
-void shapeEffectDialog:: on_pushButton_test_clicked()
-{
-    ui->label->move(QPoint(180,120));
-    ui->pushButton_test->setEnabled(false);
-    ui->label->setText(QString("Good because that's the\nonly effect we've got"));
-    ui->pushButton_up->setEnabled(true);
-    ui->pushButton_down->setEnabled(true);
-    ui->pushButton_left->setEnabled(true);
-    ui->pushButton_right->setEnabled(true);
-
-    effectSelected = true;
-
-    retEffect->pixels[4][8] = effectColor;
-    retEffect->pixels[5][7] = effectColor;
-    retEffect->pixels[6][8] = effectColor;
-    retEffect->pixels[6][9] = effectColor;
-    retEffect->pixels[5][10] = effectColor;
-    retEffect->pixels[5][12] = effectColor;
-
-    updateGUI();
-}
 
 void shapeEffectDialog::on_pushButton_up_clicked()
 {
@@ -162,21 +149,63 @@ bool shapeEffectDialog::isTouchingYBoundaries()
     return false;
 }
 
+//change fill color
 void shapeEffectDialog::on_pushButton_color_clicked()
 {
     QColor color = QColorDialog::getColor(Qt::yellow, this );
     if(color.isValid())
     {
-        effectColor = color;
+        effectFillColor = color;
+        /*
+        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+                if (retEffect->pixels[x][y].alpha() == 255)
+                    retEffect->pixels[x][y] = color;
+        */
+        if (color.red() < 191 && color.green() < 191 && color.blue() < 191)
+            ui->pushButton_color->setStyleSheet("color: #ffffff; background-color: " + color.name());
+        else ui->pushButton_color->setStyleSheet("color: #000000; background-color: " + color.name());
+        ui->pushButton_color->setText(color.name());
+
+        if(circleSelected)
+            createCircle();
+        else if(squareSelected)
+            createSquare();
+        else if(verRecSelected)
+            createVerticalRectangle();
+        else if(horRecSelected)
+            createHorizontalRectangle();
+        else
+            qDebug() << "everything is set to false";
+    }
+}
+
+//change border color
+void shapeEffectDialog::on_pushButton_color_2_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this);
+    if(color.isValid())
+    {
+        effectBorderColor = color;
         for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
             for (int x = 0; x < TAN_DEFAULT_COLS; x++)
                 if (retEffect->pixels[x][y].alpha() == 255)
                     retEffect->pixels[x][y] = color;
         if (color.red() < 191 && color.green() < 191 && color.blue() < 191)
-            ui->pushButton_color->setStyleSheet("color: #ffffff; background-color: " + color.name());
-        else ui->pushButton_color->setStyleSheet("color: #000000; background-color: " + color.name());
+            ui->pushButton_color_2->setStyleSheet("color: #ffffff; background-color: " + color.name());
+        else ui->pushButton_color_2->setStyleSheet("color: #000000; background-color: " + color.name());
         ui->pushButton_color->setText(color.name());
-        updateGUI();
+
+        if(circleSelected)
+            createCircle();
+        else if(squareSelected)
+            createSquare();
+        else if(verRecSelected)
+            createVerticalRectangle();
+        else if(horRecSelected)
+            createHorizontalRectangle();
+        else
+            qDebug() << "everything is set to false";
     }
 }
 
@@ -192,4 +221,425 @@ void shapeEffectDialog::updateGUI()
             ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
         }
     }
+
+}
+
+
+void shapeEffectDialog::on_comboBox_activated(int index)
+{
+    clearGrid();
+    updateGUI();
+    circleSelected = false;
+    squareSelected = false;
+    verRecSelected = false;
+    horRecSelected = false;
+    switch(index){
+      case 0 :
+        createCircle();
+        break;
+      case 1 :
+        createSquare();
+        break;
+      case 2 :
+        createVerticalRectangle();
+        break;
+      case 3 :
+        createHorizontalRectangle();
+        break;
+      default:
+        ;
+    }
+}
+
+void shapeEffectDialog::on_comboBox_2_activated(int index)
+{
+    clearGrid();
+    updateGUI();
+    switch(index){
+      case 0 :
+        createL_Shape();
+        break;
+      case 1 :
+        createMirroredL_Shape();
+        break;
+      case 2 :
+        createS_Shape();
+        break;
+      case 3 :
+        createZ_Shape();
+        break;
+      case 4 :
+        createT_Shape();
+        break;
+      case 5 :
+        createBoxShape();
+        break;
+      case 6 :
+        createLineShape();
+        break;
+      default:
+        ;
+    }
+}
+
+
+void shapeEffectDialog::createCircle()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+    circleSelected = true;
+
+    if(ui->noFill->checkState() == Qt::Unchecked){
+        //border
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[5][11] = effectBorderColor;
+        retEffect->pixels[6][11] = effectBorderColor;
+
+        //area
+        retEffect->pixels[5][9] = effectFillColor;
+        retEffect->pixels[6][9] = effectFillColor;
+        retEffect->pixels[5][10] = effectFillColor;
+        retEffect->pixels[6][10] = effectFillColor;
+        /*
+        for(int i = 5; i < 7; i++)          //x direction
+            for(int j = 8; j < 12; j++){    //y direction
+                retEffect->pixels[i][j] = effectColor;
+        for(int i = 4; i < 8; i++)          //x direction
+            for(int j = 9; j < 11; j++)     //y direction
+                retEffect->pixels[i][j] = effectColor;
+        qDebug() << "circle";
+        */
+    }else{
+        //border
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[5][11] = effectBorderColor;
+        retEffect->pixels[6][11] = effectBorderColor;
+    }
+    updateGUI();
+}
+
+void shapeEffectDialog::createSquare()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+    squareSelected = true;
+
+    if(ui->noFill->checkState() == Qt::Unchecked){
+
+        //border
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[4][11] = effectBorderColor;
+        retEffect->pixels[5][11] = effectBorderColor;
+        retEffect->pixels[6][11] = effectBorderColor;
+        retEffect->pixels[7][11] = effectBorderColor;
+
+        //area
+        retEffect->pixels[5][9] = effectFillColor;
+        retEffect->pixels[6][9] = effectFillColor;
+        retEffect->pixels[5][10] = effectFillColor;
+        retEffect->pixels[6][10] = effectFillColor;
+
+        /*
+        for(int i = 4; i < 8; i++)          //x direction
+            for(int j = 8; j < 12; j++)     //y direction
+                retEffect->pixels[i][j] = effectColor;
+        */
+    }else{
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[4][11] = effectBorderColor;
+        retEffect->pixels[5][11] = effectBorderColor;
+        retEffect->pixels[6][11] = effectBorderColor;
+        retEffect->pixels[7][11] = effectBorderColor;
+    }
+
+    updateGUI();
+    qDebug() << "square";
+}
+
+//Vertical Rectangle
+void shapeEffectDialog::createVerticalRectangle()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+    verRecSelected = true;
+
+    if(ui->noFill->checkState() == Qt::Unchecked){
+        //border
+        retEffect->pixels[4][7] = effectBorderColor;
+        retEffect->pixels[5][7] = effectBorderColor;
+        retEffect->pixels[6][7] = effectBorderColor;
+        retEffect->pixels[7][7] = effectBorderColor;
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[4][11] = effectBorderColor;
+        retEffect->pixels[7][11] = effectBorderColor;
+        retEffect->pixels[4][12] = effectBorderColor;
+        retEffect->pixels[5][12] = effectBorderColor;
+        retEffect->pixels[6][12] = effectBorderColor;
+        retEffect->pixels[7][12] = effectBorderColor;
+
+        //area
+        retEffect->pixels[5][8] = effectFillColor;
+        retEffect->pixels[6][8] = effectFillColor;
+        retEffect->pixels[5][9] = effectFillColor;
+        retEffect->pixels[6][9] = effectFillColor;
+        retEffect->pixels[5][10] = effectFillColor;
+        retEffect->pixels[6][10] = effectFillColor;
+        retEffect->pixels[5][11] = effectFillColor;
+        retEffect->pixels[6][11] = effectFillColor;
+
+        /*
+        for(int i = 4; i < 8; i++)          //x direction
+            for(int j = 7; j < 13; j++)     //y direction
+                retEffect->pixels[i][j] = effectColor;
+        */
+    }else{
+        retEffect->pixels[4][7] = effectBorderColor;
+        retEffect->pixels[5][7] = effectBorderColor;
+        retEffect->pixels[6][7] = effectBorderColor;
+        retEffect->pixels[7][7] = effectBorderColor;
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+        retEffect->pixels[4][11] = effectBorderColor;
+        retEffect->pixels[7][11] = effectBorderColor;
+        retEffect->pixels[4][12] = effectBorderColor;
+        retEffect->pixels[5][12] = effectBorderColor;
+        retEffect->pixels[6][12] = effectBorderColor;
+        retEffect->pixels[7][12] = effectBorderColor;
+    }
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createHorizontalRectangle()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+    horRecSelected = true;
+
+    if(ui->noFill->checkState() == Qt::Unchecked){
+
+        //border
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[5][10] = effectBorderColor;
+        retEffect->pixels[6][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+
+        //area
+        retEffect->pixels[5][9] = effectFillColor;
+        retEffect->pixels[6][9] = effectFillColor;
+
+        /*
+        for(int i = 4; i < 8; i++)          //x direction
+            for(int j = 8; j < 11; j++)     //y direction
+                retEffect->pixels[i][j] = effectColor;
+        */
+    }else{
+        retEffect->pixels[4][8] = effectBorderColor;
+        retEffect->pixels[5][8] = effectBorderColor;
+        retEffect->pixels[6][8] = effectBorderColor;
+        retEffect->pixels[7][8] = effectBorderColor;
+        retEffect->pixels[4][9] = effectBorderColor;
+        retEffect->pixels[7][9] = effectBorderColor;
+        retEffect->pixels[4][10] = effectBorderColor;
+        retEffect->pixels[5][10] = effectBorderColor;
+        retEffect->pixels[6][10] = effectBorderColor;
+        retEffect->pixels[7][10] = effectBorderColor;
+    }
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createL_Shape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[5][9] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[5][11] = effectFillColor;
+    retEffect->pixels[6][11] = effectFillColor;
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createMirroredL_Shape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[6][9] = effectFillColor;
+    retEffect->pixels[6][10] = effectFillColor;
+    retEffect->pixels[6][11] = effectFillColor;
+    retEffect->pixels[5][11] = effectFillColor;
+
+    updateGUI();
+}
+
+
+void shapeEffectDialog::createS_Shape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[6][9] = effectFillColor;
+    retEffect->pixels[5][9] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[4][10] = effectFillColor;
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createZ_Shape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[4][9] = effectFillColor;
+    retEffect->pixels[5][9] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[6][10] = effectFillColor;
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createT_Shape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[4][10] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[6][10] = effectFillColor;
+    retEffect->pixels[5][9] = effectFillColor;
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createBoxShape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[5][9] = effectFillColor;
+    retEffect->pixels[6][9] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[6][10] = effectFillColor;
+
+    updateGUI();
+}
+
+void shapeEffectDialog::createLineShape()
+{
+    ui->pushButton_up->setEnabled(true);
+    ui->pushButton_down->setEnabled(true);
+    ui->pushButton_left->setEnabled(true);
+    ui->pushButton_right->setEnabled(true);
+
+    effectSelected = true;
+
+    retEffect->pixels[5][8] = effectFillColor;
+    retEffect->pixels[5][9] = effectFillColor;
+    retEffect->pixels[5][10] = effectFillColor;
+    retEffect->pixels[5][11] = effectFillColor;
+
+    updateGUI();
+}
+
+
+//clear grid
+void shapeEffectDialog::on_pushButton_clicked()
+{
+    clearGrid();
+}
+
+
+void shapeEffectDialog::clearGrid()
+{
+    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
+        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
+            retEffect->pixels[y][x] = QColor(0,0,0,0);
+    circleSelected = false;
+    squareSelected = false;
+    verRecSelected = false;
+    horRecSelected = false;
+    updateGUI();
 }

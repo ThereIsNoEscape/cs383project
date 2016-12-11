@@ -108,7 +108,6 @@ void MainWindow::openFile()    //when open is clicked
 
     updateGUIColorButtons();
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-    ui->lineEdit->setText(project.getAudioFile());
 
     addThumbnail();
 
@@ -134,7 +133,6 @@ void MainWindow::newFile()
     addThumbnail();
 
     ui->spinBox->setValue((*project.currFrame)->frame_length);
-    ui->lineEdit->setText("");
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
     updateGUIColorButtons();
@@ -635,126 +633,6 @@ Thumbnail* MainWindow::newThumbnail(QString in, TanFrame* ptr)
 
 void MainWindow::on_pushButton_preview_clicked()
 {
-    QWidget* temp;
-//    while (true)
-//    {
-        temp = QApplication::focusWidget();
-        if (temp == (QWidget*)ui->centralWidget)
-            qDebug() << "centralWidget";
-        else
-        if (temp == (QWidget*)ui->gridLayout)
-            qDebug() << "gridLayout";
-        else
-        if (temp == (QWidget*)ui->gridLayout_4)
-            qDebug() << "gridLayout_4";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout)
-            qDebug() << "horizontalLayout";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout_2)
-            qDebug() << "horizontalLayout_2";
-        else
-        if (temp == (QWidget*)ui->horizontalLayout_3)
-            qDebug() << "horizontalLayout_3";
-        else
-        if (temp == (QWidget*)ui->label_2)
-            qDebug() << "label_2";
-        else
-        if (temp == (QWidget*)ui->label_3)
-            qDebug() << "label_3";
-        else
-        if (temp == (QWidget*)ui->label_4)
-            qDebug() << "label_4";
-        else
-        if (temp == (QWidget*)ui->label_5)
-            qDebug() << "label_5";
-        else
-        if (temp == (QWidget*)ui->label_6)
-            qDebug() << "label_6";
-        else
-        if (temp == (QWidget*)ui->label_8)
-            qDebug() << "label_8";
-        else
-        if (temp == (QWidget*)ui->label_9)
-            qDebug() << "label_9";
-        else
-        if (temp == (QWidget*)ui->menuBar)
-            qDebug() << "menuBar";
-        else
-        if (temp == (QWidget*)ui->pushButton_clearFrame)
-            qDebug() << "pushButton_clearFrame";
-        else
-        if (temp == (QWidget*)ui->pushButton_copyNew)
-            qDebug() << "pushButton_copyNew";
-        else
-        if (temp == (QWidget*)ui->pushButton_delete)
-            qDebug() << "pushButton_delete";
-        else
-        if (temp == (QWidget*)ui->pushButton_l)
-            qDebug() << "pushButton_l";
-        else
-        if (temp == (QWidget*)ui->pushButton_new)
-            qDebug() << "pushButton_new";
-        else
-        if (temp == (QWidget*)ui->pushButton_next)
-            qDebug() << "pushButton_next";
-        else
-        if (temp == (QWidget*)ui->pushButton_prev)
-            qDebug() << "pushButton_prev";
-        else
-        if (temp == (QWidget*)ui->pushButton_preview)
-            qDebug() << "pushButton_preview";
-        else
-        if (temp == (QWidget*)ui->pushButton_r)
-            qDebug() << "pushButton_r";
-        else
-        if (temp == (QWidget*)ui->pushButton_redo)
-            qDebug() << "pushButton_redo";
-        else
-        if (temp == (QWidget*)ui->pushButton_undo)
-            qDebug() << "pushButton_undo";
-        else
-        if (temp == (QWidget*)ui->scrollArea)
-            qDebug() << "scrollArea";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents)
-            qDebug() << "scrollAreaWidgetContents";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_3)
-            qDebug() << "scrollAreaWidgetContents_3";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_4)
-            qDebug() << "scrollAreaWidgetContents_4";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_5)
-            qDebug() << "scrollAreaWidgetContents_5";
-        else
-        if (temp == (QWidget*)ui->scrollAreaWidgetContents_6)
-            qDebug() << "scrollAreaWidgetContents_6";
-        else
-        if (temp == (QWidget*)ui->scrollArea_2)
-            qDebug() << "scrollArea_2";
-        else
-        if (temp == (QWidget*)ui->scrollArea_3)
-            qDebug() << "scrollArea_3";
-        else
-        if (temp == (QWidget*)ui->scrollArea_4)
-            qDebug() << "scrollArea_4";
-        else
-        if (temp == (QWidget*)ui->scrollArea_5)
-            qDebug() << "scrollArea_5";
-        else
-        if (temp == (QWidget*)ui->spinBox)
-            qDebug() << "spinBox";
-        else
-        if (temp == (QWidget*)ui->statusBar)
-            qDebug() << "statusBar";
-        else
-        if (temp == (QWidget*)ui->verticalLayout)
-            qDebug() << "verticalLayout";
-        else
-            qDebug() << "default";
-//    }
     //qDebug() << (*project.currFrame)->frame_length;
 //    qDebug() << "====================";
 //    QString temp = "";
@@ -828,20 +706,6 @@ void MainWindow::thumbnail_clicked(const long int in)
             break;
         }
     }
-}
-
-
-void MainWindow::on_lineEdit_editingFinished()
-{
-    QString audiofilename = ui->lineEdit->text();
-
-    if (audiofilename.mid((audiofilename.length()-4),4).compare(QString(".wav")))
-    {
-        audiofilename.append(".wav");
-        ui->lineEdit->setText(audiofilename);
-    }
-
-    project.setAudioFile(audiofilename);
 }
 
 void MainWindow::on_undo() {
@@ -985,18 +849,21 @@ void MainWindow::spawnEffect(const effect* e)
 }
 
 void MainWindow::insert_letter() {
+    qDebug() << "Letter";
     letterEffectDialog d;
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
 }
 
 void MainWindow::insert_symbol() {
+    qDebug() << "Symbol";
     symbolEffectDialog d;
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
 }
 
 void MainWindow::insert_shape()  {
+    qDebug() << "Shape";
     shapeEffectDialog d;
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();

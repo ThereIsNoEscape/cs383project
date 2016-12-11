@@ -24,23 +24,49 @@ signals:
 
 private slots:
     void on_buttonBox_accepted();
-    void on_pushButton_test_clicked();
     void on_pushButton_up_clicked();
     void on_pushButton_down_clicked();
     void on_pushButton_left_clicked();
     void on_pushButton_right_clicked();
     void on_pushButton_color_clicked();
+    void on_comboBox_activated(int index);
+    void on_pushButton_clicked();
+    void on_comboBox_2_activated(int index);
+
+
+    void on_pushButton_color_2_clicked();
 
 private:
     Ui::shapeEffectDialog *ui;
     effect* retEffect;
+
     int offsetX;
     int offsetY;
     bool effectSelected;
-    QColor effectColor;
+    bool circleSelected;
+    bool squareSelected;
+    bool verRecSelected;
+    bool horRecSelected;
+
+    QColor effectFillColor;
+    QColor effectBorderColor;
+
+    void clearGrid();
+
     void updateGUI();
     bool isTouchingXBoundaries();
     bool isTouchingYBoundaries();
+    void createCircle();
+    void createSquare();
+    void createVerticalRectangle();
+    void createHorizontalRectangle();
+    void createL_Shape();
+    void createMirroredL_Shape();
+    void createS_Shape();
+    void createZ_Shape();
+    void createT_Shape();
+    void createBoxShape();
+    void createLineShape();
 
 };
 

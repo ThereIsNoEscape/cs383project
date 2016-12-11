@@ -30,12 +30,6 @@ HEADERS  += mainwindow.h \
     cell.h \
     config.h \
     tanfile.h \
-<<<<<<< HEAD
-    openfile.h \
-    effect.h
-
-FORMS    += mainwindow.ui
-=======
     effect.h \
     lettereffectdialog.h \
     symboleffectdialog.h \

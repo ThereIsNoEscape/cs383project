@@ -1,240 +1,471 @@
 #include "lettereffectdialog.h"
 #include "ui_lettereffectdialog.h"
 
+
 letterEffectDialog::letterEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS], QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::letterEffectDialog)
+	QDialog(parent),
+	ui(new Ui::letterEffectDialog),
+	offsetX(0),
+	offsetY(0),
+	effectSelected(false)
 {
     ui->setupUi(this);
     setWindowIcon(QIcon(":/resources/icon.png"));
-    retEffect = new effect;
-    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-            retEffect->pixels[x][y] = QColor(0,0,0,0);
-    retEffect->primary = QColor(0,0,0,0);
-    retEffect->secondary = QColor(0,0,0,0);
-    offsetX = 0;
-    offsetY = 0;
-    effectSelected = false;
-    effectColor = QColor("#ffffff");
-    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-            backgroundFrame[x][y] = frame[x][y];
+	
+	int i = 0, j = 0;
+	m_effect = new effect;
+	for (i = 0; i < TAN_DEFAULT_ROWS; i++)
+		for (j = 0; j < TAN_DEFAULT_COLS; j++)
+			m_effect->pixels[j][i] = QColor(0,0,0,0);
+	m_effect->primary = Qt::white;
+	m_effect->secondary = QColor(0,0,0,0);
 
-    //QFrame *m_Frame = ui->frame;
-    QGridLayout *m_FrameLayout = ui->gridLayout;
-    //QString m_cellName;
-    QSizePolicy m_cellSizePolicy;
-    QSize m_cellSize(15,15);
-    ui->gridLayout->setSpacing(1);
+	for (i = 0; i < TAN_DEFAULT_ROWS; i++)
+		for (j = 0; j < TAN_DEFAULT_COLS; j++)
+			backgroundFrame[j][i] = frame[j][i];
 
-    // Configure the size policy that every cell widget will use
-    m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
-    m_cellSizePolicy.setHorizontalStretch(1);
-    m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
-    m_cellSizePolicy.setVerticalStretch(1);
-    m_cellSizePolicy.setHeightForWidth(true);
+	m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
 
-    QString qss;
-
-    for (int y = 0; y < (TAN_DEFAULT_ROWS); y++)
-    {
-        for (int x = 0; x < (TAN_DEFAULT_COLS); x++)
-        {
-            // Generate the name for each cell, based on rows and cols
-            // Relocate this job to TanFrame project at some point?
-            //m_cellName = "cell" + (QString("%1").arg((i*TAN_DEFAULT_COLS + j), 3, 10, QChar('0')));
-            QWidget *m_cellWidget = new QWidget;
-            m_cellWidget->setMinimumSize(m_cellSize);
-            m_cellWidget->setSizePolicy(m_cellSizePolicy);
-
-            if (x < 8 && x > 3 && y < 15 && y > 4)
-                qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
-            else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
-
-            m_cellWidget->setStyleSheet(qss);
-            // Adding cell widget to the frame's gridLayout
-            m_FrameLayout->addWidget(m_cellWidget, y, x);
-            m_cellWidget->show();
-            m_FrameLayout->update();
-        }
-    }
+	ui->pushButton_up->setEnabled(false);
+	ui->pushButton_right->setEnabled(false);
+	ui->pushButton_down->setEnabled(false);
+	ui->pushButton_left->setEnabled(false);
+	ui->pushButton_upright->setEnabled(false);
+	ui->pushButton_downright->setEnabled(false);
+	ui->pushButton_downleft->setEnabled(false);
+	ui->pushButton_upleft->setEnabled(false);
 }
+
 
 letterEffectDialog::~letterEffectDialog()
 {
-    delete ui;
+	m_destroyFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
+
+	delete ui;
 }
+
+
+// Create the grid of cell widgets
+void letterEffectDialog::m_generateFrame(int rows, int cols)
+{
+	int i = 0, j = 0;
+	QGridLayout *m_FrameLayout = ui->gridLayout;
+	QSizePolicy m_cellSizePolicy;
+	QSize m_cellSize(20,20);
+
+	// Configure the size policy that every cell widget will use
+	m_cellSizePolicy.setHorizontalPolicy(QSizePolicy::Fixed);
+	m_cellSizePolicy.setHorizontalStretch(1);
+	m_cellSizePolicy.setVerticalPolicy(QSizePolicy::Fixed);
+	m_cellSizePolicy.setVerticalStretch(1);
+	m_cellSizePolicy.setHeightForWidth(true);
+
+	QString qss;
+
+	for (i=0; i<rows; i++)
+	{
+		for (j=0; j<cols; j++)
+		{
+			QWidget *m_cellWidget = new QWidget;
+			m_cellWidget->setMinimumSize(m_cellSize);
+			m_cellWidget->setSizePolicy(m_cellSizePolicy);
+
+			// Assemble the style string, and then set it
+			qss = QString(cellStyleBasic + "background-color: " + backgroundFrame[j][i].name() + ";");
+			if ( (j > 3 && j < 8) && (i > 4 && i < 15) )
+				qss += QString(" " + cellStyleActive);
+			else
+				qss += QString(" " + cellStyleInactive);
+			m_cellWidget->setStyleSheet(qss);
+
+			// Adding cell widget to the frame's gridLayout
+			m_FrameLayout->addWidget(m_cellWidget, i, j);
+			m_cellWidget->show();
+			m_FrameLayout->update();
+		}
+	}
+}
+
+
+// Destroy the grid of cell widgets
+void letterEffectDialog::m_destroyFrame(int rows, int cols)
+{
+	QWidget* m_cellWidget;
+	int i = 0, j = 0;
+
+	for (i=0; i<rows; i++)
+	{
+		for (j=0; j<cols; j++)
+		{
+			// Iterate through the grid of cells and delete the widget at each (row,col)
+			m_cellWidget = (QWidget*)ui->gridLayout->itemAtPosition(i,j)->widget();
+			delete m_cellWidget;
+			m_cellWidget = 0;
+		}
+	}
+}
+
 
 void letterEffectDialog::on_buttonBox_accepted()
 {
-    if (effectSelected)
-    {
-        QColor backup[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
-        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-                backup[x][y] = retEffect->pixels[x][y];
-        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-                retEffect->pixels[x][y] = backup[(x-offsetX)%TAN_DEFAULT_COLS][(y-offsetY)%TAN_DEFAULT_ROWS];
-        emit accepted(retEffect);
-    }
+	if (effectSelected)
+	{
+		emit accepted(m_effect);
+	}
 }
 
-void letterEffectDialog:: on_pushButton_test_clicked()
+void letterEffectDialog::on_buttonBox_rejected()
 {
-    ui->label->move(QPoint(270,90));
-    ui->pushButton_test->setEnabled(false);
-    ui->label->setText(QString("Good because that's the only letter we've got. However, there are lots of pretty symbols and shapes if you'd like to insert one of those."));
-    ui->pushButton_up->setEnabled(true);
-    ui->pushButton_down->setEnabled(true);
-    ui->pushButton_left->setEnabled(true);
-    ui->pushButton_right->setEnabled(true);
-
-    effectSelected = true;
-
-    retEffect->pixels[5][7] = effectColor;
-    retEffect->pixels[6][7] = effectColor;
-    retEffect->pixels[7][8] = effectColor;
-    retEffect->pixels[7][9] = effectColor;
-    retEffect->pixels[7][10] = effectColor;
-    retEffect->pixels[6][11] = effectColor;
-    retEffect->pixels[5][11] = effectColor;
-    retEffect->pixels[4][10] = effectColor;
-    retEffect->pixels[4][9] = effectColor;
-    retEffect->pixels[4][8] = effectColor;
-
-    updateGUI();
+	letterEffectDialog::close();
 }
+
+
+void letterEffectDialog:: on_comboLetter_currentIndexChanged(const QString &text)
+{
+	clearEffect();
+
+	if (text.at(0).toLatin1() != '.')
+		getEffect(text.at(0));
+
+	updateGUI();
+
+	if (text.at(0).toLatin1() == '.')
+	{
+		effectSelected = false;
+		ui->pushButton_up->setEnabled(false);
+		ui->pushButton_right->setEnabled(false);
+		ui->pushButton_down->setEnabled(false);
+		ui->pushButton_left->setEnabled(false);
+		ui->pushButton_upright->setEnabled(false);
+		ui->pushButton_downright->setEnabled(false);
+		ui->pushButton_downleft->setEnabled(false);
+		ui->pushButton_upleft->setEnabled(false);
+	}
+	else
+	{
+		effectSelected = true;
+		ui->pushButton_up->setEnabled(true);
+		ui->pushButton_right->setEnabled(true);
+		ui->pushButton_down->setEnabled(true);
+		ui->pushButton_left->setEnabled(true);
+		ui->pushButton_upright->setEnabled(true);
+		ui->pushButton_downright->setEnabled(true);
+		ui->pushButton_downleft->setEnabled(true);
+		ui->pushButton_upleft->setEnabled(true);
+	}
+}
+
+
+void letterEffectDialog::on_btnLetterColor_clicked()
+{
+	int i = 0, j = 0;
+	QColor color = QColorDialog::getColor(m_effect->primary, this);
+
+	if(color.isValid())
+	{
+		m_effect->primary = color;
+
+		for (i=0; i < TAN_DEFAULT_ROWS; i++)
+		{
+			for (j= 0; j < TAN_DEFAULT_COLS; j++)
+			{
+				if (m_effect->pixels[j][i].alpha() == 255)
+					m_effect->pixels[j][i] = m_effect->primary;
+			}
+		}
+
+		ui->btnLetterColor->setStyleSheet("background-color: " + m_effect->primary.name());
+		updateGUI();
+	}
+}
+
+
+void letterEffectDialog::clearEffect()
+{
+	int i = 0, j = 0;
+	QColor empty = QColor(0,0,0,0);
+
+	for (i=0; i < TAN_DEFAULT_ROWS; i++)
+	 for (j=0; j < TAN_DEFAULT_COLS; j++)
+		 m_effect->pixels[j][i] = empty;
+}
+
+
+void letterEffectDialog::getEffect(const QChar letter)
+{
+	int i = 0, j = 0;
+
+	switch (static_cast<char>(letter.unicode()))
+	{
+		case 'A':
+			getLetterA(0, m_effect->pixels);
+			break;
+		case 'B':
+			getLetterB(0, m_effect->pixels);
+			break;
+		case 'C':
+			getLetterC(0, m_effect->pixels);
+			break;
+		case 'D':
+			getLetterD(0, m_effect->pixels);
+			break;
+		case 'E':
+			getLetterE(0, m_effect->pixels);
+			break;
+		case 'F':
+			getLetterF(0, m_effect->pixels);
+			break;
+		case 'G':
+			getLetterG(0, m_effect->pixels);
+			break;
+		case 'H':
+			getLetterH(0, m_effect->pixels);
+			break;
+		case 'I':
+			getLetterI(0, m_effect->pixels);
+			break;
+		case 'J':
+			getLetterJ(0, m_effect->pixels);
+			break;
+		case 'K':
+			getLetterK(0, m_effect->pixels);
+			break;
+		case 'L':
+			getLetterL(0, m_effect->pixels);
+			break;
+		case 'M':
+			getLetterM(0, m_effect->pixels);
+			break;
+		case 'N':
+			getLetterN(0, m_effect->pixels);
+			break;
+		case 'O':
+			getLetterO(0, m_effect->pixels);
+			break;
+		case 'P':
+			getLetterP(0, m_effect->pixels);
+			break;
+		case 'Q':
+			getLetterQ(0, m_effect->pixels);
+			break;
+		case 'R':
+			getLetterR(0, m_effect->pixels);
+			break;
+		case 'S':
+			getLetterS(0, m_effect->pixels);
+			break;
+		case 'T':
+			getLetterT(0, m_effect->pixels);
+			break;
+		case 'U':
+			getLetterU(0, m_effect->pixels);
+			break;
+		case 'V':
+			getLetterV(0, m_effect->pixels);
+			break;
+		case 'W':
+			getLetterW(0, m_effect->pixels);
+			break;
+		case 'X':
+			getLetterX(0, m_effect->pixels);
+			break;
+		case 'Y':
+			getLetterY(0, m_effect->pixels);
+			break;
+		case 'Z':
+			getLetterZ(0, m_effect->pixels);
+			break;
+		case 'a':
+			getLetterA(1, m_effect->pixels);
+			break;
+		case 'b':
+			getLetterB(1, m_effect->pixels);
+			break;
+		case 'c':
+			getLetterC(1, m_effect->pixels);
+			break;
+		case 'd':
+			getLetterD(1, m_effect->pixels);
+			break;
+		case 'e':
+			getLetterE(1, m_effect->pixels);
+			break;
+		case 'f':
+			getLetterF(1, m_effect->pixels);
+			break;
+		case 'g':
+			getLetterG(1, m_effect->pixels);
+			break;
+		case 'h':
+			getLetterH(1, m_effect->pixels);
+			break;
+		case 'i':
+			getLetterI(1, m_effect->pixels);
+			break;
+		case 'j':
+			getLetterJ(1, m_effect->pixels);
+			break;
+		case 'k':
+			getLetterK(1, m_effect->pixels);
+			break;
+		case 'l':
+			getLetterL(1, m_effect->pixels);
+			break;
+		case 'm':
+			getLetterM(1, m_effect->pixels);
+			break;
+		case 'n':
+			getLetterN(1, m_effect->pixels);
+			break;
+		case 'o':
+			getLetterO(1, m_effect->pixels);
+			break;
+		case 'p':
+			getLetterP(1, m_effect->pixels);
+			break;
+		case 'q':
+			getLetterQ(1, m_effect->pixels);
+			break;
+		case 'r':
+			getLetterR(1, m_effect->pixels);
+			break;
+		case 's':
+			getLetterS(1, m_effect->pixels);
+			break;
+		case 't':
+			getLetterT(1, m_effect->pixels);
+			break;
+		case 'u':
+			getLetterU(1, m_effect->pixels);
+			break;
+		case 'v':
+			getLetterV(1, m_effect->pixels);
+			break;
+		case 'w':
+			getLetterW(1, m_effect->pixels);
+			break;
+		case 'x':
+			getLetterX(1, m_effect->pixels);
+			break;
+		case 'y':
+			getLetterY(1, m_effect->pixels);
+			break;
+		case 'z':
+			getLetterZ(1, m_effect->pixels);
+			break;
+		default:
+			break;
+	}
+
+	for (i=0; i < TAN_DEFAULT_ROWS; i++)
+	 for (j=0; j < TAN_DEFAULT_COLS; j++)
+		if (m_effect->pixels[j][i].alpha() == 255)
+		 m_effect->pixels[j][i] = m_effect->primary;
+}
+
+
+void letterEffectDialog::translateEffect()
+{
+	if (effectSelected)
+	{
+		int i = 0, j = 0;
+		QColor m_temp[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
+
+		for (i=0; i < TAN_DEFAULT_ROWS; i++)
+		 for (j=0; j < TAN_DEFAULT_COLS; j++)
+			 m_temp[j][i] = m_effect->pixels[j][i];
+		for (i=0; i < TAN_DEFAULT_ROWS; i++)
+		 for (j=0; j < TAN_DEFAULT_COLS; j++)
+			 m_effect->pixels[j][i] = m_temp[(j-offsetX)%TAN_DEFAULT_COLS][(i-offsetY)%TAN_DEFAULT_ROWS];
+	}
+}
+
+
+// dir == direction
+// 1 == up, 2 == right, 3 == down, 4 == left
+// diagonals are the sum of their cardinals: 3, 6, 9, 12
+void letterEffectDialog::translate(int dir)
+{
+	if (effectSelected)
+	{
+		if (dir == 1 || dir == 3 || dir == 9)
+			--offsetY;
+		if (dir == 2 || dir == 3 || dir == 6)
+			offsetX -= TAN_DEFAULT_COLS - 1;
+		if (dir == 4 || dir == 6 || dir == 12)
+			offsetY -= TAN_DEFAULT_ROWS - 1;
+		if (dir == 8 || dir == 12 || dir == 9)
+			--offsetX;
+
+		translateEffect();
+		updateGUI();
+
+		offsetX = 0;
+		offsetY = 0;
+	}
+}
+
 
 void letterEffectDialog::on_pushButton_up_clicked()
 {
-    offsetY--;
-    if (isTouchingYBoundaries())
-        ui->pushButton_up->setEnabled(false);
-    ui->pushButton_down->setEnabled(true);
-    updateGUI();
-}
-
-void letterEffectDialog::on_pushButton_down_clicked()
-{
-    offsetY++;
-    if (isTouchingYBoundaries())
-        ui->pushButton_down->setEnabled(false);
-    ui->pushButton_up->setEnabled(true);
-    updateGUI();
-}
-
-void letterEffectDialog::on_pushButton_left_clicked()
-{
-    offsetX--;
-    if (isTouchingXBoundaries())
-        ui->pushButton_left->setEnabled(false);
-    ui->pushButton_right->setEnabled(true);
-    updateGUI();
+	translate(1);
 }
 
 void letterEffectDialog::on_pushButton_right_clicked()
 {
-    offsetX++;
-    if (isTouchingXBoundaries())
-        ui->pushButton_right->setEnabled(false);
-    ui->pushButton_left->setEnabled(true);
-    updateGUI();
+	translate(2);
 }
 
-bool letterEffectDialog::isTouchingXBoundaries()
+void letterEffectDialog::on_pushButton_down_clicked()
 {
-    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-    {
-        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-        {
-            if (retEffect->pixels[x][y].alpha() == 255 && ((x+offsetX) == 0 || (x+offsetX) == (TAN_DEFAULT_COLS-1)))
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+	translate(4);
 }
 
-bool letterEffectDialog::isTouchingYBoundaries()
+void letterEffectDialog::on_pushButton_left_clicked()
 {
-    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-    {
-        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-        {
-            if (retEffect->pixels[x][y].alpha() == 255 && ((y+offsetY) == 0 || (y+offsetY) == (TAN_DEFAULT_ROWS-1)))
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+	translate(8);
 }
 
-void letterEffectDialog::on_pushButton_color_clicked()
+void letterEffectDialog::on_pushButton_upright_clicked()
 {
-    QColor color = QColorDialog::getColor(Qt::yellow, this );
-    if(color.isValid())
-    {
-        effectColor = color;
-        for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-            for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-                if (retEffect->pixels[x][y].alpha() == 255)
-                    retEffect->pixels[x][y] = color;
-        if (color.red() < 191 && color.green() < 191 && color.blue() < 191)
-            ui->pushButton_color->setStyleSheet("color: #ffffff; background-color: " + color.name());
-        else ui->pushButton_color->setStyleSheet("color: #000000; background-color: " + color.name());
-        ui->pushButton_color->setText(color.name());
-        updateGUI();
-    }
+	translate(3);
 }
 
-//clear grid
-void letterEffectDialog::on_pushButton_clear_clicked()
+void letterEffectDialog::on_pushButton_downright_clicked()
 {
-    ui->label->move(QPoint(270,30));
-    ui->label->setText("Which letter would you like?");
-    ui->pushButton_test->setEnabled(true);
-    ui->pushButton_up->setEnabled(false);
-    ui->pushButton_down->setEnabled(false);
-    ui->pushButton_left->setEnabled(false);
-    ui->pushButton_right->setEnabled(false);
-    clearGrid();
-    effectSelected = false;
-    updateGUI();
+	translate(6);
 }
 
-void letterEffectDialog::clearGrid()
+void letterEffectDialog::on_pushButton_downleft_clicked()
 {
-    offsetX = 0;
-    offsetY = 0;
-    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
-        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
-            retEffect->pixels[y][x] = QColor(0,0,0,0);
+	translate(12);
+}
+
+void letterEffectDialog::on_pushButton_upleft_clicked()
+{
+	translate(9);
 }
 
 void letterEffectDialog::updateGUI()
 {
-    QString qss;
-    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
-    {
-        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
-        {
-            if (x < 8 && x > 3 && y < 15 && y > 4)
-            {
-                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
-                    qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
-                else qss = QString("margin: 0px; border: 1px solid rgb(127,127,127); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
-            }
-            else
-            {
-                if (retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].alpha() == 255)
-                    qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + retEffect->pixels[(x+TAN_DEFAULT_COLS-offsetX)%TAN_DEFAULT_COLS][(y+TAN_DEFAULT_ROWS-offsetY)%TAN_DEFAULT_ROWS].name());
-                else qss = QString("margin: 0px; border: 1px solid rgb(0,0,0); border-radius: 2px; background-color: " + backgroundFrame[x][y].name());
-            }
-            ui->gridLayout->itemAtPosition(y,x)->widget()->setStyleSheet(qss);
-        }
-    }
+	int i = 0, j = 0;
+	QString qss;
+
+	for (i=0; i<TAN_DEFAULT_ROWS; i++)
+	{
+		for (j=0; j<TAN_DEFAULT_COLS; j++)
+		{
+			// Assemble the style string, and then set it
+			qss = QString(cellStyleBasic);
+			if (m_effect->pixels[j][i].alpha() == 255)
+				qss += QString(" background-color: " + m_effect->pixels[j][i].name() + ";");
+			else
+				qss += QString(" background-color: " + backgroundFrame[j][i].name() + ";");
+			if ( (j > 3 && j < 8) && (i > 4 && i < 15) )
+				qss += QString(" " + cellStyleActive);
+			else
+				qss += QString(" " + cellStyleInactive);
+			ui->gridLayout->itemAtPosition(i,j)->widget()->setStyleSheet(qss);
+		}
+	}
 }

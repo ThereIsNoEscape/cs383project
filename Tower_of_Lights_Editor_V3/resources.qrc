@@ -2,5 +2,13 @@
     <qresource prefix="/resources">
         <file>currSelect.png</file>
         <file>icon.png</file>
+        <file>arrows_down.png</file>
+        <file>arrows_downleft.png</file>
+        <file>arrows_downright.png</file>
+        <file>arrows_left.png</file>
+        <file>arrows_right.png</file>
+        <file>arrows_up.png</file>
+        <file>arrows_upleft.png</file>
+        <file>arrows_upright.png</file>
     </qresource>
 </RCC>

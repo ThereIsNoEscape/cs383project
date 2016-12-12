@@ -20,16 +20,20 @@ letterEffectDialog::letterEffectDialog(QColor frame[TAN_DEFAULT_COLS][TAN_DEFAUL
 	m_effect->primary = Qt::white;
 	m_effect->secondary = QColor(0,0,0,0);
 
-	m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
-
 	for (i = 0; i < TAN_DEFAULT_ROWS; i++)
 		for (j = 0; j < TAN_DEFAULT_COLS; j++)
 			backgroundFrame[j][i] = frame[j][i];
+
+	m_generateFrame(TAN_DEFAULT_ROWS, TAN_DEFAULT_COLS);
 
 	ui->pushButton_up->setEnabled(false);
 	ui->pushButton_right->setEnabled(false);
 	ui->pushButton_down->setEnabled(false);
 	ui->pushButton_left->setEnabled(false);
+	ui->pushButton_upright->setEnabled(false);
+	ui->pushButton_downright->setEnabled(false);
+	ui->pushButton_downleft->setEnabled(false);
+	ui->pushButton_upleft->setEnabled(false);
 }
 
 
@@ -67,7 +71,7 @@ void letterEffectDialog::m_generateFrame(int rows, int cols)
 			m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
 			// Assemble the style string, and then set it
-			qss = QString("background-color: " + backgroundFrame[j][i].name() + "; " + cellStyleBasic);
+			qss = QString(cellStyleBasic + "background-color: " + backgroundFrame[j][i].name() + ";");
 			if ( (j > 3 && j < 8) && (i > 4 && i < 15) )
 				qss += QString(" " + cellStyleActive);
 			else
@@ -120,18 +124,22 @@ void letterEffectDialog:: on_comboLetter_currentIndexChanged(const QString &text
 {
 	clearEffect();
 
-	if (text.at(0) != ' ')
+	if (text.at(0).toLatin1() != '.')
 		getEffect(text.at(0));
 
 	updateGUI();
 
-	if (text.at(0) == ' ')
+	if (text.at(0).toLatin1() == '.')
 	{
 		effectSelected = false;
 		ui->pushButton_up->setEnabled(false);
 		ui->pushButton_right->setEnabled(false);
 		ui->pushButton_down->setEnabled(false);
 		ui->pushButton_left->setEnabled(false);
+		ui->pushButton_upright->setEnabled(false);
+		ui->pushButton_downright->setEnabled(false);
+		ui->pushButton_downleft->setEnabled(false);
+		ui->pushButton_upleft->setEnabled(false);
 	}
 	else
 	{
@@ -140,6 +148,10 @@ void letterEffectDialog:: on_comboLetter_currentIndexChanged(const QString &text
 		ui->pushButton_right->setEnabled(true);
 		ui->pushButton_down->setEnabled(true);
 		ui->pushButton_left->setEnabled(true);
+		ui->pushButton_upright->setEnabled(true);
+		ui->pushButton_downright->setEnabled(true);
+		ui->pushButton_downleft->setEnabled(true);
+		ui->pushButton_upleft->setEnabled(true);
 	}
 }
 
@@ -412,6 +424,26 @@ void letterEffectDialog::on_pushButton_down_clicked()
 void letterEffectDialog::on_pushButton_left_clicked()
 {
 	translate(8);
+}
+
+void letterEffectDialog::on_pushButton_upright_clicked()
+{
+	translate(3);
+}
+
+void letterEffectDialog::on_pushButton_downright_clicked()
+{
+	translate(6);
+}
+
+void letterEffectDialog::on_pushButton_downleft_clicked()
+{
+	translate(12);
+}
+
+void letterEffectDialog::on_pushButton_upleft_clicked()
+{
+	translate(9);
 }
 
 

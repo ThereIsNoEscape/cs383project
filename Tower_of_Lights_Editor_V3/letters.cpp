@@ -347,6 +347,7 @@ void getLetterL(unsigned short c, QColor (&pixels)[TAN_DEFAULT_COLS][TAN_DEFAULT
 			pixels[5][7].setAlpha(m_colorAlphaMax);
 			pixels[5][8].setAlpha(m_colorAlphaMax);
 			pixels[5][9].setAlpha(m_colorAlphaMax);
+			pixels[6][9].setAlpha(m_colorAlphaMax);
 			break;
 		default:
 			pixels[4][5].setAlpha(m_colorAlphaMax);
@@ -586,7 +587,7 @@ void getLetterT(unsigned short c, QColor (&pixels)[TAN_DEFAULT_COLS][TAN_DEFAULT
 			pixels[6][6].setAlpha(m_colorAlphaMax);
 			pixels[5][7].setAlpha(m_colorAlphaMax);
 			pixels[5][8].setAlpha(m_colorAlphaMax);
-			pixels[6][8].setAlpha(m_colorAlphaMax);
+			pixels[5][9].setAlpha(m_colorAlphaMax);
 			pixels[6][9].setAlpha(m_colorAlphaMax);
 			break;
 		default:

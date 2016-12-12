@@ -113,8 +113,15 @@ border-radius: 4px;</string>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Left</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_left.png</normaloff>:/resources/arrows_left.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_up">
@@ -129,8 +136,15 @@ border-radius: 4px;</string>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Up</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_up.png</normaloff>:/resources/arrows_up.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_down">
@@ -145,8 +159,15 @@ border-radius: 4px;</string>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Down</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_down.png</normaloff>:/resources/arrows_down.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_right">
@@ -161,8 +182,15 @@ border-radius: 4px;</string>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Right</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_right.png</normaloff>:/resources/arrows_right.png</iconset>
    </property>
   </widget>
   <widget class="QLabel" name="labelLetterSelect">
@@ -239,7 +267,7 @@ border-radius: 4px;</string>
    </property>
    <item>
     <property name="text">
-     <string> </string>
+     <string>...</string>
     </property>
    </item>
    <item>
@@ -503,8 +531,93 @@ border-radius: 4px;</string>
     </property>
    </item>
   </widget>
+  <widget class="QPushButton" name="pushButton_upleft">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>220</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_upleft.png</normaloff>:/resources/arrows_upleft.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_upright">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>220</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_upright.png</normaloff>:/resources/arrows_upright.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_downright">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>290</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_downright.png</normaloff>:/resources/arrows_downright.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_downleft">
+   <property name="geometry">
+    <rect>
+     <x>429</x>
+     <y>290</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_downleft.png</normaloff>:/resources/arrows_downleft.png</iconset>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

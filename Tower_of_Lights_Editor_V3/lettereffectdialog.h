@@ -34,6 +34,10 @@ private slots:
 	void on_pushButton_right_clicked();
 	void on_pushButton_down_clicked();
 	void on_pushButton_left_clicked();
+	void on_pushButton_upright_clicked();
+	void on_pushButton_downright_clicked();
+	void on_pushButton_downleft_clicked();
+	void on_pushButton_upleft_clicked();
 
 	private:
 	Ui::letterEffectDialog *ui;

@@ -85,7 +85,7 @@ void letterEffectDialog:: on_pushButton_test_clicked()
 {
     ui->label->move(QPoint(270,90));
     ui->pushButton_test->setEnabled(false);
-    ui->label->setText(QString("Good because that's the only letter we've got. However, there are lots of pretty symbols if you'd like to insert one of those."));
+    ui->label->setText(QString("Good because that's the only letter we've got. However, there are lots of pretty symbols and shapes if you'd like to insert one of those."));
     ui->pushButton_up->setEnabled(true);
     ui->pushButton_down->setEnabled(true);
     ui->pushButton_left->setEnabled(true);
@@ -189,6 +189,30 @@ void letterEffectDialog::on_pushButton_color_clicked()
         ui->pushButton_color->setText(color.name());
         updateGUI();
     }
+}
+
+//clear grid
+void letterEffectDialog::on_pushButton_clear_clicked()
+{
+    ui->label->move(QPoint(270,30));
+    ui->label->setText("Which letter would you like?");
+    ui->pushButton_test->setEnabled(true);
+    ui->pushButton_up->setEnabled(false);
+    ui->pushButton_down->setEnabled(false);
+    ui->pushButton_left->setEnabled(false);
+    ui->pushButton_right->setEnabled(false);
+    clearGrid();
+    effectSelected = false;
+    updateGUI();
+}
+
+void letterEffectDialog::clearGrid()
+{
+    offsetX = 0;
+    offsetY = 0;
+    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
+        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
+            retEffect->pixels[y][x] = QColor(0,0,0,0);
 }
 
 void letterEffectDialog::updateGUI()

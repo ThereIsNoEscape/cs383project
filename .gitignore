@@ -32,3 +32,4 @@
 # QT
 build-*/
 *.pro.user.*
+*.user

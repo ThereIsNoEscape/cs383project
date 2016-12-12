@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>460</width>
-    <height>440</height>
+    <width>450</width>
+    <height>431</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -147,67 +147,25 @@ border-radius: 4px;</string>
     <string>Right</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QCheckBox" name="noFill">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>30</y>
-     <width>171</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>11</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Which shape would you like?</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_test">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>50</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>11</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>I would like a square</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>288</x>
-     <y>176</y>
-     <width>59</width>
-     <height>21</height>
+     <x>320</x>
+     <y>105</y>
+     <width>70</width>
+     <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Color:</string>
+    <string>No Fill</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_color">
+  <widget class="QPushButton" name="pushButton_color_2">
    <property name="geometry">
     <rect>
-     <x>334</x>
-     <y>176</y>
-     <width>87</width>
+     <x>360</x>
+     <y>160</y>
+     <width>71</width>
      <height>21</height>
     </rect>
    </property>
@@ -216,6 +174,137 @@ border-radius: 4px;</string>
    </property>
    <property name="text">
     <string>#ffffff</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>50</y>
+     <width>171</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Select a shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Circle</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Square</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Vertical Rectangle</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Horizontal Rectangle</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>L-Shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Mirrored L-Shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>S-Shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Z-Shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T-Shape</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Box</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Line</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="pushButton_color">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>200</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #ffffff</string>
+   </property>
+   <property name="text">
+    <string>#ffffff</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>160</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Border Color:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>200</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fill Color:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_clear">
+   <property name="geometry">
+    <rect>
+     <x>318</x>
+     <y>240</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
    </property>
   </widget>
  </widget>

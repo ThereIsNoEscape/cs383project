@@ -31,6 +31,7 @@ private slots:
     void on_pushButton_right_clicked();
     void on_pushButton_color_clicked();
 
+    void on_pushButton_clear_clicked();
 private:
     Ui::letterEffectDialog *ui;
     effect* retEffect;
@@ -43,6 +44,7 @@ private:
     bool isTouchingXBoundaries();
     bool isTouchingYBoundaries();
 
+    void clearGrid();
 };
 
 #endif // LETTEREFFECTDIALOG_H

@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>431</height>
+    <width>631</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>450</width>
-    <height>431</height>
+    <width>631</width>
+    <height>570</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>450</width>
-    <height>431</height>
+    <width>631</width>
+    <height>570</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,10 +28,10 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>205</x>
-     <y>391</y>
-     <width>231</width>
-     <height>32</height>
+     <x>360</x>
+     <y>500</y>
+     <width>271</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="orientation">
@@ -40,14 +40,17 @@
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
+   <property name="centerButtons">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>250</width>
-     <height>411</height>
+     <width>341</width>
+     <height>551</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -55,6 +58,9 @@
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(64, 64, 64);
@@ -65,160 +71,547 @@ border-radius: 4px;</string>
     <enum>QFrame::StyledPanel</enum>
    </property>
    <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
+    <enum>QFrame::Sunken</enum>
    </property>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>231</width>
-      <height>391</height>
+      <width>321</width>
+      <height>531</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
      <property name="spacing">
-      <number>0</number>
+      <number>4</number>
      </property>
     </layout>
    </widget>
   </widget>
   <widget class="QPushButton" name="pushButton_left">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>274</x>
-     <y>302</y>
-     <width>61</width>
+     <x>420</x>
+     <y>250</y>
+     <width>51</width>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Left</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_left.png</normaloff>:/resources/arrows_left.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_up">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>325</x>
-     <y>283</y>
-     <width>61</width>
+     <x>470</x>
+     <y>210</y>
+     <width>51</width>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Up</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_up.png</normaloff>:/resources/arrows_up.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_down">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>325</x>
-     <y>321</y>
-     <width>61</width>
+     <x>470</x>
+     <y>290</y>
+     <width>51</width>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
    <property name="text">
-    <string>Down</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_down.png</normaloff>:/resources/arrows_down.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_right">
    <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>376</x>
-     <y>302</y>
-     <width>61</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Right</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>30</y>
-     <width>171</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>11</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Which letter would you like?</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-   <property name="wordWrap">
     <bool>true</bool>
    </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_test">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>50</y>
-     <width>171</width>
+     <x>520</x>
+     <y>250</y>
+     <width>51</width>
      <height>41</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>11</pointsize>
-    </font>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
    </property>
    <property name="text">
-    <string>I would like an 'O'</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_right.png</normaloff>:/resources/arrows_right.png</iconset>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="labelLetterSelect">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>160</y>
-     <width>91</width>
-     <height>21</height>
+     <x>380</x>
+     <y>30</y>
+     <width>151</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Effect Color:</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Select a letter:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::NoTextInteraction</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_color">
+  <widget class="QLabel" name="labelLetterColor">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>160</y>
-     <width>71</width>
-     <height>21</height>
+     <x>380</x>
+     <y>100</y>
+     <width>151</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Letter color:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::NoTextInteraction</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnLetterColor">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>100</y>
+     <width>61</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: #ffffff</string>
    </property>
    <property name="text">
-    <string>#ffffff</string>
+    <string/>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboLetter">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>40</y>
+     <width>61</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="maxCount">
+    <number>1024</number>
+   </property>
+   <property name="frame">
+    <bool>false</bool>
+   </property>
+   <item>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>A</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>B</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>C</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>D</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>E</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>F</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>G</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>H</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>I</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>J</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>K</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>L</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>M</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>N</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>P</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Q</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>S</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>U</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>V</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>W</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Y</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Z</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>a</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>b</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>c</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>d</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>e</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>f</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>g</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>h</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>i</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>j</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>k</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>l</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>m</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>n</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>o</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>p</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>q</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>r</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>s</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>t</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>u</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>v</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>w</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>y</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>z</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="pushButton_upleft">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>220</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_upleft.png</normaloff>:/resources/arrows_upleft.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_upright">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>220</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_upright.png</normaloff>:/resources/arrows_upright.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_downright">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>290</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_downright.png</normaloff>:/resources/arrows_downright.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_downleft">
+   <property name="geometry">
+    <rect>
+     <x>429</x>
+     <y>290</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(128,128,128);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/arrows_downleft.png</normaloff>:/resources/arrows_downleft.png</iconset>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_clear">
@@ -235,7 +628,9 @@ border-radius: 4px;</string>
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

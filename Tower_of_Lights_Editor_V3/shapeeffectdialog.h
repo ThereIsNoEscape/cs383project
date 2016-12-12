@@ -24,12 +24,16 @@ signals:
 
 private slots:
     void on_buttonBox_accepted();
-    void on_pushButton_test_clicked();
     void on_pushButton_up_clicked();
     void on_pushButton_down_clicked();
     void on_pushButton_left_clicked();
     void on_pushButton_right_clicked();
     void on_pushButton_color_clicked();
+
+    void on_pushButton_clear_clicked();
+    void on_comboBox_activated(int index);
+    void on_pushButton_color_2_clicked();
+    void on_noFill_stateChanged(int state);
 
 private:
     Ui::shapeEffectDialog *ui;
@@ -38,11 +42,35 @@ private:
     int offsetY;
     bool effectSelected;
     QColor backgroundFrame[TAN_DEFAULT_COLS][TAN_DEFAULT_ROWS];
-    QColor effectColor;
     void updateGUI();
     bool isTouchingXBoundaries();
     bool isTouchingYBoundaries();
 
+    void clearGrid();
+    void createCircle();
+    void createCircleFill();
+    void removeCircleFill();
+    void createSquare();
+    void createSquareFill();
+    void removeSquareFill();
+    void createVerticalRectangle();
+    void createVerticalRectangleFill();
+    void removeVerticalRectangleFill();
+    void createHorizontalRectangle();
+    void createHorizontalRectangleFill();
+    void removeHorizontalRectangleFill();
+    void createL_Shape();
+    void createMirroredL_Shape();
+    void createS_Shape();
+    void createZ_Shape();
+    void createT_Shape();
+    void createBoxShape();
+    void createLineShape();
+
+    QColor effectFillColor;
+    QColor effectBorderColor;
+
+    bool noFill, fillable;
 };
 
 #endif // shapeEFFECTDIALOG_H

@@ -153,6 +153,29 @@ void symbolEffectDialog::on_pushButton_color_clicked()
     }
 }
 
+//clear grid
+void symbolEffectDialog::on_pushButton_clear_clicked()
+{
+    ui->pushButton_up->setEnabled(false);
+    ui->pushButton_down->setEnabled(false);
+    ui->pushButton_left->setEnabled(false);
+    ui->pushButton_right->setEnabled(false);
+    clearGrid();
+    if (effectSelected) ui->comboBox->insertItem(0, "Select a symbol");
+    ui->comboBox->setCurrentIndex(0);
+    effectSelected = false;
+    updateGUI();
+}
+
+void symbolEffectDialog::clearGrid()
+{
+    offsetX = 0;
+    offsetY = 0;
+    for (int x = 0; x < TAN_DEFAULT_ROWS; x++)
+        for (int y = 0; y < TAN_DEFAULT_COLS; y++)
+            retEffect->pixels[y][x] = QColor(0,0,0,0);
+}
+
 void symbolEffectDialog::updateGUI()
 {
     QString qss;
@@ -179,22 +202,22 @@ void symbolEffectDialog::updateGUI()
 
 void symbolEffectDialog::on_comboBox_activated(int index)
 {
-    if (index == 0) return;
-
-    for (int y = 0; y < (TAN_DEFAULT_ROWS); y++)
-        for (int x = 0; x < (TAN_DEFAULT_COLS); x++)
-            retEffect->pixels[x][y] = QColor(0,0,0,0); // clear any previous symbol inserted
-
+    if (!effectSelected)
+    {
+        if (index == 0) return;
+        index--;
+        ui->comboBox->removeItem(0);
+    }
     ui->pushButton_up->setEnabled(true);
     ui->pushButton_down->setEnabled(true);
     ui->pushButton_left->setEnabled(true);
     ui->pushButton_right->setEnabled(true);
-
+    clearGrid();
     effectSelected = true;
 
     switch (index)
     {
-    case 1: // Question Mark
+    case 0: // Question Mark
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[6][8] = effectColor;
@@ -202,14 +225,14 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[5][12] = effectColor;
         break;
-    case 2:  // Exclamation Mark
+    case 1:  // Exclamation Mark
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[4][12] = effectColor;
         break;
-    case 3: // Dollar Sign
+    case 2: // Dollar Sign
         retEffect->pixels[6][7] = effectColor;
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[6][8] = effectColor;
@@ -224,7 +247,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[5][12] = effectColor;
         retEffect->pixels[6][12] = effectColor;
         break;
-    case 4: // Percent Sign
+    case 3: // Percent Sign
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[7][9] = effectColor;
         retEffect->pixels[6][10] = effectColor;
@@ -232,7 +255,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][12] = effectColor;
         retEffect->pixels[7][12] = effectColor;
         break;
-    case 5: // Left Paren
+    case 4: // Left Paren
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
@@ -240,7 +263,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][11] = effectColor;
         retEffect->pixels[5][12] = effectColor;
         break;
-    case 6: // Right Paren
+    case 5: // Right Paren
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[5][9] = effectColor;
@@ -248,7 +271,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[5][11] = effectColor;
         retEffect->pixels[4][12] = effectColor;
         break;
-    case 7: // Left Square Bracket
+    case 6: // Left Square Bracket
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
@@ -258,7 +281,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][12] = effectColor;
         retEffect->pixels[5][12] = effectColor;
         break;
-    case 8: // Right Square Bracket
+    case 7: // Right Square Bracket
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[5][8] = effectColor;
@@ -268,19 +291,19 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][12] = effectColor;
         retEffect->pixels[5][12] = effectColor;
         break;
-    case 9: // Plus Sign
+    case 8: // Plus Sign
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[6][9] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         break;
-    case 10: // Minus Sign
+    case 9: // Minus Sign
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[6][9] = effectColor;
         break;
-    case 11: // Equals Sign
+    case 10: // Equals Sign
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[6][8] = effectColor;
@@ -288,36 +311,36 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[6][10] = effectColor;
         break;
-    case 12: // Up Caret
+    case 11: // Up Caret
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[6][9] = effectColor;
         break;
-    case 13: // Left Caret
+    case 12: // Left Caret
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[5][11] = effectColor;
         break;
-    case 14: // Right Caret
+    case 13: // Right Caret
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[4][11] = effectColor;
         break;
-    case 15: // Left Hook Bracket
+    case 14: // Left Hook Bracket
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         break;
-    case 16: // Right Hook Bracket
+    case 15: // Right Hook Bracket
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[5][7] = effectColor;
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         break;
-    case 17: // Forward Slash
+    case 16: // Forward Slash
         retEffect->pixels[6][7] = effectColor;
         retEffect->pixels[6][8] = effectColor;
         retEffect->pixels[5][9] = effectColor;
@@ -325,7 +348,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][11] = effectColor;
         retEffect->pixels[4][12] = effectColor;
         break;
-    case 18: // Backwards Slash
+    case 17: // Backwards Slash
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[5][9] = effectColor;
@@ -333,16 +356,16 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[6][11] = effectColor;
         retEffect->pixels[6][12] = effectColor;
         break;
-    case 19: // Semicolon
+    case 18: // Semicolon
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[5][11] = effectColor;
         retEffect->pixels[4][12] = effectColor;
         break;
-    case 20: // Colon
+    case 19: // Colon
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[4][11] = effectColor;
         break;
-    case 21: // Asterisk
+    case 20: // Asterisk
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[6][8] = effectColor;
         retEffect->pixels[8][8] = effectColor;
@@ -356,7 +379,7 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[6][11] = effectColor;
         retEffect->pixels[8][11] = effectColor;
         break;
-    case 22: // Bar
+    case 21: // Bar
         retEffect->pixels[4][7] = effectColor;
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
@@ -364,43 +387,43 @@ void symbolEffectDialog::on_comboBox_activated(int index)
         retEffect->pixels[4][11] = effectColor;
         retEffect->pixels[4][12] = effectColor;
         break;
-    case 23: // Tetris I
+    case 22: // Tetris I
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[4][11] = effectColor;
         break;
-    case 24: // Tetris O
+    case 23: // Tetris O
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         break;
-    case 25: // Tetris T
+    case 24: // Tetris T
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[6][10] = effectColor;
         break;
-    case 26: // Tetris S
+    case 25: // Tetris S
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[6][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         break;
-    case 27: // Tetris Z
+    case 26: // Tetris Z
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[6][10] = effectColor;
         break;
-    case 28: // Tetris J
+    case 27: // Tetris J
         retEffect->pixels[5][8] = effectColor;
         retEffect->pixels[5][9] = effectColor;
         retEffect->pixels[5][10] = effectColor;
         retEffect->pixels[4][10] = effectColor;
         break;
-    case 29: // Tetris L
+    case 28: // Tetris L
         retEffect->pixels[4][8] = effectColor;
         retEffect->pixels[4][9] = effectColor;
         retEffect->pixels[4][10] = effectColor;
@@ -409,6 +432,5 @@ void symbolEffectDialog::on_comboBox_activated(int index)
     default:
         break;
     }
-
     updateGUI();
 }

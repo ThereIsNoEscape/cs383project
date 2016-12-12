@@ -55,6 +55,7 @@ private slots:
 	void translateEffect();
 	void updateGUI();
 
+    void clearGrid();
 };
 
 #endif // LETTEREFFECTDIALOG_H

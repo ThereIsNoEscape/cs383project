@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>460</width>
-    <height>440</height>
+    <width>450</width>
+    <height>431</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -150,22 +150,25 @@ border-radius: 4px;</string>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>288</x>
-     <y>176</y>
-     <width>59</width>
+     <x>260</x>
+     <y>160</y>
+     <width>91</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Color:</string>
+    <string>Effect Color:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_color">
    <property name="geometry">
     <rect>
-     <x>334</x>
-     <y>176</y>
-     <width>87</width>
+     <x>360</x>
+     <y>160</y>
+     <width>71</width>
      <height>21</height>
     </rect>
    </property>
@@ -335,6 +338,19 @@ border-radius: 4px;</string>
      <string>Tetris Piece L</string>
     </property>
    </item>
+  </widget>
+  <widget class="QPushButton" name="pushButton_clear">
+   <property name="geometry">
+    <rect>
+     <x>318</x>
+     <y>240</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
   </widget>
  </widget>
  <resources/>

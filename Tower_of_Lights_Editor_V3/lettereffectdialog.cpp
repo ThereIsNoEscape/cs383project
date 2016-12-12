@@ -446,7 +446,6 @@ void letterEffectDialog::on_pushButton_upleft_clicked()
 	translate(9);
 }
 
-
 void letterEffectDialog::updateGUI()
 {
 	int i = 0, j = 0;

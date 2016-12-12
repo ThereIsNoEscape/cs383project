@@ -168,7 +168,6 @@ void MainWindow::saveAs()
 void MainWindow::m_generateFrame(int rows, int cols)
 {
     int i = 0, j = 0;
-    //QFrame *m_Frame = ui->frame;
     QGridLayout *m_FrameLayout = ui->gridLayout;
     QString m_cellName;
     QSizePolicy m_cellSizePolicy;
@@ -181,19 +180,18 @@ void MainWindow::m_generateFrame(int rows, int cols)
     m_cellSizePolicy.setVerticalStretch(1);
     m_cellSizePolicy.setHeightForWidth(true);
 
-    for (j=0; j<rows; j++)
+    for (i=0; i<rows; i++)
     {
-        for (i=0; i<cols; i++)
+        for (j=0; j<cols; j++)
         {
             // Generate the name for each cell, based on rows and cols
-            // Relocate this job to TanFrame project at some point?
-            m_cellName = "cell" + (QString("%1").arg((j*cols + i), 3, 10, QChar('0')));
-            CellWidget *m_cellWidget = new CellWidget(m_cellName, j, i);
+            m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
+            CellWidget *m_cellWidget = new CellWidget(m_cellName, i, j);
             m_cellWidget->setMinimumSize(m_cellSize);
             m_cellWidget->setSizePolicy(m_cellSizePolicy);
 
             // Adding cell widget to the frame's gridLayout
-            m_FrameLayout->addWidget(m_cellWidget, j, i);
+            m_FrameLayout->addWidget(m_cellWidget, i, j);
             m_cellWidget->show();
             // Connecting each cell's signals to appropriate generic slots
             m_connectCellSignals(m_cellWidget);
@@ -206,21 +204,19 @@ void MainWindow::m_generateFrame(int rows, int cols)
 // Destroy the grid of cell widgets
 void MainWindow::m_destroyFrame(int rows, int cols)
 {
-    CellWidget* m_cellWidget;
-    int i = 0, j = 0;
+	CellWidget* m_cellWidget;
+	int i = 0, j = 0;
 
-    for (j=0; j<rows; j++)
-    {
-        for (i=0; i<cols; i++)
-        {
-            // Generate the name for each cell, based on rows and cols
-            // Relocate this job to TanFrame *project at some point
-            //m_cellName = "cell" + (QString("%1").arg((i*cols + j), 3, 10, QChar('0')));
-            m_cellWidget = (CellWidget*)ui->gridLayout->itemAtPosition(j,i)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
-            delete m_cellWidget;
-            m_cellWidget = 0;
-        }
-    }
+	for (i=0; i<rows; i++)
+	{
+		for (j=0; j<cols; j++)
+		{
+			// Iterate through the grid of cells and delete the widget at each (row,col)
+			m_cellWidget = (CellWidget*)ui->gridLayout->itemAtPosition(i,j)->widget();
+			delete m_cellWidget;
+			m_cellWidget = 0;
+		}
+	}
 }
 
 

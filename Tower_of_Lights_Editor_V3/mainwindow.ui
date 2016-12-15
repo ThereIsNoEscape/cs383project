@@ -416,7 +416,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>17</x>
-              <y>360</y>
+              <y>355</y>
               <width>91</width>
               <height>16</height>
              </rect>
@@ -432,7 +432,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>157</x>
-              <y>359</y>
+              <y>354</y>
               <width>31</width>
               <height>21</height>
              </rect>
@@ -464,7 +464,7 @@ border-radius: 4px;</string>
             <property name="geometry">
              <rect>
               <x>107</x>
-              <y>358</y>
+              <y>353</y>
               <width>51</width>
               <height>24</height>
              </rect>
@@ -514,14 +514,14 @@ border-radius: 4px;</string>
              <string>Copy To New Frame</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="pushButton_undo_2">
+           <widget class="QPushButton" name="pushButton_left">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>15</x>
-              <y>407</y>
+              <y>413</y>
               <width>51</width>
               <height>21</height>
              </rect>
@@ -533,14 +533,14 @@ border-radius: 4px;</string>
              <string>Left</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="pushButton_undo_3">
+           <widget class="QPushButton" name="pushButton_undo_down">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>75</x>
-              <y>422</y>
+              <y>427</y>
               <width>51</width>
               <height>21</height>
              </rect>
@@ -552,14 +552,14 @@ border-radius: 4px;</string>
              <string>Down</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="pushButton_undo_4">
+           <widget class="QPushButton" name="pushButton_right">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>135</x>
-              <y>407</y>
+              <y>413</y>
               <width>51</width>
               <height>21</height>
              </rect>
@@ -571,14 +571,14 @@ border-radius: 4px;</string>
              <string>Right</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="pushButton_undo_5">
+           <widget class="QPushButton" name="pushButton_up">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>75</x>
-              <y>392</y>
+              <y>399</y>
               <width>51</width>
               <height>21</height>
              </rect>
@@ -588,6 +588,19 @@ border-radius: 4px;</string>
             </property>
             <property name="text">
              <string>Up</string>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="geometry">
+             <rect>
+              <x>16</x>
+              <y>375</y>
+              <width>131</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Wrap edges</string>
             </property>
            </widget>
           </widget>

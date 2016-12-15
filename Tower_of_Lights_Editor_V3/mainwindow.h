@@ -64,6 +64,11 @@ private slots:
     void on_pushButton_clearFrame_clicked();
     void thumbnail_clicked(const long int);
     void on_pushButton_changeAudioFile_clicked();
+    void on_checkBox_stateChanged(int state);
+    void on_pushButton_up_clicked();
+    void on_pushButton_down_clicked();
+    void on_pushButton_left_clicked();
+    void on_pushButton_right_clicked();
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
@@ -80,6 +85,7 @@ private slots:
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;
+    bool wrap;
 
 	QString m_getObjName(QObject *m_obj);
 	void m_generateFrame(int rows, int cols);
@@ -108,6 +114,7 @@ private:
     void on_change_color(QList<int>, QList<int>, QList<QColor>, int);
     void on_change_frame();
     void on_change_file();
+    void move(int);
 
     QMenu *fileMenu;
     QAction *newAct;

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     undoAct->setEnabled(false);
     redoAct->setEnabled(false);
     nothingToSave = true;
+    wrap = false;
 }
 
 MainWindow::~MainWindow()
@@ -810,6 +811,53 @@ void MainWindow::on_pushButton_changeAudioFile_clicked()
     int fslash = audiofilename.lastIndexOf('\\');
     int bslash = audiofilename.lastIndexOf('/');
     ui->label_audiofile->setText("Audio File: " + (fslash > bslash ? audiofilename.mid(fslash+1) : audiofilename.mid(bslash+1)));
+}
+
+
+void MainWindow::on_checkBox_stateChanged(int state)
+{
+    wrap = (state > 0 ? true : false);
+}
+
+void MainWindow::move(int d)//0 up 1 right 2 down 3 left
+{
+    QList<int> rows, cols;
+    QList<QColor> colors;
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
+    {
+        for (int x = 0; x < TAN_DEFAULT_COLS; x++)
+        {
+            rows.append(y);
+            cols.append(x);
+            if ((d%2)==0?(y==(d==0?(TAN_DEFAULT_ROWS-1):(0))):(x==(d==1?(0):(TAN_DEFAULT_COLS-1))))
+            {
+                if (wrap) colors.append((*project.currFrame)->pixels[d%2==1?(d==1?(TAN_DEFAULT_COLS-1):0):x][d%2==0?(d==0?0:(TAN_DEFAULT_ROWS-1)):y]);
+                else colors.append(QColor(0,0,0,0));
+            }
+            else colors.append((*project.currFrame)->pixels[d%2==1?(d==1?(x-1):(x+1)):x][d%2==0?(d==0?(y+1):(y-1)):y]);
+        }
+    }
+    on_change_color(rows, cols, colors, (TAN_DEFAULT_ROWS*TAN_DEFAULT_COLS));
+}
+
+void MainWindow::on_pushButton_up_clicked()
+{
+    move(0);
+}
+
+void MainWindow::on_pushButton_down_clicked()
+{
+    move(2);
+}
+
+void MainWindow::on_pushButton_left_clicked()
+{
+    move(3);
+}
+
+void MainWindow::on_pushButton_right_clicked()
+{
+    move(1);
 }
 
 void MainWindow::on_undo()

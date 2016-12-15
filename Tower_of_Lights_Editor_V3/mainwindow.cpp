@@ -325,6 +325,9 @@ void MainWindow::createActions()
     shapeAct = new QAction(tr("S&hape"), this);
     connect(shapeAct, &QAction::triggered, this, &MainWindow::insert_shape);
 
+    fromFileAct = new QAction(tr("From File"), this);
+    connect(fromFileAct, &QAction::triggered, this, &MainWindow::insert_from_file);
+
     infoAct = new QAction(tr("Info"), this);
     connect(infoAct, &QAction::triggered, this, &MainWindow::info);
 }
@@ -347,6 +350,7 @@ void MainWindow::createMenus()
     insertMenu->addAction(letterAct);
     insertMenu->addAction(symbolAct);
     insertMenu->addAction(shapeAct);
+    insertMenu->addAction(fromFileAct);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(infoAct);
@@ -578,6 +582,17 @@ void MainWindow::newFrameCopy()
     on_change_frame();
 }
 
+void MainWindow::newFrame(TanFrame* in)
+{
+    if (project.m_frames.size() == 1) ui->pushButton_delete->setEnabled(true);
+    generateThumbnailCurrent();
+    project.newFrame(in);
+    addCurrentThumbnail();
+
+    nothingToSave = false;
+    on_change_frame();
+}
+
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {// I recoded this because it wasn't working properly
@@ -803,8 +818,11 @@ void MainWindow::on_undo()
     {
         Change* change = (*project.currFrame)->undoStack.pop();
         (*project.currFrame)->redoStack.push(change);
-        ((CellWidget*)ui->gridLayout->itemAtPosition(change->row,change->col)->widget())->setColor(change->old_color);
-        (*project.currFrame)->pixels[change->col][change->row] = change->old_color;
+        for (QList<pixelChange*>::iterator i = change->pixelChanges.begin(); i != change->pixelChanges.end(); i++)
+        {
+            ((CellWidget*)ui->gridLayout->itemAtPosition((*i)->row,(*i)->col)->widget())->setColor((*i)->old_color);
+            (*project.currFrame)->pixels[(*i)->col][(*i)->row] = (*i)->old_color;
+        }
         ui->pushButton_redo->setEnabled(true);
         redoAct->setEnabled(true);
     }
@@ -821,8 +839,11 @@ void MainWindow::on_redo()
     {
         Change* change = (*project.currFrame)->redoStack.pop();
         (*project.currFrame)->undoStack.push(change);
-        ((CellWidget*)(ui->gridLayout->itemAtPosition(change->row,change->col)->widget()))->setColor(change->new_color);
-        (*project.currFrame)->pixels[change->col][change->row] = change->new_color;
+        for (QList<pixelChange*>::iterator i = change->pixelChanges.begin(); i != change->pixelChanges.end(); i++)
+        {
+            ((CellWidget*)(ui->gridLayout->itemAtPosition((*i)->row,(*i)->col)->widget()))->setColor((*i)->new_color);
+            (*project.currFrame)->pixels[(*i)->col][(*i)->row] = (*i)->new_color;
+        }
         ui->pushButton_undo->setEnabled(true);
         undoAct->setEnabled(true);
     }
@@ -839,12 +860,41 @@ void MainWindow::on_change_color(int row, int col, const QColor& p_color)
     Change* change = new Change;
     CellWidget *cell = (CellWidget*)ui->gridLayout->itemAtPosition(row,col)->widget();// MainWindow::findChild<CellWidget*>(m_cellName);
 
-    change->row = row;
-    change->col = col;
-    change->old_color = cell->getColor();
-    change->new_color = p_color;
+    pixelChange* temp = new pixelChange;
+    temp->row = row;
+    temp->col = col;
+    temp->old_color = cell->getColor();
+    temp->new_color = p_color;
+    change->pixelChanges.append(temp);
+
     (*project.currFrame)->undoStack.push(change);
     cell->setColor(p_color);
+    undoAct->setEnabled(true);
+    redoAct->setEnabled(false);
+    ui->pushButton_undo->setEnabled(true);
+    ui->pushButton_redo->setEnabled(false);
+}
+
+void MainWindow::on_change_color(QList<int> rows, QList<int> cols, QList<QColor> colors, int changes)
+{
+    (*project.currFrame)->redoStack.clear();
+
+    Change* change = new Change;
+    pixelChange* temp;
+    CellWidget *cell;
+    for (int c = 0; c < changes; c++)
+    {
+        cell = (CellWidget*)ui->gridLayout->itemAtPosition(rows[c],cols[c])->widget();
+        temp = new pixelChange;
+        temp->row = rows[c];
+        temp->col = cols[c];
+        temp->old_color = cell->getColor();
+        temp->new_color = colors[c];
+        change->pixelChanges.append(temp);
+        cell->setColor(colors[c]);
+    }
+
+    (*project.currFrame)->undoStack.push(change);
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);
@@ -905,35 +955,44 @@ void MainWindow::on_change_frame()
 
 void MainWindow::on_pushButton_clearFrame_clicked()
 {
+    QList<int> rows;
+    QList<int> cols;
+    QList<QColor> colors;
     for(int i=0; i<TAN_DEFAULT_ROWS; i++)
     {
         for(int j=0; j<TAN_DEFAULT_COLS; j++)
         {
+            rows.append(i);
+            cols.append(j);
+            colors.append(QColor(0,0,0,0));
             (*project.currFrame)->pixels[j][i] = QColor(0,0,0,0);
         }
     }
-    on_change_frame();
+    on_change_color(rows, cols, colors, (TAN_DEFAULT_COLS*TAN_DEFAULT_ROWS));
 }
 
 void MainWindow::spawnEffect(const effect* e)
 {
     //apply effect
+    int changes = 0;
+    QList<int> rows;
+    QList<int> cols;
+    QList<QColor> colors;
     for (int r=0;r<TAN_DEFAULT_ROWS;r++)
     {
         for (int c=0;c<TAN_DEFAULT_COLS;c++)
         {
             if (e->pixels[c][r].alpha() == 255) // check to make sure there's something there
             {
-                //update project
+                rows.append(r);
+                cols.append(c);
+                colors.append(e->pixels[c][r]);
                 (*project.currFrame)->pixels[c][r]  = e->pixels[c][r];
-                //update GUI
-                //QString m_cellName = "cell" + (QString("%1").arg((r*TAN_DEFAULT_COLS + c), 3, 10, QChar('0')));
-                //CellWidget *m_cellWidget = MainWindow::findChild<CellWidget*>(m_cellName);
-                //m_cellWidget->setColor(e->pixels[c][r]);
-                on_change_color(r, c, e->pixels[c][r]);
+                changes++;
             }
         }
     }
+    on_change_color(rows, cols, colors, changes);
 }
 
 void MainWindow::insert_letter() {
@@ -952,6 +1011,21 @@ void MainWindow::insert_shape()  {
     shapeEffectDialog d((*project.currFrame)->pixels);
     connect(&d, SIGNAL(accepted(const effect*)), this, SLOT(spawnEffect(const effect*)));
     d.exec();
+}
+
+void MainWindow::insert_from_file()  {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open tan file"),"",    //user selects fileName
+                                             "Tan File (*.tan*);;All files (*.*)");
+    if (fileName=="")   //checking if blank name is selected
+        return;
+
+    TanFile* prospective = load(fileName);//loads all the project into memory
+
+    if (prospective == NULL) //returns if nothing was returned (the file was invalid)
+        return;
+
+    for (QList<TanFrame*>::iterator i = prospective->m_frames.begin(); i != prospective->m_frames.end(); i++)
+        newFrame(*i);
 }
 
 void MainWindow::info()  {

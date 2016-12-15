@@ -25,6 +25,16 @@ void TanFile::newFrame()
         (*i)->frame_start += (*currFrame)->frame_length;
 }
 
+void TanFile::newFrame(TanFrame* in)
+{
+    int temp = (currFrame-m_frames.begin());
+    m_frames.insert((currFrame+1-m_frames.begin()), in);
+    currFrame = (m_frames.begin()+temp+1);
+
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
+}
+
 void TanFile::newFrameCopy()
 {
     TanFrame* newf = new TanFrame;

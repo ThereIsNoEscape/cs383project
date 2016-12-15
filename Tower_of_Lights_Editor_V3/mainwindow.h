@@ -72,6 +72,7 @@ private slots:
     void insert_letter();
     void insert_symbol();
     void insert_shape();
+    void insert_from_file();
 
     void info();
 
@@ -87,6 +88,7 @@ private:
     void m_updateTanFileColor(const int row, const int col, QColor m_color);
     void updateGUIColorButtons();
     void newFrame();
+    void newFrame(TanFrame*);
     void newFrameCopy();
     bool saveSequence();//returns false if the user cancels the entire process
     void createActions();
@@ -103,6 +105,7 @@ private:
     Thumbnail* newThumbnail(QImage in, TanFrame*);
     Thumbnail* newThumbnail(QString in, TanFrame*);
     void on_change_color(int row, int col, const QColor& p_color);
+    void on_change_color(QList<int>, QList<int>, QList<QColor>, int);
     void on_change_frame();
     void on_change_file();
 
@@ -121,6 +124,7 @@ private:
     QAction *letterAct;
     QAction *symbolAct;
     QAction *shapeAct;
+    QAction *fromFileAct;
 
     QMenu *helpMenu;
     QAction *infoAct;

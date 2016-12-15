@@ -520,17 +520,17 @@ border-radius: 4px;</string>
             </property>
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>410</y>
-              <width>61</width>
-              <height>41</height>
+              <x>15</x>
+              <y>407</y>
+              <width>51</width>
+              <height>21</height>
              </rect>
             </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
-             <string>Cut</string>
+             <string>Left</string>
             </property>
            </widget>
            <widget class="QPushButton" name="pushButton_undo_3">
@@ -539,17 +539,17 @@ border-radius: 4px;</string>
             </property>
             <property name="geometry">
              <rect>
-              <x>70</x>
-              <y>410</y>
-              <width>61</width>
-              <height>41</height>
+              <x>75</x>
+              <y>422</y>
+              <width>51</width>
+              <height>21</height>
              </rect>
             </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
-             <string>Copy</string>
+             <string>Down</string>
             </property>
            </widget>
            <widget class="QPushButton" name="pushButton_undo_4">
@@ -558,17 +558,36 @@ border-radius: 4px;</string>
             </property>
             <property name="geometry">
              <rect>
-              <x>130</x>
-              <y>410</y>
-              <width>61</width>
-              <height>41</height>
+              <x>135</x>
+              <y>407</y>
+              <width>51</width>
+              <height>21</height>
              </rect>
             </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
-             <string>Paste</string>
+             <string>Right</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_undo_5">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>75</x>
+              <y>392</y>
+              <width>51</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Up</string>
             </property>
            </widget>
           </widget>

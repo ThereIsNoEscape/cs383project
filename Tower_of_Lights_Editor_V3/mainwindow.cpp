@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     undoAct->setEnabled(false);
     redoAct->setEnabled(false);
     nothingToSave = true;
-    wrap = false;
+    wrap = true;
 }
 
 MainWindow::~MainWindow()
@@ -110,8 +110,8 @@ void MainWindow::openFile()    //when open is clicked
 
     updateGUIColorButtons();
     if (project.getAudioFile().compare(QString("NoAudioFile")))
-        ui->label_audiofile->setText(project.getAudioFile());
-    else ui->label_audiofile->setText("unset");
+        ui->pushButton_changeAudioFile->setText(project.getAudioFile());
+    else ui->pushButton_changeAudioFile->setText("Audio File: unset");
 
     addThumbnail();
 
@@ -138,7 +138,7 @@ void MainWindow::newFile()
     addThumbnail();
     ui->pushButton_delete->setEnabled(false);
 
-    ui->label_audiofile->setText("Audio File: unset");
+    ui->pushButton_changeAudioFile->setText("Audio File: unset");
     project.setLeftColor(255,255,255);
     project.setRightColor(255,255,255);
     updateGUIColorButtons();
@@ -250,10 +250,8 @@ void MainWindow::cell_clicked(const int row, const int col, const char btn)
     }
     //if both colors are the same, don't bother
     if (m_color == (*project.currFrame)->pixels[col][row]) return;
-    // Then update the cell color
+    // Update the cell color
     on_change_color(row, col, m_color);
-    // And update the corresponding color in the Tan file representation
-    project.storeFrameColor(row,col,m_color);
     nothingToSave = false;
 }
 
@@ -810,7 +808,7 @@ void MainWindow::on_pushButton_changeAudioFile_clicked()
     project.setAudioFile(audiofilename);
     int fslash = audiofilename.lastIndexOf('\\');
     int bslash = audiofilename.lastIndexOf('/');
-    ui->label_audiofile->setText("Audio File: " + (fslash > bslash ? audiofilename.mid(fslash+1) : audiofilename.mid(bslash+1)));
+    ui->pushButton_changeAudioFile->setText("Audio File: " + (fslash > bslash ? audiofilename.mid(fslash+1) : audiofilename.mid(bslash+1)));
 }
 
 
@@ -823,18 +821,18 @@ void MainWindow::move(int d)//0 up 1 right 2 down 3 left
 {
     QList<int> rows, cols;
     QList<QColor> colors;
+    int xo = (d%2==0?0:(d==1?-1:1));
+    int yo = (d%2==0?(d==0?1:-1):0);
     for (int y = 0; y < TAN_DEFAULT_ROWS; y++)
     {
         for (int x = 0; x < TAN_DEFAULT_COLS; x++)
         {
             rows.append(y);
             cols.append(x);
-            if ((d%2)==0?(y==(d==0?(TAN_DEFAULT_ROWS-1):(0))):(x==(d==1?(0):(TAN_DEFAULT_COLS-1))))
-            {
-                if (wrap) colors.append((*project.currFrame)->pixels[d%2==1?(d==1?(TAN_DEFAULT_COLS-1):0):x][d%2==0?(d==0?0:(TAN_DEFAULT_ROWS-1)):y]);
-                else colors.append(QColor(0,0,0,0));
-            }
-            else colors.append((*project.currFrame)->pixels[d%2==1?(d==1?(x-1):(x+1)):x][d%2==0?(d==0?(y+1):(y-1)):y]);
+            if (wrap) {colors.append((*project.currFrame)->pixels[(x+xo+TAN_DEFAULT_COLS)%TAN_DEFAULT_COLS][(y+yo+TAN_DEFAULT_ROWS)%TAN_DEFAULT_ROWS]);qDebug()<<"wrap";}
+            else if ((x+xo) < 0 || (x+xo) == TAN_DEFAULT_COLS || (y+yo) < 0 || (y+yo) == TAN_DEFAULT_ROWS)
+                colors.append(QColor(0,0,0,0));
+            else colors.append((*project.currFrame)->pixels[x+xo][y+yo]);
         }
     }
     on_change_color(rows, cols, colors, (TAN_DEFAULT_ROWS*TAN_DEFAULT_COLS));
@@ -842,22 +840,74 @@ void MainWindow::move(int d)//0 up 1 right 2 down 3 left
 
 void MainWindow::on_pushButton_up_clicked()
 {
-    move(0);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
+        for (int x = 0; x< TAN_DEFAULT_COLS; x++) {
+            if ((*project.currFrame)->pixels[x][y].name().compare(QString("#000000"))) {
+                move(0);
+                return;
+            }
+        }
+    }
 }
 
 void MainWindow::on_pushButton_down_clicked()
 {
-    move(2);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
+        for (int x = 0; x< TAN_DEFAULT_COLS; x++) {
+            if ((*project.currFrame)->pixels[x][y].name().compare(QString("#000000"))) {
+                move(2);
+                return;
+            }
+        }
+    }
 }
 
 void MainWindow::on_pushButton_left_clicked()
 {
-    move(3);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
+        for (int x = 0; x< TAN_DEFAULT_COLS; x++) {
+            if ((*project.currFrame)->pixels[x][y].name().compare(QString("#000000"))) {
+                move(3);
+                return;
+            }
+        }
+    }
 }
 
 void MainWindow::on_pushButton_right_clicked()
 {
-    move(1);
+    for (int y = 0; y < TAN_DEFAULT_ROWS; y++) {
+        for (int x = 0; x< TAN_DEFAULT_COLS; x++) {
+            if ((*project.currFrame)->pixels[x][y].name().compare(QString("#000000"))) {
+                move(1);
+                return;
+            }
+        }
+    }
+}
+
+void MainWindow::on_pushButton_downright_clicked()
+{
+    on_pushButton_down_clicked();
+    on_pushButton_right_clicked();
+}
+
+void MainWindow::on_pushButton_upright_clicked()
+{
+    on_pushButton_up_clicked();
+    on_pushButton_right_clicked();
+}
+
+void MainWindow::on_pushButton_downleft_clicked()
+{
+    on_pushButton_down_clicked();
+    on_pushButton_left_clicked();
+}
+
+void MainWindow::on_pushButton_upleft_clicked()
+{
+    on_pushButton_up_clicked();
+    on_pushButton_left_clicked();
 }
 
 void MainWindow::on_undo()
@@ -917,6 +967,7 @@ void MainWindow::on_change_color(int row, int col, const QColor& p_color)
 
     (*project.currFrame)->undoStack.push(change);
     cell->setColor(p_color);
+    (*project.currFrame)->pixels[col][row] = p_color;
     undoAct->setEnabled(true);
     redoAct->setEnabled(false);
     ui->pushButton_undo->setEnabled(true);
@@ -940,6 +991,7 @@ void MainWindow::on_change_color(QList<int> rows, QList<int> cols, QList<QColor>
         temp->new_color = colors[c];
         change->pixelChanges.append(temp);
         cell->setColor(colors[c]);
+        (*project.currFrame)->pixels[cols[c]][rows[c]] = colors[c];
     }
 
     (*project.currFrame)->undoStack.push(change);
@@ -1013,7 +1065,6 @@ void MainWindow::on_pushButton_clearFrame_clicked()
             rows.append(i);
             cols.append(j);
             colors.append(QColor(0,0,0,0));
-            (*project.currFrame)->pixels[j][i] = QColor(0,0,0,0);
         }
     }
     on_change_color(rows, cols, colors, (TAN_DEFAULT_COLS*TAN_DEFAULT_ROWS));
@@ -1035,7 +1086,6 @@ void MainWindow::spawnEffect(const effect* e)
                 rows.append(r);
                 cols.append(c);
                 colors.append(e->pixels[c][r]);
-                (*project.currFrame)->pixels[c][r]  = e->pixels[c][r];
                 changes++;
             }
         }

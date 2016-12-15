@@ -1122,6 +1122,21 @@ void MainWindow::insert_from_file()  {
     if (prospective == NULL) //returns if nothing was returned (the file was invalid)
         return;
 
+    //set time interval for each frame
+    for(QList<TanFrame*>::iterator i = prospective->m_frames.begin(); i != prospective->m_frames.end(); i++)
+    {
+        if((i+1) == prospective->m_frames.end()) //if you're on the last frame
+        {
+            (*i)->frame_length = 25;        //default time interval for last frame
+            //qDebug() << iter->frame_length;
+        }
+        else
+        {
+            //current frame time interval = next frame start time = current frame start time
+            (*i)->frame_length = (*(i + 1))->frame_start - (*i)->frame_start;
+        }
+    }
+
     for (QList<TanFrame*>::iterator i = prospective->m_frames.begin(); i != prospective->m_frames.end(); i++)
         newFrame(*i);
 }

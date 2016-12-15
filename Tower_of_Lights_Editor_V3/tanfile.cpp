@@ -27,6 +27,7 @@ void TanFile::newFrame()
 
 void TanFile::newFrame(TanFrame* in)
 {
+    in->frame_start = (((*currFrame)->frame_start)+((*currFrame)->frame_length));
     int temp = (currFrame-m_frames.begin());
     m_frames.insert((currFrame+1-m_frames.begin()), in);
     currFrame = (m_frames.begin()+temp+1);

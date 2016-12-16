@@ -10,5 +10,13 @@
         <file>arrows_up.png</file>
         <file>arrows_upleft.png</file>
         <file>arrows_upright.png</file>
+        <file>dark_arrows_down.png</file>
+        <file>dark_arrows_downleft.png</file>
+        <file>dark_arrows_downright.png</file>
+        <file>dark_arrows_left.png</file>
+        <file>dark_arrows_right.png</file>
+        <file>dark_arrows_up.png</file>
+        <file>dark_arrows_upleft.png</file>
+        <file>dark_arrows_upright.png</file>
     </qresource>
 </RCC>

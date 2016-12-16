@@ -8,11 +8,21 @@
 #include "config.h"
 #include <QDebug>        // for testing purposes
 
-struct Change {
+struct pixelChange {
     int col;
     int row;
     QColor  old_color;
     QColor  new_color;
+};
+
+//struct frameChange {
+//    TanFrame* oldFrame;
+//};
+
+struct Change {
+    //bool isFrameChange;
+    QList<pixelChange*> pixelChanges;
+    //QList<frameChange*> frameChanges;
 };
 
 struct TanFrame {
@@ -45,6 +55,7 @@ public:
     QList<TanFrame*>::iterator currFrame;       // holds current position in list of frames
 
     void newFrame(); //creates a new frame after the current one
+    void newFrame(TanFrame*); //adds the frame passed
     void newFrameCopy(); //creates a new frame copying the current one
     void removeCurrentFrame();
 

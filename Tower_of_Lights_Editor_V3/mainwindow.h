@@ -64,6 +64,15 @@ private slots:
     void on_pushButton_clearFrame_clicked();
     void thumbnail_clicked(const long int);
     void on_pushButton_changeAudioFile_clicked();
+    void on_checkBox_stateChanged(int state);
+    void on_pushButton_up_clicked();
+    void on_pushButton_down_clicked();
+    void on_pushButton_left_clicked();
+    void on_pushButton_right_clicked();
+    void on_pushButton_upleft_clicked();
+    void on_pushButton_downright_clicked();
+    void on_pushButton_downleft_clicked();
+    void on_pushButton_upright_clicked();
 
     void on_spinBox_valueChanged(int arg1);
     void on_undo();
@@ -72,6 +81,7 @@ private slots:
     void insert_letter();
     void insert_symbol();
     void insert_shape();
+    void insert_from_file();
 
     void info();
 
@@ -79,6 +89,7 @@ private slots:
 private:
 	Ui::MainWindow *ui;
     bool nothingToSave;
+    bool wrap;
 
 	QString m_getObjName(QObject *m_obj);
 	void m_generateFrame(int rows, int cols);
@@ -87,24 +98,24 @@ private:
     void m_updateTanFileColor(const int row, const int col, QColor m_color);
     void updateGUIColorButtons();
     void newFrame();
+    void newFrame(TanFrame*);
     void newFrameCopy();
     bool saveSequence();//returns false if the user cancels the entire process
     void createActions();
     void createMenus();
     void switchCurrentFrame(int index);
-    void generateThumbnailCurrent();
     void generateThumbnail(TanFrame* ptr);
     QImage scaleDown(QImage thumbnail);
     void clearThumbnails(); // used when opening a project or starting a new project
-    void addThumbnail(); // only used when starting a new project;
-    void addThumbnailToEnd(QImage in, TanFrame*);
-    void switchSelectedThumbnail(int index);
-    void addCurrentThumbnail();
-    Thumbnail* newThumbnail(QImage in, TanFrame*);
-    Thumbnail* newThumbnail(QString in, TanFrame*);
+    void appendThumbnail(TanFrame*);
+    void addThumbnail(TanFrame*, int);
+    void clearSelectedThumbnail();
+    Thumbnail* newThumbnail(TanFrame*);
     void on_change_color(int row, int col, const QColor& p_color);
+    void on_change_color(QList<int>, QList<int>, QList<QColor>, int);
     void on_change_frame();
     void on_change_file();
+    void move(int);
 
     QMenu *fileMenu;
     QAction *newAct;
@@ -121,6 +132,7 @@ private:
     QAction *letterAct;
     QAction *symbolAct;
     QAction *shapeAct;
+    QAction *fromFileAct;
 
     QMenu *helpMenu;
     QAction *infoAct;

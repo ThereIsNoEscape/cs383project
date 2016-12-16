@@ -25,6 +25,17 @@ void TanFile::newFrame()
         (*i)->frame_start += (*currFrame)->frame_length;
 }
 
+void TanFile::newFrame(TanFrame* in)
+{
+    in->frame_start = (((*currFrame)->frame_start)+((*currFrame)->frame_length));
+    int temp = (currFrame-m_frames.begin());
+    m_frames.insert((currFrame+1-m_frames.begin()), in);
+    currFrame = (m_frames.begin()+temp+1);
+
+    for (QList<TanFrame *>::iterator i = (currFrame+1); i != m_frames.end(); i++)
+        (*i)->frame_start += (*currFrame)->frame_length;
+}
+
 void TanFile::newFrameCopy()
 {
     TanFrame* newf = new TanFrame;
@@ -37,8 +48,7 @@ void TanFile::newFrameCopy()
             newf->pixels[j][i] = (*currFrame)->pixels[j][i];
         }
     }
-    newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
-    newf->thumbnail.fill(QColor(90,90,90));
+    newf->thumbnail = (*currFrame)->thumbnail;
 
     newf->undoStack = (*currFrame)->undoStack;
     newf->redoStack = (*currFrame)->redoStack;

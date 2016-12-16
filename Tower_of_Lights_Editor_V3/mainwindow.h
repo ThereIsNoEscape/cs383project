@@ -104,16 +104,13 @@ private:
     void createActions();
     void createMenus();
     void switchCurrentFrame(int index);
-    void generateThumbnailCurrent();
     void generateThumbnail(TanFrame* ptr);
     QImage scaleDown(QImage thumbnail);
     void clearThumbnails(); // used when opening a project or starting a new project
-    void addThumbnail(); // only used when starting a new project;
-    void addThumbnailToEnd(QImage in, TanFrame*);
-    void switchSelectedThumbnail(int index);
-    void addCurrentThumbnail();
-    Thumbnail* newThumbnail(QImage in, TanFrame*);
-    Thumbnail* newThumbnail(QString in, TanFrame*);
+    void appendThumbnail(TanFrame*);
+    void addThumbnail(TanFrame*, int);
+    void clearSelectedThumbnail();
+    Thumbnail* newThumbnail(TanFrame*);
     void on_change_color(int row, int col, const QColor& p_color);
     void on_change_color(QList<int>, QList<int>, QList<QColor>, int);
     void on_change_frame();

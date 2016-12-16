@@ -48,8 +48,7 @@ void TanFile::newFrameCopy()
             newf->pixels[j][i] = (*currFrame)->pixels[j][i];
         }
     }
-    newf->thumbnail = QImage(120, 200, QImage::Format_RGB32);
-    newf->thumbnail.fill(QColor(90,90,90));
+    newf->thumbnail = (*currFrame)->thumbnail;
 
     newf->undoStack = (*currFrame)->undoStack;
     newf->redoStack = (*currFrame)->redoStack;
